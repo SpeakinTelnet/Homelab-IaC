@@ -1,0 +1,38 @@
+---
+
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - block:
+        - name: create node folder
+          file:
+            mode: 0744
+            path: "{{ base_dir }}/proxmox_nodes/{{ node_name }}"
+            state: directory
+            recurse: true
+
+        - name: create host var folders
+          copy:
+            src: "{{ base_dir }}/global_files/node_template.yml"
+            dest: "{{ base_dir }}/proxmox_nodes/{{ node_name }}/main.yml"
+            force: false
+            mode: 0744
+
+        - name: create host .token file
+          copy:
+            content: >-
+              {{ 'node_token: CHANGEME' | ansible.builtin.vault(vault_secret) }}"
+            dest: "{{ base_dir }}/proxmox_nodes/{{ node_name }}/.token"
+            decrypt: false
+            mode: 0744
+      when: node_name is defined
+
+    - name: Node name is undefined
+      ansible.builtin.fail:
+        msg: >-
+          you need to set the node name with -e "node_name=<node_name>"
+          to generate the folder
+      when: node_name is undefined
+  vars:
+    vault_secret: "{{ lookup('password', '../.vault_key') }}"
+    base_dir: "{{ (ansible_inventory_sources[0] | dirname) }}"

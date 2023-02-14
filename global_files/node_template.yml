@@ -1,0 +1,8 @@
+---
+
+node_token_id: ansible-token
+node_url: node.example
+node_ansible_pubkey: >-
+  ssh-ed25519
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  ansible
