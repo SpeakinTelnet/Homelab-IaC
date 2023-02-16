@@ -1,0 +1,68 @@
+---
+
+- name: Add Bookstack .env file
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Add file
+      become: true
+      template:
+        src: >-
+          {{
+          inventory_dir + '/host_vars/' + inventory_hostname + '/files/bookstack.env.j2'
+          }}
+        dest: /var/www/bookstack/.env
+        owner: www-data
+        group: www-data
+        mode: 0755
+      tags:
+        - skip_ansible_lint
+      notify: refresh_bookstack
+
+
+- name: Update bookstack configuration file
+  become: true
+  copy:
+    src: >-
+      {{
+      inventory_dir + '/host_vars/' + inventory_hostname + '/files/bookstack.apache.conf'
+      }}
+    dest: /etc/apache2/sites-available/bookstack.conf
+    owner: www-data
+    group: www-data
+    mode: 0755
+  notify: refresh_bookstack
+
+
+- name: Set Bookstack folder permission to allow git pull
+  become: true
+  file:
+    dest: /var/www/bookstack
+    owner: root
+    group: root
+    recurse: true
+  changed_when: false
+
+
+- name: Verify Bookstack is to the latest release
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/BookStackApp/BookStack.git
+    dest: /var/www/bookstack
+    version: release
+    update: true
+  notify: refresh_bookstack
+
+
+- name: Set Bookstack folder permission back to www-data
+  become: true
+  file:
+    dest: /var/www/bookstack
+    owner: www-data
+    group: www-data
+    recurse: true
+  changed_when: false

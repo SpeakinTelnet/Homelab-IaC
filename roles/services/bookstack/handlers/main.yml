@@ -1,0 +1,22 @@
+---
+
+- name: Process bookstack upgrade
+  become: true
+  shell: |
+    composer install --no-dev --no-interaction
+    php artisan migrate --no-interaction --force
+    php artisan cache:clear --no-interaction
+    php artisan config:clear --no-interaction
+    php artisan view:clear --no-interaction
+  args:
+    chdir: /var/www/bookstack/
+  changed_when: false
+  listen: refresh_bookstack
+
+- name: restart apache service
+  become: true
+  systemd:
+    name: apache2
+    enabled: true
+    state: restarted
+  listen: refresh_bookstack

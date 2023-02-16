@@ -1,0 +1,58 @@
+---
+
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: create host var folders
+      delegate_to: localhost
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
+        recurse: true
+        state: directory
+        mode: 0744
+
+
+- hosts: bookstack
+  gather_facts: false
+  tasks:
+    - name: create host files folders
+      delegate_to: localhost
+      file:
+        path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files"
+        recurse: true
+        state: directory
+        mode: 0744
+
+    - name: Add server files templates
+      delegate_to: localhost
+      copy:
+        src: "{{ inventory_dir }}/../global_files/host_conf_templates/{{ item }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/{{ item }}"
+        force: false
+        mode: 0744
+      loop:
+        - "{{ 'bookstack.env.j2' if 'bookstack' in group_names }}"
+        - "{{ 'bookstack.apache.conf' if 'bookstack' in group_names }}"
+      when: item|length > 0
+
+
+- hosts: bookstack
+  gather_facts: false
+  vars:
+    vault_secret: "{{ lookup('password', '../.vault_key') }}"
+  tasks:
+    - name: Add server .credentials templates
+      delegate_to: localhost
+      copy:
+        content: >-
+          {{ lookup('ansible.builtin.template',
+           inventory_dir + '/../global_files/host_secret_templates/' + item )
+           | vault(vault_secret) }}
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml"
+        force: false
+        mode: 0744
+        decrypt: false
+      loop:
+        - "{{ 'bookstack.credentials.yml.j2' if 'bookstack' in group_names }}"
+      when: item|length > 0
+

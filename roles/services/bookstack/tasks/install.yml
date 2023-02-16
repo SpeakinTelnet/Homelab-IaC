@@ -1,0 +1,155 @@
+---
+- name: add Bookstack dependencies
+  become: true
+  apt:
+    name:
+      - git
+      - unzip
+      - apache2
+      - php7.4
+      - curl
+      - composer
+      - php7.4-fpm
+      - php7.4-curl
+      - php7.4-mbstring
+      - php7.4-ldap
+      - php7.4-tidy
+      - php7.4-xml
+      - php7.4-zip
+      - php7.4-gd
+      - php7.4-mysql
+      - libapache2-mod-php7.4
+      - default-mysql-server
+      - python3-dev
+      - default-libmysqlclient-dev
+      - build-essential
+      - python3-pip
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Install mysqlclient python package
+  become: true
+  pip:
+    name: mysqlclient
+
+- name: create mysql bookstack database
+  become: true
+  mysql_db:
+    login_user: root
+    name: bookstack
+    state: present
+
+- name: Create mysql user bookstack with bookstack database privileges
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create user
+      become: true
+      mysql_user:
+        login_user: root
+        name: bookstack
+        password: "{{ bookstack_sql_password }}"
+        priv: "bookstack.*:ALL"
+        state: present
+
+- name: Clone the bookstack webapp into /var/www
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/BookStackApp/BookStack.git
+    dest: /var/www/bookstack
+    version: release
+    umask: "022"
+
+- name: Add Bookstack .env file
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Add file
+      become: true
+      template:
+        src: >-
+          {{
+          inventory_dir + '/host_vars/' + inventory_hostname + '/files/bookstack.env.j2'
+          }}
+        dest: /var/www/bookstack/.env
+        owner: www-data
+        group: www-data
+        mode: 0755
+
+- name: Install composer dependencies
+  become: true
+  shell: |
+    export COMPOSER_ALLOW_SUPERUSER=1
+    php /usr/bin/composer install --no-dev --no-plugins
+  args:
+    chdir: /var/www/bookstack/
+  changed_when: false
+
+- name: Run php artisan migrate
+  become: true
+  shell: |
+    php artisan migrate --no-interaction --force
+  args:
+    chdir: /var/www/bookstack/
+  changed_when: false
+
+- name: Set Bookstack folder permission
+  become: true
+  file:
+    dest: /var/www/bookstack
+    owner: www-data
+    group: www-data
+    recurse: true
+
+- name: Prepare Apache
+  become: true
+  command:
+    cmd: "{{ item }}"
+    chdir: /var/www/bookstack/
+  with_items:
+    - "a2enmod rewrite"
+    - "a2enmod php7.4"
+  changed_when: false
+
+- name: Add Bookstack configuration file
+  become: true
+  copy:
+    src: >-
+      {{
+      inventory_dir + '/host_vars/' + inventory_hostname + '/files/bookstack.apache.conf'
+      }}
+    dest: /etc/apache2/sites-available/bookstack.conf
+    owner: www-data
+    group: www-data
+    mode: 0755
+
+- name: enable config and disable default site
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - "/usr/sbin/a2ensite bookstack.conf"
+    - "/usr/sbin/apachectl configtest"
+    - "/usr/sbin/a2dissite 000-default.conf"
+  changed_when: false
+
+- name: restart apache service
+  become: true
+  systemd:
+    name: apache2
+    enabled: true
+    state: restarted
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "bookstack_deployed"

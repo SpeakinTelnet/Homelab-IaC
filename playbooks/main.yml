@@ -1,0 +1,6 @@
+---
+
+- hosts: lxc
+  strategy: free
+  roles:
+    - { role: services/bookstack, when: "'bookstack' in group_names " }
