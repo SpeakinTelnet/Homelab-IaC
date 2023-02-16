@@ -7,6 +7,12 @@ Welcome to Homelab-IaC's documentation!
 
    overview
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Service:
+
+   bookstack
+
 Indices and tables
 ==================
 
