@@ -12,6 +12,7 @@ Welcome to Homelab-IaC's documentation!
    :caption: Service:
 
    bookstack
+   cloudbeaver
 
 Indices and tables
 ==================
