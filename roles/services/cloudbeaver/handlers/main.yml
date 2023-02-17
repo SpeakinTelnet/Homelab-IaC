@@ -1,0 +1,10 @@
+---
+- name: restart-docker
+  become: true
+  community.docker.docker_container:
+    name: cloudbeaver
+    image: dbeaver/cloudbeaver
+    state: started
+    restart: true
+    comparisons:
+      "*": ignore

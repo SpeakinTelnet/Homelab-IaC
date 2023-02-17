@@ -4,3 +4,4 @@
   strategy: free
   roles:
     - { role: services/bookstack, when: "'bookstack' in group_names " }
+    - { role: services/cloudbeaver, when: "'cloudbeaver' in group_names " }

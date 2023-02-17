@@ -1,0 +1,10 @@
+---
+
+- name: Pull cloudbeaver image
+  become: true
+  community.docker.docker_image:
+    repository: dbeaver/cloudbeaver:latest
+    name: dbeaver/cloudbeaver
+    source: pull
+    state: present
+  notify: restart-docker

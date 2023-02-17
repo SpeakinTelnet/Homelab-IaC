@@ -1,0 +1,34 @@
+---
+
+- name: Install CloudBeaver dependencies
+  become: true
+  apt:
+    name:
+      - python3-pip
+
+
+- name: Install CloudBeaver python package dependencies
+  become: true
+  pip:
+    name:
+      - docker
+
+
+- name: Create the CloudBeaver container
+  become: true
+  docker_container:
+    name: cloudbeaver
+    restart_policy: unless-stopped
+    image: dbeaver/cloudbeaver:latest
+    state: started
+    ports:
+      - 80:8978
+    volumes:
+      - /var/opt/cloudbeaver:/opt/cloudbeaver/workspace
+
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "cloudbeaver_deployed"
