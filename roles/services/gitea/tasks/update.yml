@@ -1,0 +1,42 @@
+---
+- name: Get Gitea latest tag
+  github_release:
+    user: go-gitea
+    repo: gitea
+    action: latest_release
+  register: gitea_latest
+  changed_when: false
+
+- name: Grab Gitea latest binaries
+  become: true
+  get_url:
+    # yamllint disable-line rule:line-length
+    url: https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64
+    # yamllint disable-line rule:line-length
+    checksum: sha256:https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64.sha256
+    dest: /usr/local/bin/gitea
+    owner: git
+    group: git
+    mode: a+x
+  notify: restart_gitea
+
+- name: Copy the app.ini file over
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/gitea.app.ini.j2'
+          }}
+        dest: /etc/gitea/app.ini
+        owner: root
+        group: git
+        mode: 0775
+      notify: restart_gitea

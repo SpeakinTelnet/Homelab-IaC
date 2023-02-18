@@ -1,0 +1,7 @@
+---
+- name: restart gitea service
+  become: true
+  systemd:
+    name: gitea
+    state: restarted
+  listen: restart_gitea

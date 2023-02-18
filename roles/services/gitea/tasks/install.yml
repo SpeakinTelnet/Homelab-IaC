@@ -1,0 +1,142 @@
+---
+- name: add dependencies
+  become: true
+  apt:
+    name:
+      - git
+      - default-mysql-server
+      - default-libmysqlclient-dev
+      - build-essential
+      - python3-pip
+
+- name: Install python package dependencies
+  become: true
+  pip:
+    name:
+      - mysqlclient
+      - github3.py
+
+- name: create mysql gitea database
+  become: true
+  mysql_db:
+    login_user: root
+    name: giteadb
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+    state: present
+
+- name: Create mysql user gitea with gitea database privileges
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create user
+      become: true
+      mysql_user:
+        login_user: root
+        name: gitea
+        password: "{{ gitea_sql_password }}"
+        priv: "giteadb.*:ALL"
+        state: present
+
+- name: Add group git
+  become: true
+  ansible.builtin.group:
+    name: git
+    state: present
+
+- name: Add user git
+  become: true
+  user:
+    name: git
+    groups: git
+    comment: "Git Version Control"
+    password: "!"
+    shell: /bin/bash
+
+- name: Get gitea latest tag
+  github_release:
+    user: go-gitea
+    repo: gitea
+    action: latest_release
+  register: gitea_latest
+  changed_when: false
+
+- name: Grab gitea latest binaries
+  become: true
+  get_url:
+    # yamllint disable-line rule:line-length
+    url: https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64
+    # yamllint disable-line rule:line-length
+    checksum: sha256:https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64.sha256
+    dest: /usr/local/bin/gitea
+    owner: git
+    group: git
+    mode: a+x
+
+- name: Create the gitea var folders
+  become: true
+  file:
+    dest: "/var/lib/gitea/{{ item }}"
+    owner: git
+    group: git
+    state: directory
+    mode: 0750
+  loop:
+    - custom
+    - data
+    - log
+
+- name: Create the gitea /etc folder
+  become: true
+  file:
+    dest: /etc/gitea
+    owner: root
+    group: git
+    state: directory
+    mode: 0775
+
+- name: Copy the app.ini file over
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/gitea.app.ini.j2'
+          }}
+        dest: /etc/gitea/app.ini
+        owner: root
+        group: git
+        mode: 0775
+
+- name: Add Gitea service file
+  become: true
+  copy:
+    src: gitea.service
+    dest: /etc/systemd/system/gitea.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and start Gitea service
+  become: true
+  systemd:
+    name: gitea
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "gitea_deployed"

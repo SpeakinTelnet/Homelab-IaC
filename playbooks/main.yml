@@ -7,3 +7,4 @@
     - { role: services/cloudbeaver, when: "'cloudbeaver' in group_names " }
     - { role: services/emqx, when: "'emqx' in group_names " }
     - { role: services/frigate, when: "'frigate' in group_names " }
+    - { role: services/gitea, when: "'gitea' in group_names " }
