@@ -1,0 +1,65 @@
+---
+
+- name: Create the frigate folders
+  become: true
+  file:
+    dest: "{{ item }}"
+    owner: root
+    group: root
+    state: directory
+    mode: 0755
+  loop:
+    - /opt/frigate
+    - /var/opt/frigate
+    - /etc/frigate
+
+
+- name: Copy docker-compose
+  become: true
+  copy:
+    src: >-
+      {{
+       inventory_dir + '/host_vars/' + inventory_hostname +
+       '/files/frigate.docker-compose.yml'
+      }}
+    dest: /opt/frigate/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0755
+
+
+- name: Copy config template
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/frigate.yml.j2'
+          }}
+        dest: /etc/frigate/config.yml
+        owner: root
+        group: root
+        mode: 0755
+
+
+- name: Pull docker service image
+  become: true
+  command:
+    chdir: /opt/frigate
+    cmd: "docker compose pull"
+  changed_when: false
+  notify: Start updated docker service
+
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "frigate_deployed"

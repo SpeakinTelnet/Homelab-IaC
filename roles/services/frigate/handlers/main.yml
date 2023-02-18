@@ -1,0 +1,17 @@
+---
+
+- name: Restart docker service
+  become: true
+  command:
+    chdir: /opt/frigate
+    cmd: "docker compose restart"
+  changed_when: false
+  register: docker_restarted
+
+- name: Start updated docker service
+  become: true
+  command:
+    chdir: /opt/frigate
+    cmd: "docker compose up -d"
+  changed_when: false
+  when: docker_restarted|default(false)|bool

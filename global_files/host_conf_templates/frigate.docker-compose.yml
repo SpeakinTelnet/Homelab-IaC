@@ -1,0 +1,17 @@
+---
+version: "3.9"
+services:
+  frigate:
+    container_name: frigate
+    privileged: true  # this may not be necessary for all setups
+    restart: unless-stopped
+    image: blakeblackshear/frigate:stable
+    shm_size: "256mb"  # update for your cameras based on calculation above
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/frigate/config.yml:/config/config.yml:ro
+      - /etc/frigate/db:/db
+      - /var/opt/frigate:/media/frigate
+    ports:
+      - "5000:5000"
+      - "1935:1935"  # RTMP feeds

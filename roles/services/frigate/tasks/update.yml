@@ -1,0 +1,46 @@
+---
+
+- name: Copy docker-compose if changed
+  become: true
+  copy:
+    src: >-
+      {{
+       inventory_dir + '/host_vars/' + inventory_hostname +
+       '/files/frigate.docker-compose.yml'
+      }}
+    dest: /opt/frigate/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0644
+  notify: Start updated docker service
+
+
+- name: Copy config template if changed
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/frigate.yml.j2'
+          }}
+        dest: /etc/frigate/config.yml
+        owner: root
+        group: root
+        mode: 0755
+      notify: Restart docker service
+
+
+- name: "Update docker service image"
+  become: true
+  command:
+    chdir: /opt/frigate
+    cmd: "docker compose pull"
+  changed_when: false
+  notify: Start updated docker service

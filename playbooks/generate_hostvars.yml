@@ -12,7 +12,7 @@
         mode: 0744
 
 
-- hosts: bookstack, emqx
+- hosts: bookstack, emqx, frigate
   gather_facts: false
   tasks:
     - name: create host files folders
@@ -34,10 +34,27 @@
         - "{{ 'bookstack.env.j2' if 'bookstack' in group_names }}"
         - "{{ 'bookstack.apache.conf' if 'bookstack' in group_names }}"
         - "{{ 'emqx.conf' if 'emqx' in group_names }}"
+        - "{{ 'frigate.docker-compose.yml' if 'frigate' in group_names }}"
+        - "{{ 'frigate.yml.j2' if 'frigate' in group_names }}"
       when: item|length > 0
 
 
-- hosts: bookstack
+- hosts: frigate
+  gather_facts: false
+  tasks:
+    - name: Add server variable templates
+      delegate_to: localhost
+      copy:
+        src: "{{ inventory_dir }}/../global_files/host_vars_templates/{{ item }}"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ item }}"
+        force: false
+        mode: 0744
+      loop:
+        - "{{ 'frigate.yml' if 'frigate' in group_names }}"
+      when: item|length > 0
+
+
+- hosts: bookstack, frigate
   gather_facts: false
   vars:
     vault_secret: "{{ lookup('password', '../.vault_key') }}"
@@ -55,5 +72,6 @@
         decrypt: false
       loop:
         - "{{ 'bookstack.credentials.yml.j2' if 'bookstack' in group_names }}"
+        - "{{ 'frigate.credentials.yml.j2' if 'frigate' in group_names }}"
       when: item|length > 0
 
