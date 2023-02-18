@@ -15,6 +15,7 @@ Welcome to Homelab-IaC's documentation!
    cloudbeaver
    emqx
    frigate
+   gitea
 
 Indices and tables
 ==================
