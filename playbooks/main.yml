@@ -8,3 +8,4 @@
     - { role: services/emqx, when: "'emqx' in group_names " }
     - { role: services/frigate, when: "'frigate' in group_names " }
     - { role: services/gitea, when: "'gitea' in group_names " }
+    - { role: services/jellyfin, when: "'jellyfin' in group_names " }

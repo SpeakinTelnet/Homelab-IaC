@@ -1,0 +1,7 @@
+---
+- name: restart jellyfin service
+  become: true
+  systemd:
+    name: jellyfin
+    state: restarted
+  listen: restart_jellyfin

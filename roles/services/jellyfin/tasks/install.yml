@@ -1,0 +1,45 @@
+---
+- name: install Jellyfin dependencies
+  become: true
+  apt:
+    name:
+      - curl
+      - gnupg
+      - ffmpeg
+
+- name: Add Jellyfin GPG key
+  become: true
+  ansible.builtin.get_url:
+    # yamllint disable-line rule:line-length
+    url: "https://repo.jellyfin.org/{{ ansible_distribution | lower }}/jellyfin_team.gpg.key"
+    dest: /etc/apt/trusted.gpg.d/jellyfin.asc
+
+- name: Add Jellyfin APT sources
+  become: true
+  template:
+    src: jellyfin.sources.j2
+    dest: /etc/apt/sources.list.d/jellyfin.sources
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install Jellyfin
+  become: true
+  apt:
+    update_cache: true
+    name: jellyfin
+    state: latest
+    cache_valid_time: 1800
+
+- name: Start and Enable jellyfin service
+  become: true
+  systemd:
+    name: jellyfin
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "jellyfin_deployed"

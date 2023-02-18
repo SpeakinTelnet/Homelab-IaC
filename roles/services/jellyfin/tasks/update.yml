@@ -1,0 +1,9 @@
+---
+- name: Update Jellyfin
+  become: true
+  apt:
+    update_cache: true
+    name: jellyfin
+    state: latest
+    cache_valid_time: 1800
+  notify: restart_jellyfin
