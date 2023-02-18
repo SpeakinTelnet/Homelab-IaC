@@ -5,7 +5,7 @@ Cloudbeaver
     :width: 200
     :height: 200
 
-For additional informations see `Cloudbeaver official docs <https://dbeaver.com/docs/cloudbeaver/>`_
+For additional information see `Cloudbeaver official docs <https://dbeaver.com/docs/cloudbeaver/>`_
 
 
 Deployment Vars

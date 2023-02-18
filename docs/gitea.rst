@@ -5,7 +5,7 @@ Gitea
     :width: 200
     :height: 200
 
-For additional informations see `Gitea official docs <https://docs.gitea.io/en-us/>`_
+For additional information see `Gitea official docs <https://docs.gitea.io/en-us/>`_
 
 .. note::
     Includes a configuration file in the /host_vars folder

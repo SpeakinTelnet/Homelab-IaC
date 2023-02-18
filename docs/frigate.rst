@@ -5,7 +5,7 @@ Frigate
     :width: 200
     :height: 200
 
-For additional informations see `Frigate official docs <https://docs.frigate.video/>`_
+For additional information see `Frigate official docs <https://docs.frigate.video/>`_
 
 .. note::
     Includes a configuration file and a docker-compose in the /host_vars folder

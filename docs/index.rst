@@ -16,6 +16,7 @@ Welcome to Homelab-IaC's documentation!
    emqx
    frigate
    gitea
+   jellyfin
 
 Indices and tables
 ==================

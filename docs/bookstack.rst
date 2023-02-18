@@ -8,7 +8,7 @@ Bookstack
 | Default User: ``admin@admin.com``
 | Default Password: ``password``
 
-For additional informations see `Bookstack official docs <https://www.bookstackapp.com/docs/>`_
+For additional information see `Bookstack official docs <https://www.bookstackapp.com/docs/>`_
 
 
 Deployment Vars
