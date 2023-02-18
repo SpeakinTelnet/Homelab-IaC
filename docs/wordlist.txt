@@ -8,3 +8,4 @@ gitea
 homelab
 IaC
 Jellyfin
+jellyseerr

@@ -17,6 +17,7 @@ Welcome to Homelab-IaC's documentation!
    frigate
    gitea
    jellyfin
+   jellyseerr
 
 Indices and tables
 ==================
