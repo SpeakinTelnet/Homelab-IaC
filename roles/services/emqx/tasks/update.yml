@@ -1,0 +1,24 @@
+---
+
+- name: Add Emqx configuration file
+  become: true
+  copy:
+    src: >-
+      {{
+      inventory_dir + '/host_vars/' + inventory_hostname + '/files/emqx.conf'
+      }}
+    dest: /etc/emqx/emqx.conf
+    owner: emqx
+    group: emqx
+    mode: 0644
+  notify: restart-emqx
+
+
+- name: Update Emqx
+  become: true
+  apt:
+    update_cache: true
+    name: emqx
+    state: latest
+    cache_valid_time: 1800
+  notify: restart-emqx

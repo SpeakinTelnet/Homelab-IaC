@@ -12,7 +12,7 @@
         mode: 0744
 
 
-- hosts: bookstack
+- hosts: bookstack, emqx
   gather_facts: false
   tasks:
     - name: create host files folders
@@ -33,6 +33,7 @@
       loop:
         - "{{ 'bookstack.env.j2' if 'bookstack' in group_names }}"
         - "{{ 'bookstack.apache.conf' if 'bookstack' in group_names }}"
+        - "{{ 'emqx.conf' if 'emqx' in group_names }}"
       when: item|length > 0
 
 

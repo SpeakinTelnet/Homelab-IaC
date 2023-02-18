@@ -1,0 +1,8 @@
+---
+- name: restart emqx service
+  become: true
+  systemd:
+    name: emqx
+    enabled: true
+    state: restarted
+  listen: restart-emqx

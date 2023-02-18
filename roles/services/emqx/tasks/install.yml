@@ -1,0 +1,57 @@
+---
+
+- name: install emqx dependencies
+  become: true
+  apt:
+    name:
+      - curl
+      - gnupg
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Add emqx GPG key
+  become: true
+  get_url:
+    url: "https://packages.emqx.com/emqx/emqx/gpgkey"
+    dest: /etc/apt/trusted.gpg.d/emqx.asc
+
+- name: Add emqx APT sources
+  become: true
+  template:
+    src: emqx.sources.j2
+    dest: /etc/apt/sources.list.d/emqx.sources
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install Emqx
+  become: true
+  apt:
+    update_cache: true
+    name: emqx
+    state: latest
+
+- name: Add Emqx configuration file
+  become: true
+  copy:
+    src: >-
+      {{
+      inventory_dir + '/host_vars/' + inventory_hostname + '/files/emqx.conf'
+      }}
+    dest: /etc/emqx/emqx.conf
+    owner: emqx
+    group: emqx
+    mode: 0644
+
+- name: Start and Enable emqx service
+  become: true
+  systemd:
+    name: emqx
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "emqx_deployed"
