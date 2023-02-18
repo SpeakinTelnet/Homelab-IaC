@@ -12,7 +12,8 @@
         mode: 0744
 
 
-- hosts: bookstack, emqx, frigate, gitea
+# - hosts: bookstack, frigate, gitea, homepage, jellyseerr, nzbget, samba_server
+- hosts: bookstack, emqx, frigate, gitea, jellyseerr
   gather_facts: false
   tasks:
     - name: create host files folders
@@ -37,9 +38,11 @@
         - "{{ 'frigate.docker-compose.yml' if 'frigate' in group_names }}"
         - "{{ 'frigate.yml.j2' if 'frigate' in group_names }}"
         - "{{ 'gitea.app.ini.j2' if 'gitea' in group_names }}"
+        - "{{ 'jellyseerr.docker-compose.yml.j2' if 'jellyseerr' in group_names }}"
       when: item|length > 0
 
 
+#- hosts: frigate, lxc, mailcow, nfs_server, nzbget, paperless, samba_server
 - hosts: frigate
   gather_facts: false
   tasks:
@@ -55,6 +58,7 @@
       when: item|length > 0
 
 
+# - hosts: bookstack, frigate, homepage, nzbget, paperless, samba_server
 - hosts: bookstack, frigate
   gather_facts: false
   vars:

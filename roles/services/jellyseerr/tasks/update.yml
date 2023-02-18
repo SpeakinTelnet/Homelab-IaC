@@ -1,0 +1,23 @@
+---
+- name: Copy docker-compose if changed
+  become: true
+  template:
+    src: >-
+      {{
+       inventory_dir + '/host_vars/' + inventory_hostname +
+       '/files/jellyseerr.docker-compose.yml.j2'
+      }}
+    dest: /opt/jellyseerr/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0755
+  notify: Start updated docker service
+
+
+- name: "Update docker service image"
+  become: true
+  command:
+    chdir: /opt/jellyseerr
+    cmd: "docker compose pull"
+  changed_when: false
+  notify: Start updated docker service

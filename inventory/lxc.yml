@@ -1,21 +1,35 @@
 lxc:
+  hosts:
+    testshare.homelab:
   children:
     ####################
     bookstack:
       hosts:
+        bookstack.homelab:
 
     ####################
     cloudbeaver:
       hosts:
+        testcloudbeaver.homelab:
 
     ####################
     emqx:
       hosts:
+        testemqx.homelab:
 
     ####################
     frigate:
       hosts:
+        testfrigate.homelab:
 
     ####################
     gitea:
+      hosts:
+
+    ####################
+    jellyfin:
+      hosts:
+
+    ####################
+    jellyseerr:
       hosts:

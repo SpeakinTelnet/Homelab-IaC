@@ -11,7 +11,7 @@
     dest: /opt/frigate/docker-compose.yml
     owner: root
     group: root
-    mode: 0644
+    mode: 0755
   notify: Start updated docker service
 
 

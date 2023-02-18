@@ -1,0 +1,38 @@
+---
+- name: Create the jellyseerr folder
+  become: true
+  file:
+    dest: /opt/jellyseerr
+    owner: root
+    group: root
+    state: directory
+    mode: 0755
+
+
+- name: Copy docker-compose
+  become: true
+  template:
+    src: >-
+      {{
+       inventory_dir + '/host_vars/' + inventory_hostname +
+       '/files/jellyseerr.docker-compose.yml.j2'
+      }}
+    dest: /opt/jellyseerr/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0755
+
+
+- name: Pull docker service image
+  become: true
+  command:
+    chdir: /opt/jellyseerr
+    cmd: "docker compose pull"
+  notify: Start updated docker service
+
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "jellyseerr_deployed"
