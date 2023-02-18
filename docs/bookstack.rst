@@ -2,11 +2,11 @@ Bookstack
 =========
 
 .. image:: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/bookstack.png
+    :width: 200
+    :height: 200
 
-
-Default User: ``admin@admin.com``
-
-Default Password: ``password``
+| Default User: ``admin@admin.com``
+| Default Password: ``password``
 
 For additional informations see `Bookstack official docs <https://www.bookstackapp.com/docs/>`_
 
