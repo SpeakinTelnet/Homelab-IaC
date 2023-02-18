@@ -13,6 +13,7 @@ Welcome to Homelab-IaC's documentation!
 
    bookstack
    cloudbeaver
+   emqx
 
 Indices and tables
 ==================
