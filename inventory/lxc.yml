@@ -3,3 +3,15 @@ lxc:
     ####################
     bookstack:
       hosts:
+
+    ####################
+    cloudbeaver:
+      hosts:
+
+    ####################
+    emqx:
+      hosts:
+
+    ####################
+    frigate:
+      hosts:
