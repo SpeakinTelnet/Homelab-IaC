@@ -1,0 +1,15 @@
+---
+- name: Create directory for ansible custom facts
+  become: true
+  file:
+    state: directory
+    recurse: true
+    path: /etc/ansible/facts.d
+
+- name: "Add {{ stamp }} tag"
+  become: true
+  copy:
+    dest: "/etc/ansible/facts.d/{{ stamp }}.fact"
+    content: "true"
+    force: false
+    mode: 0644
