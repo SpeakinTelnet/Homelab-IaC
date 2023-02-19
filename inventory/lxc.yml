@@ -33,3 +33,7 @@ lxc:
     ####################
     jellyseerr:
       hosts:
+
+    ####################
+    mailcow:
+      hosts:

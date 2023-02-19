@@ -1,0 +1,16 @@
+---
+
+- name: Copy redirect.conf
+  become: true
+  template:
+    src: redirect.conf.j2
+    dest: /opt/mailcow/data/conf/nginx/redirect.conf
+    mode: 0644
+  when: mailcow_redirect_http_to_https
+
+- name: Delete redirect.conf
+  become: true
+  file:
+    path: /opt/mailcow/data/conf/nginx/redirect.conf
+    state: absent
+  when: not mailcow_redirect_http_to_https

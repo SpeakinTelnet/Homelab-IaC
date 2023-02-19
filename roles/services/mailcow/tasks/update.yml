@@ -1,0 +1,30 @@
+---
+
+- name: Copy updater script
+  become: true
+  copy:
+    src: updater.sh
+    dest: /opt/mailcowupdater.sh
+    mode: '0777'
+
+- name: Create update logs directory
+  become: true
+  file:
+    dest: /var/log/mailcow-update/
+    state: directory
+    mode: 0644
+
+- name: Update mailcow
+  become: true
+  command: "/bin/bash /opt/mailcowupdater.sh"
+  register: mailcow_update
+  changed_when: 'not "No updates are available" in mailcow_update.stdout'
+
+- name: Write update log to file
+  become: true
+  copy:
+    content: "{{ mailcow_update.stdout }}"
+    dest: "/var/log/mailcow-update/update-{{ ansible_date_time.iso8601_basic_short }}.log"
+    mode: 0644
+  no_log: true
+  when: 'not "No updates are available" in mailcow_update.stdout'

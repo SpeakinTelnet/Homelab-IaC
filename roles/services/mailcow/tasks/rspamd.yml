@@ -1,0 +1,11 @@
+---
+
+- name: Configure rspamd clamv server
+  become: true
+  lineinfile:
+    dest: /opt/mailcow/data/conf/rspamd/local.d/antivirus.conf"
+    regexp: "^  servers = \".*\";$"
+    line: "  servers = \"{{ mailcow_rspamd_clamd_servers }}\";"
+    create: true
+    mode: 0644
+  notify: Restart mailcow rspamd

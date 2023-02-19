@@ -10,3 +10,4 @@
     - { role: services/gitea, when: "'gitea' in group_names " }
     - { role: services/jellyfin, when: "'jellyfin' in group_names " }
     - { role: services/jellyseerr, when: "'jellyseerr' in group_names " }
+    - { role: services/mailcow, when: "'mailcow' in group_names " }

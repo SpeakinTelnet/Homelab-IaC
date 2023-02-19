@@ -43,7 +43,7 @@
 
 
 #- hosts: frigate, lxc, mailcow, nfs_server, nzbget, paperless, samba_server
-- hosts: frigate
+- hosts: frigate, mailcow
   gather_facts: false
   tasks:
     - name: Add server variable templates
@@ -55,6 +55,7 @@
         mode: 0744
       loop:
         - "{{ 'frigate.yml' if 'frigate' in group_names }}"
+        - "{{ 'mailcow.yml' if 'mailcow' in group_names }}"
       when: item|length > 0
 
 

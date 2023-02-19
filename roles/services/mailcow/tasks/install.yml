@@ -1,0 +1,75 @@
+---
+- name: Install mailcow dependencies
+  become: true
+  apt:
+    name: git
+    state: present
+
+- name: Stop and Disable postfix service
+  become: true
+  systemd:
+    name: postfix
+    enabled: false
+    state: stopped
+
+- name: Clone mailcow git repo
+  become: true
+  git:
+    repo: "https://github.com/mailcow/mailcow-dockerized.git"
+    version: "{{ mailcow_git_branch }}"
+    umask: "022"
+    update: false
+    force: true
+    dest: /opt/mailcow
+
+- name: Generate mailcow.conf file
+  become: true
+  command:
+    cmd: "/bin/bash ./generate_config.sh"
+    chdir: /opt/mailcow
+    creates: mailcow.conf
+  environment:
+    MAILCOW_HOSTNAME: "{{ mailcow_hostname }}"
+    MAILCOW_TZ: "{{ timezone }}"
+    MAILCOW_BRANCH: "{{ mailcow_git_branch }}"
+  changed_when: false
+
+- name: Template settings for mailcow.conf
+  import_tasks: mailcowconf.yml
+
+- name: Configure Rspamd
+  import_tasks: rspamd.yml
+
+- name: Template settings for Nginx
+  import_tasks: nginx.yml
+
+- name: Copy vars.local.inc.php
+  become: true
+  template:
+    src: vars.local.inc.php.j2
+    dest: /opt/mailcow/data/web/inc/vars.local.inc.php
+    mode: 0644
+
+- name: Comment out somaxconn lines (lxc constraint)
+  become: true
+  lineinfile:
+    dest: /opt/mailcow/docker-compose.yml
+    regexp: "^{{ item }}"
+    line: "#{{ item }}"
+    state: present
+  loop:
+    - "      sysctls:"
+    - "        - net.core.somaxconn=4096"
+
+- name: Start mailcow container stack
+  become: true
+  command:
+    cmd: "docker compose --project-name {{ mailcow_project_name }} up -d"
+    chdir: /opt/mailcow
+  changed_when: false
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "mailcow_deployed"
