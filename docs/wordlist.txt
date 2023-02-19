@@ -9,3 +9,15 @@ homelab
 IaC
 Jellyfin
 jellyseerr
+mailcow
+hostname
+lumen
+cosmo
+spacelab
+IPv
+solr
+webmail
+dmarc
+rcpts
+whois
+redis

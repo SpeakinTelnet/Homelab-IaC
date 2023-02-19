@@ -18,6 +18,7 @@ Welcome to Homelab-IaC's documentation!
    gitea
    jellyfin
    jellyseerr
+   mailcow
 
 Indices and tables
 ==================
