@@ -1,0 +1,7 @@
+---
+- name: Restart nzbget service
+  become: true
+  systemd:
+    name: nzbget
+    state: restarted
+  listen: restart-nzbget

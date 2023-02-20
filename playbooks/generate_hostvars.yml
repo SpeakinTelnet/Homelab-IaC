@@ -13,7 +13,7 @@
 
 
 # - hosts: bookstack, frigate, gitea, homepage, jellyseerr, nzbget, samba_server
-- hosts: bookstack, emqx, frigate, gitea, jellyseerr
+- hosts: bookstack, emqx, frigate, gitea, jellyseerr, nzbget
   gather_facts: false
   tasks:
     - name: create host files folders
@@ -39,11 +39,12 @@
         - "{{ 'frigate.yml.j2' if 'frigate' in group_names }}"
         - "{{ 'gitea.app.ini.j2' if 'gitea' in group_names }}"
         - "{{ 'jellyseerr.docker-compose.yml.j2' if 'jellyseerr' in group_names }}"
+        - "{{ 'nzbget.conf.j2' if 'nzbget' in group_names }}"
       when: item|length > 0
 
 
 #- hosts: frigate, lxc, mailcow, nfs_server, nzbget, paperless, samba_server
-- hosts: frigate, mailcow
+- hosts: frigate, mailcow, nzbget
   gather_facts: false
   tasks:
     - name: Add server variable templates
@@ -56,11 +57,12 @@
       loop:
         - "{{ 'frigate.yml' if 'frigate' in group_names }}"
         - "{{ 'mailcow.yml' if 'mailcow' in group_names }}"
+        - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"
       when: item|length > 0
 
 
 # - hosts: bookstack, frigate, homepage, nzbget, paperless, samba_server
-- hosts: bookstack, frigate
+- hosts: bookstack, frigate, nzbget
   gather_facts: false
   vars:
     vault_secret: "{{ lookup('password', '../.vault_key') }}"
@@ -79,6 +81,7 @@
       loop:
         - "{{ 'bookstack.credentials.yml.j2' if 'bookstack' in group_names }}"
         - "{{ 'frigate.credentials.yml.j2' if 'frigate' in group_names }}"
+        - "{{ 'nzbget.credentials.yml.j2' if 'nzbget' in group_names }}"
       when: item|length > 0
 
 

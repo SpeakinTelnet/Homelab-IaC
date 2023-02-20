@@ -1,0 +1,28 @@
+---
+- name: Update Nzbget package
+  become: true
+  apt:
+    name: nzbget
+    state: latest
+  notify: restart-nzbget
+
+- name: copy the config to remote if changed
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/nzbget.conf.j2'
+          }}
+        dest: /etc/nzbget/nzbget.conf
+        owner: nzbget
+        group: media
+        mode: 0755
+      notify: restart-nzbget

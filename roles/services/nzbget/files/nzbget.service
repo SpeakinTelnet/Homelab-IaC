@@ -1,0 +1,16 @@
+[Unit]
+Description=NZBGet Binary News File Grabber
+After=network.target
+
+[Service]
+Type=forking
+User=nzbget
+Group=media
+ExecStart=/usr/bin/nzbget --daemon --configfile /etc/nzbget/nzbget.conf
+ExecReload=/usr/bin/nzbget --reload
+ExecStop=/usr/bin/nzbget --quit
+Restart=always
+SyslogIdentifier=NZBGet
+
+[Install]
+WantedBy=multi-user.target

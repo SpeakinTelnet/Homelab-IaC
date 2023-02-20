@@ -11,3 +11,4 @@
     - { role: services/jellyfin, when: "'jellyfin' in group_names " }
     - { role: services/jellyseerr, when: "'jellyseerr' in group_names " }
     - { role: services/mailcow, when: "'mailcow' in group_names " }
+    - { role: services/nzbget, when: "'nzbget' in group_names " }

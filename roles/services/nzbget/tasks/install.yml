@@ -1,0 +1,71 @@
+---
+
+- name: Install Nzbget package
+  become: true
+  apt:
+    name: nzbget
+    state: latest
+
+- name: Ensure group media exists
+  become: true
+  group:
+    name: media
+    state: present
+
+- name: Add user nzbget
+  become: true
+  user:
+    name: nzbget
+    groups: media
+
+- name: Copy the service file on the remote
+  become: true
+  copy:
+    src: nzbget.service
+    dest: /etc/systemd/system/nzbget.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create the nzbget config folder
+  become: true
+  file:
+    dest: /etc/nzbget
+    owner: nzbget
+    group: media
+    state: directory
+    mode: 0755
+
+- name: copy nzbget configuration on the remote
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/nzbget.conf.j2'
+          }}
+        dest: /etc/nzbget/nzbget.conf
+        owner: nzbget
+        group: media
+        mode: 0755
+
+- name: Start/Restart nzbget service
+  become: true
+  systemd:
+    daemon_reload: true
+    name: nzbget
+    enabled: true
+    state: restarted
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "nzbget_deployed"
