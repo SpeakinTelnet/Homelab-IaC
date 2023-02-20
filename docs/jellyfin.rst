@@ -5,7 +5,7 @@ Jellyfin
     :width: 200
     :height: 200
 
-``Default Port``: 8096
+Default Port: ``8096``
 
 For additional information see `Jellyfin official docs <https://jellyfin.org/docs/>`_
 

@@ -19,6 +19,7 @@ Welcome to Homelab-IaC's documentation!
    jellyfin
    jellyseerr
    mailcow
+   nzbget
 
 Indices and tables
 ==================

@@ -21,3 +21,6 @@ dmarc
 rcpts
 whois
 redis
+nzbget
+tegbzn
+webui
