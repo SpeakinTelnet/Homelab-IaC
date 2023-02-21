@@ -42,5 +42,5 @@
   command:
     chdir: /opt/frigate
     cmd: "docker compose pull"
-  changed_when: false
+  changed_when: true
   notify: Start updated docker service
