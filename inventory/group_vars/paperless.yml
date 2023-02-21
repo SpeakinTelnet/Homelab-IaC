@@ -1,0 +1,7 @@
+---
+
+docker: true
+lxc_features:
+  - nesting=1
+
+disk: "local-lvm:15"

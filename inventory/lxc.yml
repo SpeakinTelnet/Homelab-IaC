@@ -41,3 +41,7 @@ lxc:
     ####################
     nzbget:
       hosts:
+
+    ####################
+    paperless:
+      hosts:

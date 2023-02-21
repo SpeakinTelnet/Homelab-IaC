@@ -1,0 +1,65 @@
+---
+
+- name: Create the paperless-ngx folders
+  become: true
+  file:
+    dest: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+    recurse: true
+  loop:
+    - /opt/paperless
+    - /var/paperless/media
+    - /var/paperless/data
+    - /var/paperless/consume
+    - /var/paperless/export
+
+- name: Copy docker-compose template
+  block:
+    - name: load secret variables
+      include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy docker-compose.yml
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname +
+           '/files/paperless-ngx.docker-compose.yml.j2'
+          }}
+        dest: /opt/paperless/docker-compose.yml
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Copy docker-compose.env
+      become: true
+      template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname +
+           '/files/paperless-ngx.docker-compose.env.j2'
+          }}
+        dest: /opt/paperless/docker-compose.env
+        owner: root
+        group: root
+        mode: 0644
+
+- name: Pull docker service image
+  become: true
+  command:
+    chdir: /opt/paperless
+    cmd: "docker compose pull"
+  changed_when: true
+  notify: Start updated docker service
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "paperless_deployed"

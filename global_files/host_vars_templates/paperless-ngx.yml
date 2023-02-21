@@ -1,0 +1,7 @@
+---
+
+##################### Required #####################
+
+paperless_default_superuser: CHANGEME
+
+paperless_default_superuser_email:
