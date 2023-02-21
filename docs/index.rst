@@ -21,6 +21,7 @@ Welcome to Homelab-IaC's documentation!
    mailcow
    nzbget
    paperless
+   prowlarr
 
 Indices and tables
 ==================

@@ -26,3 +26,4 @@ tegbzn
 webui
 ngx
 lvm
+prowlarr
