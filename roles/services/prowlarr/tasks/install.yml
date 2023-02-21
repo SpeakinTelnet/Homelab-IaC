@@ -1,0 +1,61 @@
+---
+- name: add dependencies
+  become: true
+  apt:
+    name:
+      - curl
+      - sqlite3
+
+- name: Ensure group media exists
+  become: true
+  group:
+    name: media
+    state: present
+
+- name: Add user prowlarr and group media
+  become: true
+  user:
+    name: prowlarr
+    groups: media
+
+- name: Add prowlarr to opt
+  become: true
+  unarchive:
+    # yamllint disable-line rule:line-length
+    src: "http://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
+    dest: /opt
+    owner: prowlarr
+    group: media
+    remote_src: true
+    creates: /opt/Prowlarr
+
+- name: Create the Prowlarr lib folder
+  become: true
+  file:
+    dest: /var/lib/prowlarr
+    owner: prowlarr
+    group: media
+    state: directory
+    mode: 0744
+
+- name: Add Prowlarr service file
+  become: true
+  copy:
+    src: prowlarr.service
+    dest: /etc/systemd/system/prowlarr.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and start prowlarr service
+  become: true
+  systemd:
+    name: prowlarr
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "prowlarr_deployed"

@@ -1,0 +1,5 @@
+---
+- block:
+    - name: deploy Prowlarr
+      include_tasks: install.yml
+      when: ansible_local.prowlarr_deployed is undefined
