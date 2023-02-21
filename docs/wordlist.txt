@@ -27,3 +27,4 @@ webui
 ngx
 lvm
 prowlarr
+radarr

@@ -22,6 +22,7 @@ Welcome to Homelab-IaC's documentation!
    nzbget
    paperless
    prowlarr
+   radarr
 
 Indices and tables
 ==================
