@@ -20,6 +20,7 @@ Welcome to Homelab-IaC's documentation!
    jellyseerr
    mailcow
    nzbget
+   paperless
 
 Indices and tables
 ==================

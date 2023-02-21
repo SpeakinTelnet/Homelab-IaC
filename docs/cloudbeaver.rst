@@ -11,6 +11,9 @@ For additional information see `Cloudbeaver official docs <https://dbeaver.com/d
 Deployment Vars
 ---------------
 
+Secrets
+*******
+
 None required
 
 Host variables

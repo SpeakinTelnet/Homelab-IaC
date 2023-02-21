@@ -24,3 +24,5 @@ redis
 nzbget
 tegbzn
 webui
+ngx
+lvm
