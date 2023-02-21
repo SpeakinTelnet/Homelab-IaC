@@ -14,3 +14,4 @@
     - { role: services/nzbget, when: "'nzbget' in group_names " }
     - { role: services/paperless, when: "'paperless' in group_names " }
     - { role: services/prowlarr, when: "'prowlarr' in group_names " }
+    - { role: services/radarr, when: "'radarr' in group_names " }

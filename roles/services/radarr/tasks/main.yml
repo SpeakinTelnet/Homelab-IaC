@@ -1,0 +1,5 @@
+---
+- block:
+    - name: deploy Radarr
+      include_tasks: install.yml
+      when: ansible_local.radarr_deployed is undefined

@@ -8,49 +8,49 @@
 
 - name: Ensure group media exists
   become: true
-  group:
+  ansible.builtin.group:
     name: media
     state: present
 
-- name: Add user prowlarr and group media
+- name: Add user radarr and group media
   become: true
   user:
-    name: prowlarr
+    name: radarr
     groups: media
 
-- name: Add prowlarr to opt
+- name: Add Radarr to opt
   become: true
   unarchive:
     # yamllint disable-line rule:line-length
-    src: "http://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
+    src: "http://radarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
     dest: /opt
-    owner: prowlarr
+    owner: radarr
     group: media
     remote_src: true
-    creates: /opt/Prowlarr
+    creates: /opt/Radarr
 
-- name: Create the Prowlarr lib folder
+- name: Create the radarr lib folder
   become: true
   file:
-    dest: /var/lib/prowlarr
-    owner: prowlarr
+    dest: /var/lib/radarr
+    owner: radarr
     group: media
     state: directory
-    mode: 0744
+    mode: 0755
 
-- name: Add Prowlarr service file
+- name: Add Radarr service file
   become: true
   copy:
-    src: prowlarr.service
-    dest: /etc/systemd/system/prowlarr.service
+    src: radarr.service
+    dest: /etc/systemd/system/radarr.service
     owner: root
     group: root
     mode: 0644
 
-- name: Enable and start prowlarr service
+- name: Enable and start Radarr service
   become: true
   systemd:
-    name: prowlarr
+    name: radarr
     enabled: true
     state: started
 
@@ -58,4 +58,4 @@
   include_role:
     name: helpers/tag_host
   vars:
-    stamp: "prowlarr_deployed"
+    stamp: "radarr_deployed"

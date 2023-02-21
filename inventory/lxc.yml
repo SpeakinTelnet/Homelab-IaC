@@ -45,3 +45,11 @@ lxc:
     ####################
     paperless:
       hosts:
+
+    ####################
+    prowlarr:
+      hosts:
+
+    ####################
+    radarr:
+      hosts:
