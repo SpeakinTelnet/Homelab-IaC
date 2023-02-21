@@ -28,3 +28,4 @@ ngx
 lvm
 prowlarr
 radarr
+sonarr

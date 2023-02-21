@@ -23,6 +23,7 @@ Welcome to Homelab-IaC's documentation!
    paperless
    prowlarr
    radarr
+   sonarr
 
 Indices and tables
 ==================
