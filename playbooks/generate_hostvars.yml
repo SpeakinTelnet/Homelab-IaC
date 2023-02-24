@@ -26,21 +26,18 @@
     - name: Add server files templates
       delegate_to: localhost
       copy:
-        src: "{{ inventory_dir }}/../global_files/host_conf_templates/{{ item }}"
-        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/{{ item }}"
+        src: "{{ inventory_dir }}/../global_files/host_conf_templates/{{ item }}/"
+        dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/"
         force: false
         mode: 0744
       loop:
-        - "{{ 'bookstack.env.j2' if 'bookstack' in group_names }}"
-        - "{{ 'bookstack.apache.conf' if 'bookstack' in group_names }}"
-        - "{{ 'emqx.conf' if 'emqx' in group_names }}"
-        - "{{ 'frigate.docker-compose.yml' if 'frigate' in group_names }}"
-        - "{{ 'frigate.yml.j2' if 'frigate' in group_names }}"
-        - "{{ 'gitea.app.ini.j2' if 'gitea' in group_names }}"
-        - "{{ 'jellyseerr.docker-compose.yml.j2' if 'jellyseerr' in group_names }}"
-        - "{{ 'nzbget.conf.j2' if 'nzbget' in group_names }}"
-        - "{{ 'paperless-ngx.docker-compose.yml.j2' if 'paperless' in group_names }}"
-        - "{{ 'paperless-ngx.docker-compose.env.j2' if 'paperless' in group_names }}"
+        - "{{ 'bookstack' if 'bookstack' in group_names }}"
+        - "{{ 'emqx' if 'emqx' in group_names }}"
+        - "{{ 'frigate' if 'frigate' in group_names }}"
+        - "{{ 'gitea' if 'gitea' in group_names }}"
+        - "{{ 'jellyseerr' if 'jellyseerr' in group_names }}"
+        - "{{ 'nzbget' if 'nzbget' in group_names }}"
+        - "{{ 'paperless-ngx' if 'paperless' in group_names }}"
       when: item|length > 0
 
 
