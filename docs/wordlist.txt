@@ -29,3 +29,5 @@ lvm
 prowlarr
 radarr
 sonarr
+grafana
+ansible
