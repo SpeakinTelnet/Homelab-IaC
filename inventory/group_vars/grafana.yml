@@ -1,0 +1,4 @@
+---
+
+lxc_features:
+  - nesting=1

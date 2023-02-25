@@ -1,0 +1,36 @@
+---
+
+- name: Update Grafana
+  become: true
+  apt:
+    update_cache: true
+    name: grafana-enterprise
+    state: latest
+    cache_valid_time: 1800
+  notify: restart-grafana
+
+- name: Update Grafana's Provisioning
+  become: true
+  copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
+      }}
+    dest: /etc/grafana/provisioning
+    mode: 0644
+    owner: root
+    group: grafana
+  notify: restart-grafana
+
+- name: Update Grafana's Dashboards
+  become: true
+  copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/dashboards/'
+      }}
+    dest: /var/lib/grafana/dashboards
+    mode: 0755
+    owner: grafana
+    group: grafana
+  notify: restart-grafana

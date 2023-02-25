@@ -1,0 +1,77 @@
+---
+- name: Install Grafana dependencies
+  become: true
+  apt:
+    name:
+      - curl
+      - gnupg
+    state: latest
+
+- name: Add Grafana GPG key
+  become: true
+  get_url:
+    url: "https://apt.grafana.com/gpg.key"
+    dest: /etc/apt/trusted.gpg.d/grafana.key
+
+- name: Add Grafana APT sources
+  become: true
+  apt_repository:
+    repo: >-
+      deb [signed-by=/etc/apt/trusted.gpg.d/grafana.key]
+       https://apt.grafana.com stable main
+    filename: grafana
+    state: present
+
+- name: Install Grafana
+  become: true
+  apt:
+    name: grafana-enterprise
+    update_cache: true
+    state: latest
+    cache_valid_time: 1800
+
+- name: Change Grafana's provisioning folder
+  become: true
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: "^;provisioning"
+    line: "provisioning = /etc/grafana/provisioning"
+    state: present
+
+- name: Add Grafana's Provisioning
+  become: true
+  copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
+      }}
+    dest: /etc/grafana/provisioning
+    mode: 0644
+    owner: root
+    group: grafana
+
+- name: Add Grafana's Dashboards
+  become: true
+  copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/dashboards/'
+      }}
+    dest: /var/lib/grafana/dashboards
+    mode: 0755
+    owner: grafana
+    group: grafana
+
+
+- name: Start and Enable Grafana service
+  become: true
+  systemd:
+    name: grafana-server
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "grafana_deployed"

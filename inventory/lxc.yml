@@ -27,6 +27,10 @@ lxc:
       hosts:
 
     ####################
+    grafana:
+      hosts:
+
+    ####################
     jellyfin:
       hosts:
 
