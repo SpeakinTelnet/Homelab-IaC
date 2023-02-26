@@ -1,0 +1,69 @@
+---
+
+- name: Install file server dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - samba
+      - samba-common
+      - python3-pexpect
+    state: present
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Ensure appropriate services are enabled
+  become: true
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - nmbd
+    - smbd
+
+- name: Ensure shared path directories exist
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: '0777'
+  loop: "{{ samba_paths | default([]) }}"
+
+- name: Upload smb config file
+  become: true
+  ansible.builtin.copy:
+    src: "{{ inventory_dir + '/host_vars/' + inventory_hostname + '/files/smb.conf' }}"
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Ensure samba users exist
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+  loop: "{{ samba_users | default([]) }}"
+
+- name: Set Samba password with credentials
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{ inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml' }}
+
+    - name: Set Samba password
+      become: true
+      ansible.builtin.expect:
+        command: "smbpasswd -a {{ item }}"
+        timeout: 3
+        responses:
+          'New SMB password': "{{ lookup('vars', item + '_passwd') }}"
+          'Retype new SMB password': "{{ lookup('vars', item + '_passwd') }}"
+      loop: "{{ samba_users | default([]) }}"
+      notify:
+        - Reload Samba service
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "samba_deployed"

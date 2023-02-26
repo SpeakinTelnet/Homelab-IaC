@@ -1,0 +1,45 @@
+---
+
+- name: Upload smb config file
+  become: true
+  ansible.builtin.copy:
+    src: "{{ inventory_dir + '/host_vars/' + inventory_hostname + '/files/smb.conf' }}"
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload Samba service
+
+- name: Ensure samba users exist
+  become: true
+  ansible.builtin.user:
+    name: "{{ item }}"
+  loop: "{{ samba_users | default([]) }}"
+  notify:
+    - Reload Samba service
+
+- name: Ensure shared path directories exist
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: '0777'
+  loop: "{{ samba_paths | default([]) }}"
+
+- name: Set Samba password with credentials
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{ inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml' }}
+
+    - name: Set Samba password
+      become: true
+      ansible.builtin.expect:
+        command: "smbpasswd -a {{ item }}"
+        timeout: 3
+        responses:
+          'New SMB password': "{{ lookup('vars', item + '_passwd') }}"
+          'Retype new SMB password': "{{ lookup('vars', item + '_passwd') }}"
+      loop: "{{ samba_users | default([]) }}"
+      changed_when: false

@@ -1,0 +1,10 @@
+---
+
+- name: Reload Samba service
+  become: true
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: reloaded
+  with_items:
+    - nmbd
+    - smbd

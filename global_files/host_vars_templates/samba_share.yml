@@ -1,0 +1,16 @@
+---
+
+##################### Required #####################
+
+# has to reflect the required users in the smb.conf file
+# passwords has to be added to the .credentials file as well
+samba_users:
+  - user1
+  - user2
+  - user3
+
+# has to reflect the required share path in the smb.conf file
+samba_paths:
+  - /path/to/share1
+  - /path/to/share2
+  - /path/to/share3

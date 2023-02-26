@@ -3,3 +3,7 @@ all:
     ####################
     nfs_share:
       hosts:
+
+    ####################
+    samba_share:
+      hosts:

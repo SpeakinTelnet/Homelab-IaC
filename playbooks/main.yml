@@ -22,3 +22,4 @@
   strategy: free
   roles:
     - { role: addons/nfs_share, when: "'nfs_share' in group_names " }
+    - { role: addons/samba_share, when: "'samba_share' in group_names " }
