@@ -1,0 +1,48 @@
+---
+
+- name: Install file server dependencies
+  become: true
+  apt:
+    name:
+      - nfs-common
+      - nfs-kernel-server
+      - rpcbind
+    state: present
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Ensure appropriate services are enabled
+  become: true
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - rpcbind
+    - nfs-kernel-server
+
+- name: Ensure shared path directories exist
+  become: true
+  file:
+    dest: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode|default('0755') }}"
+    owner: "{{ item.owner|default('nobody') }}"
+    group: "{{ item.group|default('nogroup') }}"
+  with_items: "{{ nfs_shares|default([]) }}"
+
+- name: Configure NFS server
+  become: true
+  lineinfile:
+    dest: '/etc/exports'
+    regexp: "^{{ item.0.path }} {{ item.1 }}"
+    line: "{{ item.0.path }} {{ item.1 }}({{ item.0.options }})"
+  loop: "{{ nfs_shares | default([]) | subelements('target') }}"
+  notify:
+    - reload nfs-kernel-server
+
+- name: Stamp as properly deployed
+  include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "nfs_deployed"

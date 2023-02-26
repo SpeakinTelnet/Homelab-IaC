@@ -1,0 +1,25 @@
+---
+
+
+- name: Ensure shared path directories exist
+  become: true
+  file:
+    dest: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode|default('0755') }}"
+    owner: "{{ item.owner|default('nobody') }}"
+    group: "{{ item.group|default('nogroup') }}"
+  with_items: "{{ nfs_shares|default([]) }}"
+  notify:
+    - reload nfs-kernel-server
+
+- name: Configure NFS server
+  become: true
+  lineinfile:
+    dest: '/etc/exports'
+    regexp: "^{{ item.0.path }} {{ item.1 }}"
+    line: "{{ item.0.path }} {{ item.1 }}({{ item.0.options }})"
+    mode: '0644'
+  loop: "{{ nfs_shares | subelements('target') }}"
+  notify:
+    - reload nfs-kernel-server

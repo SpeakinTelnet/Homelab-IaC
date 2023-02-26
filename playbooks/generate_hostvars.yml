@@ -55,6 +55,7 @@
       loop:
         - "{{ 'frigate.yml' if 'frigate' in group_names }}"
         - "{{ 'mailcow.yml' if 'mailcow' in group_names }}"
+        - "{{ 'nfs_share.yml' if 'nfs_share' in group_names }}"
         - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.yml' if 'paperless' in group_names }}"
       when: item|length > 0
