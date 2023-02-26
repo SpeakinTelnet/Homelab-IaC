@@ -30,6 +30,7 @@ Welcome to Homelab-IaC's documentation!
    :maxdepth: 1
    :caption: Add-ons:
 
+   addons/ftp_server
    addons/nfs_share
    addons/samba_share
 
