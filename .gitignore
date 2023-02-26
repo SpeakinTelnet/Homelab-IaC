@@ -26,3 +26,6 @@ ENV/
 
 # Sphinx documentation
 docs/_build/
+
+# Ignore host variables for the blank branch
+inventory/host_vars/*
