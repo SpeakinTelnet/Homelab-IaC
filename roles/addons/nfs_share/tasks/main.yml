@@ -1,10 +1,12 @@
 ---
 
-- block:
-    - name: deploy NFS share
-      include_tasks: install.yml
+- name: Filter NFS share role
+  block:
+
+    - name: Deploy NFS share
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.nfs_deployed is undefined
 
-    - name: update NFS share
-      include_tasks: update.yml
+    - name: Update NFS share
+      ansible.builtin.include_tasks: update.yml
       when: ansible_local.nfs_deployed is defined

@@ -1,23 +1,26 @@
 ---
 
-- hosts: all
+- name: Create host host_vars folder
+  hosts: all
   gather_facts: false
   tasks:
-    - name: create host var folders
+    - name: Create host var folders
       delegate_to: localhost
-      file:
+      ansible.builtin.file:
         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}"
         recurse: true
         state: directory
         mode: 0744
 
 
-- hosts: bookstack, emqx, frigate, gitea, grafana, jellyseerr, nzbget, paperless, samba_share
+- name: Add host configuration files
+  hosts: bookstack, emqx, frigate, gitea, grafana, jellyseerr, nzbget, paperless,
+    samba_share
   gather_facts: false
   tasks:
-    - name: create host files folders
+    - name: Create host files folders
       delegate_to: localhost
-      file:
+      ansible.builtin.file:
         path: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files"
         recurse: true
         state: directory
@@ -25,7 +28,7 @@
 
     - name: Add server files templates
       delegate_to: localhost
-      copy:
+      ansible.builtin.copy:
         src: "{{ inventory_dir }}/../global_files/host_conf_templates/{{ item }}/"
         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/"
         force: false
@@ -40,15 +43,16 @@
         - "{{ 'nzbget' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx' if 'paperless' in group_names }}"
         - "{{ 'samba_share' if 'samba_share' in group_names }}"
-      when: item|length > 0
+      when: item | length > 0
 
 
-- hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share
+- name: Add host specific host_vars file
+  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share
   gather_facts: false
   tasks:
     - name: Add server variable templates
       delegate_to: localhost
-      copy:
+      ansible.builtin.copy:
         src: "{{ inventory_dir }}/../global_files/host_vars_templates/{{ item }}"
         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/{{ item }}"
         force: false
@@ -60,17 +64,18 @@
         - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.yml' if 'paperless' in group_names }}"
         - "{{ 'samba_share.yml' if 'samba_share' in group_names }}"
-      when: item|length > 0
+      when: item | length > 0
 
 
-- hosts: bookstack, frigate, nzbget, paperless, samba_share
+- name: Add host specific .credentials file
+  hosts: bookstack, frigate, nzbget, paperless, samba_share
   gather_facts: false
   vars:
     vault_secret: "{{ lookup('password', '../.vault_key') }}"
   tasks:
-    - name: Add server .credentials templates
+    - name: Add server .credentials templates  # noqa: args[module]
       delegate_to: localhost
-      copy:
+      ansible.builtin.copy:
         content: >-
           {{ lookup('ansible.builtin.template',
            inventory_dir + '/../global_files/host_secret_templates/' + item )
@@ -85,50 +90,50 @@
         - "{{ 'nzbget.credentials.yml.j2' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.credentials.yml.j2' if 'paperless' in group_names }}"
         - "{{ 'samba_share.credentials.yml.j2' if 'samba_share' in group_names }}"
-      when: item|length > 0
+      when: item | length > 0
 
 
-- hosts: gitea
+- name: Generate the .credentials file for Gitea
+  hosts: gitea
   gather_facts: false
   vars:
     vault_secret: "{{ lookup('password', '../.vault_key') }}"
   tasks:
-
     - name: Add server .credentials templates for gitea
       delegate_to: localhost
-      copy:
+      ansible.builtin.copy:
         content: >-
           {{ lookup('template', inventory_dir +
            '/../global_files/host_secret_templates/gitea.credentials.yml.j2' ) }}
         dest: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml"
         force: false
         mode: 0744
-      register: file_added
+      notify: lfs_jwt_secret_generation
 
-    - name: workaround for lfs_jwt_secret
-      when: file_added.changed
-      block:
+  handlers:
         - name: Generate the lfs_jwt_secret
           delegate_to: localhost
           # yamllint disable-line rule:line-length
-          shell: set -o pipefail && dd if=/dev/urandom bs=1 count=32 status=none | base64 | tr '/+' '_-' | tr -d '='
+      ansible.builtin.shell: set -o pipefail && dd if=/dev/urandom bs=1 count=32 status=none | base64 | tr '/+' '_-' | tr -d '='
           args:
             executable: /usr/bin/bash
           register: jwt_secret
           changed_when: false
+      listen: lfs_jwt_secret_generation
 
         - name: Add the jwt_secret to the file
           delegate_to: localhost
-          lineinfile:
+      ansible.builtin.lineinfile:
             path: >-
               {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
             regexp: "^gitea_lfs_jwt_secret:"
             line: "gitea_lfs_jwt_secret: {{ jwt_secret.stdout }}"
             state: present
+      listen: lfs_jwt_secret_generation
 
-        - name: Encrypt gitea .credentials file
+    - name: Encrypt gitea .credentials file  # noqa: args[module]
           delegate_to: localhost
-          copy:
+      ansible.builtin.copy:
             content: >-
               {{ lookup('ansible.builtin.file',
                inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml')
@@ -137,3 +142,4 @@
               {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
             mode: 0744
             decrypt: false
+      listen: lfs_jwt_secret_generation

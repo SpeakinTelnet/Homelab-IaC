@@ -3,19 +3,19 @@
 
 - name: Ensure shared path directories exist
   become: true
-  file:
+  ansible.builtin.file:
     dest: "{{ item.path }}"
     state: directory
-    mode: "{{ item.mode|default('0755') }}"
-    owner: "{{ item.owner|default('nobody') }}"
-    group: "{{ item.group|default('nogroup') }}"
-  with_items: "{{ nfs_shares|default([]) }}"
+    mode: "{{ item.mode | default('0755') }}"
+    owner: "{{ item.owner | default('nobody') }}"
+    group: "{{ item.group | default('nogroup') }}"
+  with_items: "{{ nfs_shares | default([]) }}"
   notify:
     - reload nfs-kernel-server
 
 - name: Configure NFS server
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: '/etc/exports'
     regexp: "^{{ item.0.path }} {{ item.1 }}"
     line: "{{ item.0.path }} {{ item.1 }}({{ item.0.options }})"
