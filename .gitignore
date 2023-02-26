@@ -29,3 +29,8 @@ docs/_build/
 
 # Ignore host variables for the blank branch
 inventory/host_vars/*
+!inventory/host_vars/.gitkeep
+
+# Ignore node variables for the blank branch
+proxmox_nodes/*
+!proxmox_nodes/.gitkeep
