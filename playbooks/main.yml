@@ -23,3 +23,4 @@
   roles:
     - { role: addons/nfs_share, when: "'nfs_share' in group_names " }
     - { role: addons/samba_share, when: "'samba_share' in group_names " }
+    - { role: addons/ftp_server, when: "'ftp_server' in group_names " }

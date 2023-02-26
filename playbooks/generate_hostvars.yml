@@ -15,7 +15,7 @@
 
 - name: Add host configuration files
   hosts: bookstack, emqx, frigate, gitea, grafana, jellyseerr, nzbget, paperless,
-    samba_share
+    samba_share, ftp_server
   gather_facts: false
   tasks:
     - name: Create host files folders
@@ -43,11 +43,12 @@
         - "{{ 'nzbget' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx' if 'paperless' in group_names }}"
         - "{{ 'samba_share' if 'samba_share' in group_names }}"
+        - "{{ 'ftp_server' if 'ftp_server' in group_names }}"
       when: item | length > 0
 
 
 - name: Add host specific host_vars file
-  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share
+  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share, ftp_server
   gather_facts: false
   tasks:
     - name: Add server variable templates
@@ -64,11 +65,12 @@
         - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.yml' if 'paperless' in group_names }}"
         - "{{ 'samba_share.yml' if 'samba_share' in group_names }}"
+        - "{{ 'ftp_server.yml' if 'ftp_server' in group_names }}"
       when: item | length > 0
 
 
 - name: Add host specific .credentials file
-  hosts: bookstack, frigate, nzbget, paperless, samba_share
+  hosts: bookstack, frigate, nzbget, paperless, samba_share, ftp_server
   gather_facts: false
   vars:
     vault_secret: "{{ lookup('password', '../.vault_key') }}"
@@ -90,6 +92,7 @@
         - "{{ 'nzbget.credentials.yml.j2' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.credentials.yml.j2' if 'paperless' in group_names }}"
         - "{{ 'samba_share.credentials.yml.j2' if 'samba_share' in group_names }}"
+        - "{{ 'ftp_server.credentials.yml.j2' if 'ftp_server' in group_names }}"
       when: item | length > 0
 
 

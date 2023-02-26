@@ -1,0 +1,50 @@
+---
+
+- name: Set ftp users with password
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{ inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml' }}
+
+    - name: Ensure samba users exist
+      become: true
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password: "{{ lookup('vars', item + '_passwd') | password_hash('sha512') }}"
+        group: ftp
+      loop: "{{ ftp_users | default([]) }}"
+
+- name: Ensure ftp directories exist if required
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+    mode: '0775'
+    owner: root
+    group: ftp
+  loop: "{{ ftp_paths | default([]) }}"
+
+- name: Update FTP server dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - vsftpd
+    state: present
+    update_cache: true
+    cache_valid_time: 1800
+  notify:
+    - Reload FTP service
+
+- name: Upload ftp config file
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/vsftpd.conf'
+      }}
+    dest: /etc/vsftpd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload FTP service

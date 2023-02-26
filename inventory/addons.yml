@@ -7,3 +7,7 @@ all:
     ####################
     samba_share:
       hosts:
+
+    ####################
+    ftp_server:
+      hosts:
