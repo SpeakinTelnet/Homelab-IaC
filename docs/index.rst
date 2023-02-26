@@ -26,6 +26,12 @@ Welcome to Homelab-IaC's documentation!
    radarr
    sonarr
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Add-ons:
+
+   nfs_share
+
 Indices and tables
 ==================
 

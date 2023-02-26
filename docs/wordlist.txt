@@ -31,3 +31,5 @@ radarr
 sonarr
 grafana
 ansible
+ons
+subnet
