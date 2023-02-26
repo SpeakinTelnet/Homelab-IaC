@@ -11,26 +11,27 @@ Welcome to Homelab-IaC's documentation!
    :maxdepth: 1
    :caption: Service:
 
-   bookstack
-   cloudbeaver
-   emqx
-   frigate
-   gitea
-   grafana
-   jellyfin
-   jellyseerr
-   mailcow
-   nzbget
-   paperless
-   prowlarr
-   radarr
-   sonarr
+   services/bookstack
+   services/cloudbeaver
+   services/emqx
+   services/frigate
+   services/gitea
+   services/grafana
+   services/jellyfin
+   services/jellyseerr
+   services/mailcow
+   services/nzbget
+   services/paperless
+   services/prowlarr
+   services/radarr
+   services/sonarr
 
 .. toctree::
    :maxdepth: 1
    :caption: Add-ons:
 
-   nfs_share
+   addons/nfs_share
+   addons/samba_share
 
 Indices and tables
 ==================
