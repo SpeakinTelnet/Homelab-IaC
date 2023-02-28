@@ -29,7 +29,6 @@
     update_cache: true
     name: jellyfin
     state: latest
-    cache_valid_time: 1800
 
 - name: Start and Enable jellyfin service
   become: true

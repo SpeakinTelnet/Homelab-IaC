@@ -28,7 +28,6 @@
     name: grafana-enterprise
     update_cache: true
     state: latest
-    cache_valid_time: 1800
 
 - name: Change Grafana's provisioning folder
   become: true

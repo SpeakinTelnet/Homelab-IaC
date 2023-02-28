@@ -47,7 +47,6 @@
     update_cache: true
     name: sonarr
     state: latest
-    cache_valid_time: 1800
 
 - name: Stamp as properly deployed
   include_role:
