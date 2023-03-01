@@ -1,0 +1,17 @@
+---
+
+- name: Restart homepage docker service
+  become: true
+  ansible.builtin.command:
+    chdir: /opt/homepage
+    cmd: "docker compose restart"
+  changed_when: false
+  register: docker_restarted
+
+- name: Start updated homepage docker service
+  become: true
+  ansible.builtin.command:
+    chdir: /opt/homepage
+    cmd: "docker compose up -d"
+  changed_when: false
+  when: not docker_restarted|default(false)|bool

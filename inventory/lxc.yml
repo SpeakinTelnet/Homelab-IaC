@@ -31,6 +31,10 @@ lxc:
       hosts:
 
     ####################
+    homepage:
+      hosts:
+
+    ####################
     jellyfin:
       hosts:
 

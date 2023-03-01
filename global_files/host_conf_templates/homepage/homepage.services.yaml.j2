@@ -1,0 +1,169 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/services
+
+- Media:
+{% for service in groups['jellyfin'] %}
+    - Jellyfin:
+        icon: jellyfin
+        href: {{ service }}:8096
+        ping: {{ service }}:8096
+        description: Media Server
+        widget:
+            type: jellyfin
+            url: {{ service }}:8096
+            key: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_key') }}
+
+{% endfor %}
+{% for service in groups['jellyseerr'] %}
+    - Jellyseerr:
+        icon: jellyseerr
+        href: {{ service }}:5055
+        ping: {{ service }}:5055
+        description: App pour demande de media
+        widget:
+            type: jellyseerr
+            url: {{ service }}:5055
+            key: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_key') }}
+
+{% endfor %}
+{% for service in groups['paperless'] %}
+    - paperless-ngx:
+        icon: paperless-ng
+        href: {{ service }}
+        ping: {{ service }}
+        description: Archive de paperasse
+        widget:
+            type: paperlessngx
+            url: {{ service }}
+            username: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_username') }}
+            password: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_password') }}
+
+{% endfor %}
+{% for service in groups['sonarr'] %}
+    - Sonarr:
+        icon: sonarr
+        href: {{ service }}:8989
+        ping: {{ service }}:8989
+        description: Demande de series
+        widget:
+            type: sonarr
+            url: {{ service }}:8989
+            key: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_key') }}
+
+{% endfor %}
+{% for service in groups['radarr'] %}
+    - Radarr:
+        icon: radarr
+        href: {{ service }}:7878
+        ping: {{ service }}:7878
+        description: Demande de films
+        widget:
+            type: radarr
+            url: {{ service }}:7878
+            key: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_key') }}
+
+{% endfor %}
+- Home Automation:
+    - HomeAssistant:
+        icon: home-assistant-circle
+        href: http://hassos.homelab:8123
+        ping: http://hassos.homelab:8123
+        description: Automatisation/Dashboard
+
+{% for service in groups['mailcow'] %}
+    - Mailcow:
+        icon: mailcow
+        href: {{ service }}/SOGo
+        ping: {{ service }}/SOGo
+        description: E-mail interne
+
+{% endfor %}
+{% for service in groups['frigate'] %}
+    - Frigate:
+        icon: frigate-light
+        href: {{ service }}:5000
+        ping: {{ service }}:5000
+        description: Camera de Surveillance
+
+{% endfor %}
+{% for service in groups['grafana'] %}
+    - Grafana:
+        icon: grafana
+        href: {{ service }}:3000
+        ping: {{ service }}:3000
+        description: Graphiques internes
+
+{% endfor %}
+{% for service in groups['bookstack'] %}
+    - Bookstack:
+        icon: bookstack
+        href: {{ service }}
+        ping: {{ service }}
+        description: Wiki interne
+
+{% endfor %}
+    - Octoprint:
+        icon: octoprint
+        href: http://octoprint.homelab
+        ping: http://octoprint.homelab
+        description: 3D printer management
+    
+- Download Management:
+{% for service in groups['nzbget'] %}
+    - NZBGet:
+        icon: nzbget
+        href: {{ service }}:6789
+        ping: {{ service }}:6789
+        description: usenet download manager
+        widget:
+            type: nzbget
+            url: {{ service }}:6789
+            username: {{ lookup('vars', 'homepage_' + service | replace('.','_') + '_username') }}
+            {% if lookup('vars', 'homepage_' + service | replace('.','_') + '_password', default=false) | bool %}{{ 'password: ' + lookup('vars', 'homepage_' + service | replace('.','_') + '_password') }}{% endif %}
+
+{% endfor %}
+{% for service in groups['prowlarr'] %}
+    - Prowlarr:
+        icon: prowlarr
+        href: {{ service }}:5076
+        ping: {{ service }}:5076
+        description: usenet newsgroup agregator
+
+{% endfor %}
+{% for service in groups['syncthing'] %}
+    - Syncthing:
+        icon: syncthing
+        href: {{ service }}:8384
+        ping: {{ service }}:8384
+        description: Backup downloader
+    
+{% endfor %}
+- Server Management:
+
+{% for service in groups['mailcow'] %}
+    - MailCow-Admin:
+        icon: mailcow
+        href: {{ service }}
+        ping: {{ service }}
+        description: MailCow settings
+
+{% endfor %}
+{% for service in groups['gitea'] %}
+    - Gitea:
+        icon: gitea
+        href: {{ service }}:3000
+        ping: {{ service }}:3000
+        description: Version control software
+
+{% endfor %}
+{% for service in groups['cloudbeaver'] %}
+    - CloudBeaver:
+        icon: cloudbeaver
+        href: {{ service }}:8080
+        ping: {{ service }}:8080
+        description: Database Management
+
+{% endfor %}
+
+#- hypervisor & KVM:

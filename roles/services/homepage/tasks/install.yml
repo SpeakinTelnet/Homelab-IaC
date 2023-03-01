@@ -1,0 +1,66 @@
+---
+
+- name: Create the homepage config directory
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  loop:
+    - /opt/homepage
+    - /var/opt/homepage
+
+- name: Copy docker-compose
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+       inventory_dir + '/host_vars/' + inventory_hostname +
+       '/files/homepage.docker-compose.yml'
+      }}
+    dest: /opt/homepage/docker-compose.yml
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy the configuration files over
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+            inventory_dir + '/host_vars/' + inventory_hostname + '/files/' + item.src
+          }}
+        dest: "{{ '/var/opt/homepage/' + item.dst }}"
+        owner: root
+        group: root
+        mode: 0775
+      loop:
+        - {src: "homepage.bookmarks.yaml.j2", dst: "bookmarks.yaml"}
+        - {src: "homepage.docker.yaml.j2", dst: "docker.yaml"}
+        - {src: "homepage.services.yaml.j2", dst: "services.yaml"}
+        - {src: "homepage.settings.yaml.j2", dst: "settings.yaml"}
+        - {src: "homepage.widgets.yaml.j2", dst: "widgets.yaml"}
+
+- name: Pull docker service image
+  become: true
+  ansible.builtin.command:
+    chdir: /opt/homepage
+    cmd: "docker compose pull"
+  changed_when: true
+  notify: Start updated homepage docker service
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "homepage_deployed"
