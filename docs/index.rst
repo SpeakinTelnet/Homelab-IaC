@@ -17,6 +17,7 @@ Welcome to Homelab-IaC's documentation!
    services/frigate
    services/gitea
    services/grafana
+   services/homepage
    services/jellyfin
    services/jellyseerr
    services/mailcow
