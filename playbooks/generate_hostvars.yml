@@ -117,35 +117,35 @@
       notify: lfs_jwt_secret_generation
 
   handlers:
-        - name: Generate the lfs_jwt_secret
-          delegate_to: localhost
-          # yamllint disable-line rule:line-length
+    - name: Generate the lfs_jwt_secret
+      delegate_to: localhost
+      # yamllint disable-line rule:line-length
       ansible.builtin.shell: set -o pipefail && dd if=/dev/urandom bs=1 count=32 status=none | base64 | tr '/+' '_-' | tr -d '='
-          args:
-            executable: /usr/bin/bash
-          register: jwt_secret
-          changed_when: false
+      args:
+        executable: /usr/bin/bash
+      register: jwt_secret
+      changed_when: false
       listen: lfs_jwt_secret_generation
 
-        - name: Add the jwt_secret to the file
-          delegate_to: localhost
+    - name: Add the jwt_secret to the file
+      delegate_to: localhost
       ansible.builtin.lineinfile:
-            path: >-
-              {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
-            regexp: "^gitea_lfs_jwt_secret:"
-            line: "gitea_lfs_jwt_secret: {{ jwt_secret.stdout }}"
-            state: present
+        path: >-
+          {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
+        regexp: "^gitea_lfs_jwt_secret:"
+        line: "gitea_lfs_jwt_secret: {{ jwt_secret.stdout }}"
+        state: present
       listen: lfs_jwt_secret_generation
 
     - name: Encrypt gitea .credentials file  # noqa: args[module]
-          delegate_to: localhost
+      delegate_to: localhost
       ansible.builtin.copy:
-            content: >-
-              {{ lookup('ansible.builtin.file',
-               inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml')
-               | vault(vault_secret) }}"
-            dest: >-
-              {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
-            mode: 0744
-            decrypt: false
+        content: >-
+          {{ lookup('ansible.builtin.file',
+            inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml')
+            | vault(vault_secret) }}"
+        dest: >-
+          {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
+        mode: 0744
+        decrypt: false
       listen: lfs_jwt_secret_generation
