@@ -1,0 +1,17 @@
+---
+timezone: America/Toronto
+
+additional_user_key_pair:
+  # yamllint disable-line rule:line-length
+  homelab: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINVTdXNc0Jv00eTqnIBRQpkA4FNyuNmj3sf32xXJWbwh homelab"
+  # yamllint disable-line rule:line-length
+  juicessh: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDDzIWVOYrnmdludnq3F1C9gOcSKRAFEqRegYypJoVuq JuiceSSH"
+
+# yamllint disable-line rule:line-length
+ansible_pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEsOFNu85OS9zWMGWZsC0hUWPVzKqbgWn2yX5anv8U/k ansible"
+
+# default values, overwrite in specific group vars or host vars if needed
+default_lxc_image: "local:vztmpl/debian-11-standard_11.6-1_amd64.tar.zst"
+default_netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10"}'
+
+require_sysdresolved_restart: true
