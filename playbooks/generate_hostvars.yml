@@ -49,7 +49,7 @@
 
 
 - name: Add host specific host_vars file
-  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share, ftp_server
+  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share, ftp_server, lxc
   gather_facts: false
   tasks:
     - name: Add server variable templates
@@ -61,6 +61,7 @@
         mode: 0744
       loop:
         - "{{ 'frigate.yml' if 'frigate' in group_names }}"
+        - "{{ 'lxc.yml' if 'lxc' in group_names }}"
         - "{{ 'mailcow.yml' if 'mailcow' in group_names }}"
         - "{{ 'nfs_share.yml' if 'nfs_share' in group_names }}"
         - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"

@@ -1,0 +1,12 @@
+---
+- name: Update the container
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+    cache_valid_time: 1800
+
+- name: Set the container timezone
+  become: true
+  community.general.timezone:
+    name: "{{ timezone }}"

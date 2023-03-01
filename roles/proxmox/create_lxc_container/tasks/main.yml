@@ -1,0 +1,57 @@
+---
+
+- name: Create lxc container
+  block:
+    - name: Load node data
+      ansible.builtin.include_vars: "{{ item }}"
+      loop:
+        - "{{ inventory_dir + '/../proxmox_nodes/' + node + '/.token' }}"
+        - "{{ inventory_dir + '/../proxmox_nodes/' + node + '/main.yml' }}"
+
+    - name: Create container
+      community.general.proxmox:
+        vmid: "{{ vmid }}"
+        node: "{{ node }}"
+        validate_certs: false
+        api_host: "{{ node_url }}"
+        api_user: ansible@pam
+        api_token_id: "{{ node_token_id }}"
+        api_token_secret: "{{ node_token }}"
+        unprivileged: "{{ lxc_unprivileged | default(true) }}"
+        hostname: "{{ inventory_hostname_short }}"
+        ostemplate: "{{ lxc_image | default(default_lxc_image) }}"
+        cores: "{{ core | default(2) }}"
+        memory: "{{ memory | default(1024) }}"
+        swap: "{{ swap | default(1024) }}"
+        disk: "{{ disk | default('local-lvm:5') }}"
+        state: present
+        storage: "{{ node_storage_for_lxc | default('local-lvm') }}"
+        features: "{{ lxc_features | default(omit) }}"
+        pubkey: "{{ node_ansible_pubkey }}"
+        netif: "{{ netif_config | default(default_netif_config) }}"
+      delegate_to: localhost
+
+    # ref https://bugzilla.proxmox.com/show_bug.cgi?id=2582
+    - name: (root@pam workaround) Add custom lines to the file if not present
+      become: true
+      delegate_to: "{{ node_url }}"
+      ansible.builtin.lineinfile:
+        dest: "/etc/pve/lxc/{{ vmid }}.conf"
+        line: "{{ line_text }}"
+        state: present
+      loop_control:
+        loop_var: line_text
+      loop: "{{ additional_conf_lines | default([]) }}"
+
+    - name: Start container
+      community.general.proxmox:
+        vmid: "{{ vmid }}"
+        node: "{{ node }}"
+        validate_certs: false
+        api_host: "{{ node_url }}"
+        api_user: ansible@pam
+        api_token_id: "{{ node_token_id }}"
+        api_token_secret: "{{ node_token }}"
+        state: started
+      delegate_to: localhost
+      notify: Pause and Restart systemdresolved

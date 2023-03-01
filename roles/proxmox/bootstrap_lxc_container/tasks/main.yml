@@ -1,0 +1,11 @@
+---
+
+- name: Bootstrap lxc
+  ansible.builtin.include_tasks: tasks/bootstrap.yml
+
+- name: Update lxc
+  ansible.builtin.include_tasks: update.yml
+
+- name: Dockerize lxc
+  ansible.builtin.include_tasks: tasks/dockerize.yml
+  when: docker|default(false)|bool is true

@@ -1,0 +1,5 @@
+---
+
+- name: Pause and Restart systemdresolved
+  ansible.builtin.include_tasks: ../handlers/systemd_resolved.yml
+  when: require_sysdresolved_restart | default(false)

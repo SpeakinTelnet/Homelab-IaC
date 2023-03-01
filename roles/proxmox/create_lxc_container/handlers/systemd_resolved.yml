@@ -1,0 +1,13 @@
+---
+
+- name: Pause to let dhcp populate
+  ansible.builtin.pause:
+    seconds: 2
+
+- name: Restart systemd-resolved
+  delegate_to: localhost
+  become: true
+  run_once: true
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted

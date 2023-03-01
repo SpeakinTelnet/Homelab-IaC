@@ -1,0 +1,47 @@
+---
+- name: Do facts module to get latest information
+  ansible.builtin.setup:
+
+- name: Remove docker-related package
+  become: true
+  ansible.builtin.apt:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+
+- name: Add docker dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: latest
+
+- name: Add Docker GPG key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: Add Docker APT repository
+  become: true
+  ansible.builtin.apt_repository:
+    # yamllint disable-line rule:line-length
+    repo: "deb [arch=amd64] https://download.docker.com/{{ ansible_system | lower }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+
+- name: Install docker package
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
+    cache_valid_time: 1800

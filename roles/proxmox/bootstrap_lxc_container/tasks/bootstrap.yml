@@ -1,0 +1,58 @@
+---
+
+- name: Create ansible user
+  remote_user: root
+  ansible.builtin.user:
+    name: ansible
+    shell: /bin/bash
+    groups: root
+
+- name: Create_additional_users
+  remote_user: root
+  ansible.builtin.user:
+    name: "{{ users.key }}"
+    shell: /bin/bash
+    groups: sudo
+  loop_control:
+    loop_var: users
+  loop: "{{ additional_user_key_pair | dict2items }}"
+
+- name: Install the sudo package
+  remote_user: root
+  ansible.builtin.apt:
+    name: sudo
+    update_cache: true
+    state: latest
+    cache_valid_time: 1800
+
+- name: Add ssh key for ansible
+  remote_user: root
+  ansible.posix.authorized_key:
+    user: ansible
+    key: "{{ ansible_pubkey }}"
+
+- name: Add ssh key for additional users
+  remote_user: root
+  ansible.posix.authorized_key:
+    user: "{{ users.key }}"
+    key: "{{ users.value }}"
+  loop_control:
+    loop_var: users
+  loop: "{{ additional_user_key_pair | dict2items }}"
+
+- name: Add sudoers file for ansible
+  remote_user: root
+  ansible.builtin.copy:
+    src: sudoer_ansible
+    dest: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: 0440
+
+- name: Disallow SSH password authentication
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
