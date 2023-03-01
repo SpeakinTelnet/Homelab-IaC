@@ -42,4 +42,4 @@
     chdir: /opt/paperless
     cmd: "docker compose pull"
   changed_when: true
-  notify: Start updated docker service
+  notify: Start updated paperless docker service

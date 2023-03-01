@@ -13,7 +13,7 @@
   changed_when: false
   listen: refresh_bookstack
 
-- name: restart apache service
+- name: restart bookstack apache service
   become: true
   systemd:
     name: apache2

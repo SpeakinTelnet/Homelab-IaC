@@ -1,5 +1,5 @@
 ---
-- name: restart-docker
+- name: Restart Cloudbreaver Docker
   become: true
   community.docker.docker_container:
     name: cloudbeaver

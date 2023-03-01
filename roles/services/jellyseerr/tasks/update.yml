@@ -11,7 +11,7 @@
     owner: root
     group: root
     mode: 0755
-  notify: Start updated docker service
+  notify: Start updated jellyseerr docker service
 
 
 - name: "Update docker service image"
@@ -20,4 +20,4 @@
     chdir: /opt/jellyseerr
     cmd: "docker compose pull"
   changed_when: true
-  notify: Start updated docker service
+  notify: Start updated jellyseerr docker service

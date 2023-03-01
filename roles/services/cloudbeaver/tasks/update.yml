@@ -7,4 +7,4 @@
     name: dbeaver/cloudbeaver
     source: pull
     state: present
-  notify: restart-docker
+  notify: Restart Cloudbreaver Docker

@@ -55,7 +55,7 @@
     chdir: /opt/frigate
     cmd: "docker compose pull"
   changed_when: true
-  notify: Start updated docker service
+  notify: Start updated frigate docker service
 
 
 - name: Stamp as properly deployed

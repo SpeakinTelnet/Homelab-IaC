@@ -1,6 +1,6 @@
 ---
 
-- name: Restart docker service
+- name: Restart paperless docker service
   become: true
   command:
     chdir: /opt/paperless
@@ -8,7 +8,7 @@
   changed_when: false
   register: docker_restarted
 
-- name: Start updated docker service
+- name: Start updated paperless docker service
   become: true
   command:
     chdir: /opt/paperless

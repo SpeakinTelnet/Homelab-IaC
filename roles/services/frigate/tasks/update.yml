@@ -12,7 +12,7 @@
     owner: root
     group: root
     mode: 0755
-  notify: Start updated docker service
+  notify: Start updated frigate docker service
 
 
 - name: Copy config template if changed
@@ -34,7 +34,7 @@
         owner: root
         group: root
         mode: 0755
-      notify: Restart docker service
+      notify: Restart frigate docker service
 
 
 - name: "Update docker service image"
@@ -43,4 +43,4 @@
     chdir: /opt/frigate
     cmd: "docker compose pull"
   changed_when: true
-  notify: Start updated docker service
+  notify: Start updated frigate docker service
