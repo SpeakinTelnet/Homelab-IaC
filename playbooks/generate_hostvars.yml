@@ -49,7 +49,8 @@
 
 
 - name: Add host specific host_vars file
-  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share, ftp_server, lxc
+  hosts: frigate, mailcow, nfs_share, nzbget, paperless, samba_share, ftp_server, lxc,
+    ohmyzsh
   gather_facts: false
   tasks:
     - name: Add server variable templates
@@ -66,6 +67,7 @@
         - "{{ 'nfs_share.yml' if 'nfs_share' in group_names }}"
         - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.yml' if 'paperless' in group_names }}"
+        - "{{ 'ohmyzsh.yml' if 'ohmyzsh' in group_names }}"
         - "{{ 'samba_share.yml' if 'samba_share' in group_names }}"
         - "{{ 'ftp_server.yml' if 'ftp_server' in group_names }}"
       when: item | length > 0

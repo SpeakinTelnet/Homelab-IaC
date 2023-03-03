@@ -1,0 +1,22 @@
+---
+
+- name: Download oh-my-zsh Installer
+  become: true
+  ansible.builtin.get_url:
+    url: https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+    dest: /tmp/zsh-installer.sh
+    owner: nobody
+    group: nogroup
+    mode: 0777
+
+- name: Update ZSH per user
+  loop: "{{ ohmyzsh_users | default(additional_user_key_pair.keys() | list) }}"
+  loop_control:
+    loop_var: user
+  ansible.builtin.include_tasks: ohmyzsh.yml
+
+- name: Remove the zsh-installer.sh
+  become: true
+  ansible.builtin.file:
+    path: /tmp/zsh-installer.sh
+    state: absent

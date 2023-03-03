@@ -1,0 +1,46 @@
+---
+
+- name: Install oh-my-zsh dependencies
+  become: true
+  ansible.builtin.package:
+    name:
+      - git
+      - zsh
+      - curl
+    state: present
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Ensure a locale exists
+  become: true
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+
+- name: Download oh-my-zsh Installer
+  become: true
+  ansible.builtin.get_url:
+    url: https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+    dest: /tmp/zsh-installer.sh
+    owner: nobody
+    group: nogroup
+    mode: 0777
+
+- name: Install ZSH per user
+  loop: "{{ ohmyzsh_users | default(additional_user_key_pair.keys() | list) }}"
+  loop_control:
+    loop_var: user
+  ansible.builtin.include_tasks: ohmyzsh.yml
+
+
+- name: Remove the zsh-installer.sh
+  become: true
+  ansible.builtin.file:
+    path: /tmp/zsh-installer.sh
+    state: absent
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "ohmyzsh_deployed"

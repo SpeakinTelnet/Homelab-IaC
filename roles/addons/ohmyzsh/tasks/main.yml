@@ -1,0 +1,12 @@
+---
+
+- name: Filter oh-my-zsh role
+  block:
+
+    - name: Deploy oh-my-zsh
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.ohmyzsh_deployed is undefined
+
+    - name: Update oh-my-zsh
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.ohmyzsh_deployed is defined
