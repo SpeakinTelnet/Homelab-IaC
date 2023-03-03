@@ -1,10 +1,11 @@
 ---
 
-- block:
-    - name: deploy CloudBeaver
-      include_tasks: install.yml
+- name: Filter Cloudbeaver role
+  block:
+    - name: Deploy CloudBeaver
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.cloudbeaver_deployed is undefined
 
-    - name: update CloudBeaver
-      include_tasks: update.yml
+    - name: Update CloudBeaver
+      ansible.builtin.include_tasks: update.yml
       when: ansible_local.cloudbeaver_deployed is defined

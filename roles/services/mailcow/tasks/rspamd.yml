@@ -2,7 +2,7 @@
 
 - name: Configure rspamd clamv server
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /opt/mailcow/data/conf/rspamd/local.d/antivirus.conf"
     regexp: "^  servers = \".*\";$"
     line: "  servers = \"{{ mailcow_rspamd_clamd_servers }}\";"

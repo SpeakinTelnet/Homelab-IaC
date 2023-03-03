@@ -2,7 +2,7 @@
 
 - name: Restart paperless docker service
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/paperless
     cmd: "docker compose restart"
   changed_when: false
@@ -10,7 +10,7 @@
 
 - name: Start updated paperless docker service
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/paperless
     cmd: "docker compose up -d"
   changed_when: false

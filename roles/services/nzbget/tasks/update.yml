@@ -1,22 +1,23 @@
 ---
+
 - name: Update Nzbget package
   become: true
-  apt:
+  ansible.builtin.apt:
     name: nzbget
     state: latest
   notify: restart-nzbget
 
-- name: copy the config to remote if changed
+- name: Copy the config to remote if changed
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Copy file
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/nzbget.conf.j2'

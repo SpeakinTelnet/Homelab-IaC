@@ -1,26 +1,27 @@
 ---
-- name: add dependencies
+
+- name: Add dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - curl
       - sqlite3
 
 - name: Ensure group media exists
   become: true
-  ansible.builtin.group:
+  ansible.builtin.ansible.builtin.group:
     name: media
     state: present
 
 - name: Add user radarr and group media
   become: true
-  user:
+  ansible.builtin.user:
     name: radarr
     groups: media
 
 - name: Add Radarr to opt
   become: true
-  unarchive:
+  ansible.builtin.unarchive:
     # yamllint disable-line rule:line-length
     src: "http://radarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
     dest: /opt
@@ -31,7 +32,7 @@
 
 - name: Create the radarr lib folder
   become: true
-  file:
+  ansible.builtin.file:
     dest: /var/lib/radarr
     owner: radarr
     group: media
@@ -40,7 +41,7 @@
 
 - name: Add Radarr service file
   become: true
-  copy:
+  ansible.builtin.copy:
     src: radarr.service
     dest: /etc/systemd/system/radarr.service
     owner: root
@@ -49,13 +50,13 @@
 
 - name: Enable and start Radarr service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: radarr
     enabled: true
     state: started
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "radarr_deployed"

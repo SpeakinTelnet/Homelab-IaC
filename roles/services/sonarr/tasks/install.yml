@@ -1,55 +1,55 @@
 ---
-- name: add dependencies
+- name: Add dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - dirmngr
       - gnupg
       - ca-certificates
 
-- name: add mono apt keys
+- name: Add mono apt keys
   become: true
-  apt_key:
+  ansible.builtin.apt_key:
     id: 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
     keyserver: hkp://keyserver.ubuntu.com:80
     state: present
 
 - name: Add mono APT repository
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     # yamllint disable-line rule:line-length
     repo: "deb https://download.mono-project.com/repo/debian stable-buster main"
     filename: mono-official-stable.list
 
 - name: Install Mediaarea from deb package
   become: true
-  apt:
+  ansible.builtin.apt:
     deb: https://mediaarea.net/repo/deb/repo-mediaarea_1.0-21_all.deb
 
-- name: add sonarr apt keys
+- name: Add sonarr apt keys
   become: true
-  apt_key:
+  ansible.builtin.apt_key:
     id: 2009837CBFFD68F45BC180471F4F90DE2A9B4BF8
     keyserver: hkp://keyserver.ubuntu.com:80
     state: present
 
 - name: Add sonarr APT repository
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     # yamllint disable-line rule:line-length
     repo: "deb https://apt.sonarr.tv/debian buster main"
     filename: sonarr
 
-- name: install sonarr
+- name: Install sonarr
   become: true
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name: sonarr
     state: latest
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "sonarr_deployed"

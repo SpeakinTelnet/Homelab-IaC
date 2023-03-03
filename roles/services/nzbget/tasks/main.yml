@@ -1,10 +1,11 @@
 ---
 
-- block:
-    - name: deploy nzbget
-      include_tasks: install.yml
+- name: Filter Nzbget role
+  block:
+    - name: Deploy nzbget
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.nzbget_deployed is undefined
 
-    - name: update nzbget
-      include_tasks: update.yml
+    - name: Update nzbget
+      ansible.builtin.include_tasks: update.yml
       when: ansible_local.nzbget_deployed is defined

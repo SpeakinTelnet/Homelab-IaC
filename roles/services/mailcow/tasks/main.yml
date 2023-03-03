@@ -1,9 +1,11 @@
 ---
 
-- name: Deploy Mailcow
-  include_tasks: install.yml
-  when: ansible_local.mailcow_deployed is undefined
+- name: Filter Mailcow role
+  block:
+    - name: Deploy Mailcow
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.mailcow_deployed is undefined
 
-- name: Update Mailcow
-  include_tasks: update.yml
-  when: ansible_local.mailcow_deployed is defined
+    - name: Update Mailcow
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.mailcow_deployed is defined

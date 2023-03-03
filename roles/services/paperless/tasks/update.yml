@@ -2,15 +2,15 @@
 
 - name: Copy docker-compose template
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Copy docker-compose.yml
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname +
@@ -24,7 +24,7 @@
 
     - name: Copy docker-compose.env
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname +
@@ -38,7 +38,7 @@
 
 - name: "Update docker service image"
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/paperless
     cmd: "docker compose pull"
   changed_when: true

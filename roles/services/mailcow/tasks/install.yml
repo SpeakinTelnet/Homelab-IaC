@@ -1,20 +1,20 @@
 ---
 - name: Install mailcow dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name: git
     state: present
 
 - name: Stop and Disable postfix service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: postfix
     enabled: false
     state: stopped
 
 - name: Clone mailcow git repo
   become: true
-  git:
+  ansible.builtin.git:
     repo: "https://github.com/mailcow/mailcow-dockerized.git"
     version: "{{ mailcow_git_branch }}"
     umask: "022"
@@ -24,7 +24,7 @@
 
 - name: Generate mailcow.conf file
   become: true
-  command:
+  ansible.builtin.command:
     cmd: "/bin/bash ./generate_config.sh"
     chdir: /opt/mailcow
     creates: mailcow.conf
@@ -35,24 +35,24 @@
   changed_when: false
 
 - name: Template settings for mailcow.conf
-  import_tasks: mailcowconf.yml
+  ansible.builtin.import_tasks: mailcowconf.yml
 
 - name: Configure Rspamd
-  import_tasks: rspamd.yml
+  ansible.builtin.import_tasks: rspamd.yml
 
 - name: Template settings for Nginx
-  import_tasks: nginx.yml
+  ansible.builtin.import_tasks: nginx.yml
 
 - name: Copy vars.local.inc.php
   become: true
-  template:
+  ansible.builtin.template:
     src: vars.local.inc.php.j2
     dest: /opt/mailcow/data/web/inc/vars.local.inc.php
     mode: 0644
 
 - name: Comment out somaxconn lines (lxc constraint)
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /opt/mailcow/docker-compose.yml
     regexp: "^{{ item }}"
     line: "#{{ item }}"
@@ -63,13 +63,13 @@
 
 - name: Start mailcow container stack
   become: true
-  command:
+  ansible.builtin.command:
     cmd: "docker compose --project-name {{ mailcow_project_name }} up -d"
     chdir: /opt/mailcow
   changed_when: false
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "mailcow_deployed"

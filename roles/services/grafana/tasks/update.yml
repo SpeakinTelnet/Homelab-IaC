@@ -2,7 +2,7 @@
 
 - name: Update Grafana
   become: true
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name: grafana-enterprise
     state: latest
@@ -11,7 +11,7 @@
 
 - name: Update Grafana's Provisioning
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
         inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
@@ -24,7 +24,7 @@
 
 - name: Update Grafana's Dashboards
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
         inventory_dir + '/host_vars/' + inventory_hostname + '/files/dashboards/'

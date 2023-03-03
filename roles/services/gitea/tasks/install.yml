@@ -1,7 +1,7 @@
 ---
-- name: add dependencies
+- name: Add dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - git
       - default-mysql-server
@@ -11,14 +11,14 @@
 
 - name: Install python package dependencies
   become: true
-  pip:
+  ansible.builtin.pip:
     name:
       - mysqlclient
       - github3.py
 
-- name: create mysql gitea database
+- name: Create mysql gitea database
   become: true
-  mysql_db:
+  community.mysql.mysql_db:
     login_user: root
     name: giteadb
     encoding: utf8mb4
@@ -27,15 +27,15 @@
 
 - name: Create mysql user gitea with gitea database privileges
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Create user
       become: true
-      mysql_user:
+      community.mysql.mysql_user:
         login_user: root
         name: gitea
         password: "{{ gitea_sql_password }}"
@@ -50,7 +50,7 @@
 
 - name: Add user git
   become: true
-  user:
+  ansible.builtin.user:
     name: git
     groups: git
     comment: "Git Version Control"
@@ -58,7 +58,7 @@
     shell: /bin/bash
 
 - name: Get gitea latest tag
-  github_release:
+  community.general.github_release:
     user: go-gitea
     repo: gitea
     action: latest_release
@@ -67,11 +67,11 @@
 
 - name: Grab gitea latest binaries
   become: true
-  get_url:
+  ansible.builtin.get_url:
     # yamllint disable-line rule:line-length
-    url: https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64
+    url: https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v', '') }}-linux-amd64
     # yamllint disable-line rule:line-length
-    checksum: sha256:https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64.sha256
+    checksum: sha256:https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v', '') }}-linux-amd64.sha256
     dest: /usr/local/bin/gitea
     owner: git
     group: git
@@ -79,7 +79,7 @@
 
 - name: Create the gitea var folders
   become: true
-  file:
+  ansible.builtin.file:
     dest: "/var/lib/gitea/{{ item }}"
     owner: git
     group: git
@@ -92,7 +92,7 @@
 
 - name: Create the gitea /etc folder
   become: true
-  file:
+  ansible.builtin.file:
     dest: /etc/gitea
     owner: root
     group: git
@@ -101,15 +101,15 @@
 
 - name: Copy the app.ini file over
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Copy file
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/gitea.app.ini.j2'
@@ -121,7 +121,7 @@
 
 - name: Add Gitea service file
   become: true
-  copy:
+  ansible.builtin.copy:
     src: gitea.service
     dest: /etc/systemd/system/gitea.service
     owner: root
@@ -130,13 +130,13 @@
 
 - name: Enable and start Gitea service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: gitea
     enabled: true
     state: started
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "gitea_deployed"

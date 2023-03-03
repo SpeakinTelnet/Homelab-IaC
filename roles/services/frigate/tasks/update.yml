@@ -2,7 +2,7 @@
 
 - name: Copy docker-compose if changed
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
        inventory_dir + '/host_vars/' + inventory_hostname +
@@ -17,15 +17,15 @@
 
 - name: Copy config template if changed
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Copy file
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/frigate.yml.j2'
@@ -39,7 +39,7 @@
 
 - name: "Update docker service image"
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/frigate
     cmd: "docker compose pull"
   changed_when: true

@@ -2,15 +2,15 @@
 
 - name: Add Bookstack .env file
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Add file
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
           inventory_dir + '/host_vars/' + inventory_hostname + '/files/bookstack.env.j2'
@@ -26,7 +26,7 @@
 
 - name: Update bookstack configuration file
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
       inventory_dir + '/host_vars/' + inventory_hostname + '/files/bookstack.apache.conf'
@@ -40,7 +40,7 @@
 
 - name: Set Bookstack folder permission to allow git pull
   become: true
-  file:
+  ansible.builtin.file:
     dest: /var/www/bookstack
     owner: root
     group: root
@@ -60,7 +60,7 @@
 
 - name: Set Bookstack folder permission back to www-data
   become: true
-  file:
+  ansible.builtin.file:
     dest: /var/www/bookstack
     owner: www-data
     group: www-data

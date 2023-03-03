@@ -2,14 +2,14 @@
 
 - name: Restart mailcow
   become: true
-  command:
+  ansible.builtin.command:
     cmd: "docker compose --project-name {{ PROJECT_NAME }} restart"
     chdir: /opt/mailcow
   when: ansible_local.deployed is defined
 
 - name: Recreate mailcow
   become: true
-  command:
+  ansible.builtin.command:
     cmd: "{{ item }}"
     chdir: /opt/mailcow
   with_items:
@@ -19,7 +19,7 @@
 
 - name: Restart mailcow rspamd
   become: true
-  command:
+  ansible.builtin.command:
     cmd: "docker compose --project-name {{ PROJECT_NAME }} restart rspamd-mailcow"
     chdir: /opt/mailcow
   when: ansible_local.deployed is defined

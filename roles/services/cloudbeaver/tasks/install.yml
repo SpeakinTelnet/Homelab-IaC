@@ -2,21 +2,21 @@
 
 - name: Install CloudBeaver dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - python3-pip
 
 
 - name: Install CloudBeaver python package dependencies
   become: true
-  pip:
+  ansible.builtin.pip:
     name:
       - docker
 
 
 - name: Create the CloudBeaver container
   become: true
-  docker_container:
+  community.docker.docker_container:
     name: cloudbeaver
     restart_policy: unless-stopped
     image: dbeaver/cloudbeaver:latest
@@ -28,7 +28,7 @@
 
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "cloudbeaver_deployed"

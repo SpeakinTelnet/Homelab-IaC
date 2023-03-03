@@ -1,9 +1,11 @@
 ---
-- block:
-    - name: deploy Grafana
-      include_tasks: install.yml
+
+- name: Filter Grafana role
+  block:
+    - name: Deploy Grafana
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.grafana_deployed is undefined
 
-    - name: update Grafana
-      include_tasks: update.yml
+    - name: Update Grafana
+      ansible.builtin.include_tasks: update.yml
       when: ansible_local.grafana_deployed is defined

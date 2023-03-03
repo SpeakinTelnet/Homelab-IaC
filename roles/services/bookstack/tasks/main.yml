@@ -1,9 +1,11 @@
 ---
-- block:
-    - name: deploy Bookstack
-      include_tasks: install.yml
+
+- name: Filter Bookstack role
+  block:
+    - name: Deploy Bookstack
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.bookstack_deployed is undefined
 
-    - name: update Bookstack
-      include_tasks: update.yml
+    - name: Update Bookstack
+      ansible.builtin.include_tasks: update.yml
       when: ansible_local.bookstack_deployed is defined

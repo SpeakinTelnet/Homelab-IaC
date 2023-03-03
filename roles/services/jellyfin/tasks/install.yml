@@ -1,7 +1,7 @@
 ---
-- name: install Jellyfin dependencies
+- name: Install Jellyfin dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - curl
       - gnupg
@@ -13,10 +13,13 @@
     # yamllint disable-line rule:line-length
     url: "https://repo.jellyfin.org/{{ ansible_distribution | lower }}/jellyfin_team.gpg.key"
     dest: /etc/apt/trusted.gpg.d/jellyfin.asc
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Add Jellyfin APT sources
   become: true
-  template:
+  ansible.builtin.template:
     src: jellyfin.sources.j2
     dest: /etc/apt/sources.list.d/jellyfin.sources
     owner: root
@@ -25,20 +28,20 @@
 
 - name: Install Jellyfin
   become: true
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name: jellyfin
     state: latest
 
 - name: Start and Enable jellyfin service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: jellyfin
     enabled: true
     state: started
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "jellyfin_deployed"

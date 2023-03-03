@@ -1,7 +1,7 @@
 ---
 - name: Install Grafana dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - curl
       - gnupg
@@ -9,13 +9,16 @@
 
 - name: Add Grafana GPG key
   become: true
-  get_url:
+  ansible.builtin.get_url:
     url: "https://apt.grafana.com/gpg.key"
     dest: /etc/apt/trusted.gpg.d/grafana.key
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Add Grafana APT sources
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: >-
       deb [signed-by=/etc/apt/trusted.gpg.d/grafana.key]
        https://apt.grafana.com stable main
@@ -24,14 +27,14 @@
 
 - name: Install Grafana
   become: true
-  apt:
+  ansible.builtin.apt:
     name: grafana-enterprise
     update_cache: true
     state: latest
 
 - name: Change Grafana's provisioning folder
   become: true
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/grafana/grafana.ini
     regexp: "^;provisioning"
     line: "provisioning = /etc/grafana/provisioning"
@@ -39,7 +42,7 @@
 
 - name: Add Grafana's Provisioning
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
         inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
@@ -51,7 +54,7 @@
 
 - name: Add Grafana's Dashboards
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
         inventory_dir + '/host_vars/' + inventory_hostname + '/files/dashboards/'
@@ -64,13 +67,13 @@
 
 - name: Start and Enable Grafana service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: grafana-server
     enabled: true
     state: started
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "grafana_deployed"

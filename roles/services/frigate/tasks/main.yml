@@ -1,10 +1,11 @@
 ---
 
-- block:
-    - name: deploy Frigate
-      include_tasks: install.yml
+- name: Filter Frigate role
+  block:
+    - name: Deploy Frigate
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.frigate_deployed is undefined
 
-    - name: update Frigate
-      include_tasks: update.yml
+    - name: Update Frigate
+      ansible.builtin.include_tasks: update.yml
       when: ansible_local.frigate_deployed is defined

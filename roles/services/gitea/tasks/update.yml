@@ -1,6 +1,7 @@
 ---
+
 - name: Get Gitea latest tag
-  github_release:
+  community.general.github_release:
     user: go-gitea
     repo: gitea
     action: latest_release
@@ -9,11 +10,11 @@
 
 - name: Grab Gitea latest binaries
   become: true
-  get_url:
+  ansible.builtin.get_url:
     # yamllint disable-line rule:line-length
-    url: https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64
+    url: https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v', '') }}-linux-amd64
     # yamllint disable-line rule:line-length
-    checksum: sha256:https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v','') }}-linux-amd64.sha256
+    checksum: sha256:https://github.com/go-gitea/gitea/releases/download/{{ gitea_latest['tag'] }}/gitea-{{ gitea_latest['tag'] | regex_replace('^v', '') }}-linux-amd64.sha256
     dest: /usr/local/bin/gitea
     owner: git
     group: git
@@ -22,15 +23,15 @@
 
 - name: Copy the app.ini file over
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Copy file
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/gitea.app.ini.j2'

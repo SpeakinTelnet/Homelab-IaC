@@ -1,7 +1,7 @@
 ---
 - name: Restart nzbget service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: nzbget
     state: restarted
   listen: restart-nzbget

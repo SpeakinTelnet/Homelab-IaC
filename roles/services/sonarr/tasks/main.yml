@@ -1,5 +1,7 @@
 ---
-- block:
-    - name: deploy Sonarr
-      include_tasks: install.yml
+
+- name: Filter Sonarr role
+  block:
+    - name: Deploy Sonarr
+      ansible.builtin.include_tasks: install.yml
       when: ansible_local.sonarr_deployed is undefined

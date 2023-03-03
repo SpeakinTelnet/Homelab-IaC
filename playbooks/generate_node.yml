@@ -1,31 +1,33 @@
 ---
 
-- hosts: localhost
+- name: Create a Node folder template
+  hosts: localhost
   gather_facts: false
   tasks:
-    - block:
-        - name: create node folder
-          file:
+    - name: Create node if node name is provided
+      when: node_name is defined
+      block:
+        - name: Create node folder
+          ansible.builtin.file:
             mode: 0744
             path: "{{ base_dir }}/proxmox_nodes/{{ node_name }}"
             state: directory
             recurse: true
 
-        - name: create host var folders
-          copy:
+        - name: Create host var folders
+          ansible.builtin.copy:
             src: "{{ base_dir }}/global_files/node_template.yml"
             dest: "{{ base_dir }}/proxmox_nodes/{{ node_name }}/main.yml"
             force: false
             mode: 0744
 
-        - name: create host .token file
-          copy:
+        - name: Create host .token file  # noqa args[module]
+          ansible.builtin.copy:
             content: >-
               {{ 'node_token: CHANGEME' | ansible.builtin.vault(vault_secret) }}"
             dest: "{{ base_dir }}/proxmox_nodes/{{ node_name }}/.token"
             decrypt: false
             mode: 0744
-      when: node_name is defined
 
     - name: Node name is undefined
       ansible.builtin.fail:

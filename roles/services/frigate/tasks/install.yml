@@ -2,7 +2,7 @@
 
 - name: Create the frigate folders
   become: true
-  file:
+  ansible.builtin.file:
     dest: "{{ item }}"
     owner: root
     group: root
@@ -16,7 +16,7 @@
 
 - name: Copy docker-compose
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
        inventory_dir + '/host_vars/' + inventory_hostname +
@@ -30,15 +30,15 @@
 
 - name: Copy config template
   block:
-    - name: load secret variables
-      include_vars: >-
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
         {{
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
     - name: Copy file
       become: true
-      template:
+      ansible.builtin.template:
         src: >-
           {{
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/frigate.yml.j2'
@@ -51,7 +51,7 @@
 
 - name: Pull docker service image
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/frigate
     cmd: "docker compose pull"
   changed_when: true
@@ -59,7 +59,7 @@
 
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "frigate_deployed"

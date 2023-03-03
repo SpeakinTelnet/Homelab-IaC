@@ -1,7 +1,7 @@
 ---
 - name: Create the jellyseerr folder
   become: true
-  file:
+  ansible.builtin.file:
     dest: /opt/jellyseerr
     owner: root
     group: root
@@ -11,7 +11,7 @@
 
 - name: Copy docker-compose
   become: true
-  template:
+  ansible.builtin.template:
     src: >-
       {{
        inventory_dir + '/host_vars/' + inventory_hostname +
@@ -25,7 +25,7 @@
 
 - name: Pull docker service image
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/jellyseerr
     cmd: "docker compose pull"
   changed_when: true
@@ -33,7 +33,7 @@
 
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "jellyseerr_deployed"

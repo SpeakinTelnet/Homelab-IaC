@@ -1,7 +1,8 @@
 ---
+
 - name: Copy docker-compose if changed
   become: true
-  template:
+  ansible.builtin.template:
     src: >-
       {{
        inventory_dir + '/host_vars/' + inventory_hostname +
@@ -14,9 +15,9 @@
   notify: Start updated jellyseerr docker service
 
 
-- name: "Update docker service image"
+- name: Update docker service image
   become: true
-  command:
+  ansible.builtin.command:
     chdir: /opt/jellyseerr
     cmd: "docker compose pull"
   changed_when: true

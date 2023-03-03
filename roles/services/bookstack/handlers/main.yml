@@ -2,7 +2,7 @@
 
 - name: Process bookstack upgrade
   become: true
-  shell: |
+  ansible.builtin.shell: |
     composer install --no-dev --no-interaction
     php artisan migrate --no-interaction --force
     php artisan cache:clear --no-interaction
@@ -13,9 +13,9 @@
   changed_when: false
   listen: refresh_bookstack
 
-- name: restart bookstack apache service
+- name: Restart bookstack apache service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: apache2
     enabled: true
     state: restarted

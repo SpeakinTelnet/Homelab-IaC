@@ -1,8 +1,8 @@
 ---
 
-- name: install emqx dependencies
+- name: Install emqx dependencies
   become: true
-  apt:
+  ansible.builtin.apt:
     name:
       - curl
       - gnupg
@@ -11,13 +11,16 @@
 
 - name: Add emqx GPG key
   become: true
-  get_url:
+  ansible.builtin.get_url:
     url: "https://packages.emqx.com/emqx/emqx/gpgkey"
     dest: /etc/apt/trusted.gpg.d/emqx.asc
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Add emqx APT sources
   become: true
-  template:
+  ansible.builtin.template:
     src: emqx.sources.j2
     dest: /etc/apt/sources.list.d/emqx.sources
     owner: root
@@ -26,14 +29,14 @@
 
 - name: Install Emqx
   become: true
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name: emqx
     state: latest
 
 - name: Add Emqx configuration file
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
       inventory_dir + '/host_vars/' + inventory_hostname + '/files/emqx.conf'
@@ -45,13 +48,13 @@
 
 - name: Start and Enable emqx service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: emqx
     enabled: true
     state: started
 
 - name: Stamp as properly deployed
-  include_role:
+  ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
     stamp: "emqx_deployed"

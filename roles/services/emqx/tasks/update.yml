@@ -2,7 +2,7 @@
 
 - name: Add Emqx configuration file
   become: true
-  copy:
+  ansible.builtin.copy:
     src: >-
       {{
       inventory_dir + '/host_vars/' + inventory_hostname + '/files/emqx.conf'
@@ -16,7 +16,7 @@
 
 - name: Update Emqx
   become: true
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name: emqx
     state: latest

@@ -1,7 +1,8 @@
 ---
-- name: restart emqx service
+
+- name: Restart emqx service
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: emqx
     enabled: true
     state: restarted
