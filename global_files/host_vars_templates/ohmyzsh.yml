@@ -3,11 +3,12 @@
 
 ohmyzsh_theme: agnoster
 
+##################### Optional #####################
+
 ohmyzsh_plugins:
   - systemd
   - git
   - zsh-autosuggestions
-##################### Optional #####################
 
 #ohmyzsh_users:
 #  - user1
