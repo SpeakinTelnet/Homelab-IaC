@@ -33,6 +33,7 @@ Welcome to Homelab-IaC's documentation!
 
    addons/ftp_server
    addons/nfs_share
+   addons/ohmyzsh
    addons/samba_share
 
 Indices and tables

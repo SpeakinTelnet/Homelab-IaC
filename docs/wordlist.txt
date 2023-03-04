@@ -33,3 +33,6 @@ grafana
 ansible
 ons
 subnet
+zsh
+agnoster
+yml
