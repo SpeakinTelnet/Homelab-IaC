@@ -13,5 +13,3 @@ ansible_pubkey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEsOFNu85OS9zWMGWZsC0hUWPVz
 # default values, overwrite in specific group vars or host vars if needed
 default_lxc_image: "local:vztmpl/debian-11-standard_11.6-1_amd64.tar.zst"
 default_netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10"}'
-
-require_sysdresolved_restart: true

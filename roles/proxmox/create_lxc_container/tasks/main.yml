@@ -9,6 +9,7 @@
         - "{{ inventory_dir + '/../proxmox_nodes/' + node + '/main.yml' }}"
 
     - name: Create container
+      delegate_to: localhost
       community.general.proxmox:
         vmid: "{{ vmid }}"
         node: "{{ node }}"
@@ -29,7 +30,7 @@
         features: "{{ lxc_features | default(omit) }}"
         pubkey: "{{ node_ansible_pubkey }}"
         netif: "{{ netif_config | default(default_netif_config) }}"
-      delegate_to: localhost
+      register: start_lxc_container
 
     # ref https://bugzilla.proxmox.com/show_bug.cgi?id=2582
     - name: (root@pam workaround) Add custom lines to the file if not present
@@ -42,8 +43,9 @@
       loop_control:
         loop_var: line_text
       loop: "{{ additional_conf_lines | default([]) }}"
+      register: restart_lxc_container
 
-    - name: Start container
+    - name: Start or restart lxc container
       community.general.proxmox:
         vmid: "{{ vmid }}"
         node: "{{ node }}"
@@ -52,6 +54,12 @@
         api_user: ansible@pam
         api_token_id: "{{ node_token_id }}"
         api_token_secret: "{{ node_token }}"
-        state: started
+        state: >-
+          {%- if start_lxc_container.changed -%}
+            started
+          {%- elif restart_lxc_container.changed -%}
+            restarted
+          {%- else -%}
+            started
+          {%- endif -%}
       delegate_to: localhost
-      notify: Pause and Restart systemdresolved

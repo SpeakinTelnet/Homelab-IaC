@@ -3,24 +3,5 @@
 - name: Deploy the LXC containers that are not ping-able
   hosts: lxc
   gather_facts: false
-  tasks:
-    - name: Ping hosts to find those unreachable
-      ansible.builtin.ping:
-      register: connection_test
-      ignore_errors: true
-      ignore_unreachable: true
-
-    - name: Deploy and start lxc hosts
-      ansible.builtin.include_role:
-        name: proxmox/create_lxc_container
-      when:
-        connection_test.unreachable | default(false)
-
-    - name: Flush handlers
-      ansible.builtin.meta: flush_handlers
-
-    - name: Bootstrap lxc hosts
-      ansible.builtin.include_role:
-        name: proxmox/bootstrap_lxc_container
-      when:
-        connection_test.unreachable | default(false)
+  roles:
+    - proxmox/create_lxc_container
