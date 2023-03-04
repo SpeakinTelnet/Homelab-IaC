@@ -1,0 +1,17 @@
+[addons:children]
+nfs_share
+samba_share
+ftp_server
+ohmyzsh
+
+[nfs_share]
+
+
+[samba_share]
+
+
+[ftp_server]
+
+
+[ohmyzsh]
+testzsh.homelab

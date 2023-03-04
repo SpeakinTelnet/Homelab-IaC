@@ -1,7 +1,7 @@
 ---
 
-- name: Deploy all services based on LXC
-  hosts: lxc
+- name: Deploy all services
+  hosts: services
   strategy: free
   roles:
     - {role: services/bookstack, when: "'bookstack' in group_names"}
@@ -21,7 +21,7 @@
     - {role: services/sonarr, when: "'sonarr' in group_names"}
 
 - name: Deploy all add-ons
-  hosts: all
+  hosts: addons
   strategy: free
   roles:
     - {role: addons/nfs_share, when: "'nfs_share' in group_names "}
