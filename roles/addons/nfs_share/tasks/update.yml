@@ -23,3 +23,8 @@
   loop: "{{ nfs_shares | subelements('target') }}"
   notify:
     - reload nfs-kernel-server
+
+- name: Export the share
+  become: true
+  ansible.builtin.command: exportfs -rav
+  changed_when: false

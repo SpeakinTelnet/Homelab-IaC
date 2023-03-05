@@ -39,7 +39,12 @@
     line: "{{ item.0.path }} {{ item.1 }}({{ item.0.options }})"
   loop: "{{ nfs_shares | default([]) | subelements('target') }}"
   notify:
-    - reload nfs-kernel-server
+    - Reload nfs kernel server
+
+- name: Export the share
+  become: true
+  ansible.builtin.command: exportfs -rav
+  changed_when: false
 
 - name: Stamp as properly deployed
   ansible.builtin.include_role:

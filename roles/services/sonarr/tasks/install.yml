@@ -19,7 +19,7 @@
   become: true
   ansible.builtin.apt_repository:
     # yamllint disable-line rule:line-length
-    repo: "deb https://download.mono-project.com/repo/debian stable-buster main"
+    repo: "deb https://download.mono-project.com/repo/ubuntu stable-focal main"
     filename: mono-official-stable.list
 
 - name: Install Mediaarea from deb package
@@ -38,7 +38,7 @@
   become: true
   ansible.builtin.apt_repository:
     # yamllint disable-line rule:line-length
-    repo: "deb https://apt.sonarr.tv/debian buster main"
+    repo: "deb https://apt.sonarr.tv/ubuntu focal main"
     filename: sonarr
 
 - name: Install sonarr
