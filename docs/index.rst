@@ -1,6 +1,10 @@
 Welcome to Homelab-IaC's documentation!
 =======================================
 
+.. include:: ../README.rst
+    :start-after: .. readme-intro-start
+    :end-before: .. readme-basic-usage-start
+
 .. toctree::
    :maxdepth: 2
    :caption: Intro:

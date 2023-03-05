@@ -1,33 +1,67 @@
 SpeakinTelnet Homelab-IaC
 =========================
 
-Here lies my homelab's infrastructure as code (IaC) written in Ansible .
+Refer to the `full documentation <https://Homelab-IaC.readthedocs.io>`_ for in-depth 
+explanations.
 
-Usage
------
+.. readme-intro-start
 
-Refer to the `full documentation <https://Homelab-IaC.readthedocs.io>`_
-for the in-depth usage.
+Here lies my homelab's infrastructure as code (IaC) written in Ansible. I'm slowly
+updating my current setup to be more readable, re-usable, and publicly available.
+This here repository is but a blank slate. Another branch will be made available once
+I'm done sterilizing my personal setup so you can use it as a filled reference.
 
-.. readme-usage-start
+.. readme-basic-usage-start
+
+Basic Usage
+-----------
 
 Prerequisite
 ************
 
-* TODO
+For general usage:
+  * Ansible user with ssh-key login to the managed system.
+    This is auto-generated for lxc created with the provided playbook
+  * An ansible vault key. ``ansible.cfg`` uses ``<ansible_root_folder>/.vault_key`` per default.
 
-Basic Usage
-***********
+.. hint::
+    Use your favorite password generator to create a strong password  in the .vault_key file.
+    This key is used to encrypt the password/credentials/secrets for every services and host
+    that requires some.
 
-* TODO
+To auto-deploy lxc containers on proxmox:
+  * Ansible user with ssh-key login to the proxmox Host 
+  * Token with admin access to create and start the containers
 
-.. readme-usage-end
+
+Playbooks
+*********
+
+Multiple playbooks are provided to:
+
+  * Populate a local proxmox node folder for configuration and variables purpose.
+  * Populate various host_vars folders according to their appropriate services and add-ons. 
+  * Auto deploy LXC containers on proxmox
+  * Deploy and Update various services (e.g., Gitea, Grafana, Jellyfin, etc) 
+    and add-ons (e.g., oh-my-zsh, Samba, etc)
+  * Change user password across all hosts
+
+.. readme-basic-usage-end
+
+What's next
+-----------
+
+  * Add screenshots and other appealing stuff
+  * Continue to add services
+  * Add my whole blockchain deployment playbook (geth, nethermind, prysm, lodestar...) 
+  * Add other things to add
 
 Donate 
 ------
 
-I made this has a fun side project and it's free for anyone to use.
-If you like it and wish to donate here's a few of my crypto wallets. 
+If you want to support the work I've put in this repo here's a few of my crypto wallets.
+Just know that the best support you could give is a comment or heartfelt thanks so I know
+you appreciate it. 
 
 .. _tbl-grid:
 
