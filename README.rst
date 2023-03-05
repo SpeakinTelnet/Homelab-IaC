@@ -38,15 +38,15 @@ If you like it and wish to donate here's a few of my crypto wallets.
 | |EthereumQR|                           | |MoneroQR|                           | |PeercoinQR|                            |
 +----------------------------------------+--------------------------------------+-----------------------------------------+
 
-.. |EthereumQR| image:: https://raw.githubusercontent.com/SpeakinTelnet/Homelab-IaC/master/docs/_qrcodes/ethereum.png
+.. |EthereumQR| image:: https://raw.githubusercontent.com/SpeakinTelnet/SpeakinTelnet/master/img/_qrcodes/ethereum.png
   :width: 300
   :alt: EthereumQR
 
-.. |MoneroQR| image:: https://raw.githubusercontent.com/SpeakinTelnet/Homelab-IaC/master/docs/_qrcodes/monero.png
+.. |MoneroQR| image:: https://raw.githubusercontent.com/SpeakinTelnet/SpeakinTelnet/master/img/_qrcodes/monero.png
   :width: 300
   :alt: MoneroQR
 
-.. |PeercoinQR| image:: https://raw.githubusercontent.com/SpeakinTelnet/Homelab-IaC/master/docs/_qrcodes/peercoin.png
+.. |PeercoinQR| image:: https://raw.githubusercontent.com/SpeakinTelnet/SpeakinTelnet/master/img/_qrcodes/peercoin.png
   :width: 300
   :alt: PeerCoinQR
 
