@@ -15,6 +15,7 @@ Welcome to Homelab-IaC's documentation!
    playbooks/main
    playbooks/deploy_lxc
    playbooks/bootstrap_lxc
+   playbooks/change_password
 
 .. toctree::
    :maxdepth: 1
