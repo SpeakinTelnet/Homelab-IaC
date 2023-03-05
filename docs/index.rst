@@ -6,6 +6,7 @@ Welcome to Homelab-IaC's documentation!
    :caption: Intro:
 
    overview
+   preparation
 
 .. toctree::
    :maxdepth: 1
