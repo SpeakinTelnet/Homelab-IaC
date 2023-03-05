@@ -14,6 +14,7 @@ Welcome to Homelab-IaC's documentation!
 
    playbooks/main
    playbooks/deploy_lxc
+   playbooks/bootstrap_lxc
 
 .. toctree::
    :maxdepth: 1
