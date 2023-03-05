@@ -1,6 +1,6 @@
 ---
 
-- name: Deploy the LXC containers that are not ping-able
+- name: Bootstrap the LXC containers that are not ping-able
   hosts: lxc
   gather_facts: false
   tasks:
