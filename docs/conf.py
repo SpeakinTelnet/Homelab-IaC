@@ -20,7 +20,8 @@ spelling_show_suggestions = True
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx.ext.doctest',
-              'sphinxcontrib.spelling']
+              'sphinxcontrib.spelling',
+              'sphinx_copybutton']
 
 
 # -- File structure configuration ---------------------------------------------
