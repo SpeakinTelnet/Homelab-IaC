@@ -27,7 +27,11 @@
         disk: "{{ disk | default('local-lvm:5') }}"
         state: present
         storage: "{{ node_storage_for_lxc | default('local-lvm') }}"
-        features: "{{ lxc_features | default(omit) }}"
+        features: >-
+          {{
+          lxc_features |
+          default(lxc_unprivileged | default(true) | ternary('nesting=1', omit))
+          }}
         pubkey: "{{ node_ansible_pubkey }}"
         netif: "{{ netif_config | default(default_netif_config) }}"
       register: start_lxc_container

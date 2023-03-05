@@ -49,10 +49,25 @@
     group: root
     mode: 0440
 
-- name: Disallow SSH password authentication
+- name: Disallow SSH password authentication and root login
   become: true
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
-    regexp: "^PasswordAuthentication"
-    line: "PasswordAuthentication no"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
     state: present
+  loop:
+    - {regexp: "^.*PermitRootLogin", line: "PermitRootLogin no"}
+    - {regexp: "^.*PasswordAuthentication", line: "PasswordAuthentication no"}
+    - {regexp: "^.*PubkeyAuthentication", line: "PubkeyAuthentication yes"}
+    - {regexp: "^.*UsePam", line: "UsePam yes"}
+
+- name: Restart sshd to refresh the new config
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+  loop:
+    - sshd
+    - systemd-logind
