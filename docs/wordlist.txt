@@ -36,3 +36,9 @@ subnet
 zsh
 agnoster
 yml
+proxmox
+systemd
+sudoer
+conf
+netif
+username

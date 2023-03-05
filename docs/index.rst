@@ -10,6 +10,12 @@ Welcome to Homelab-IaC's documentation!
 
 .. toctree::
    :maxdepth: 1
+   :caption: Actions:
+
+   playbooks/main
+
+.. toctree::
+   :maxdepth: 1
    :caption: Service:
 
    services/bookstack
