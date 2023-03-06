@@ -1,7 +1,18 @@
 SpeakinTelnet Homelab-IaC
 =========================
 
-Refer to the `full documentation <https://Homelab-IaC.readthedocs.io>`_ for in-depth 
+.. image:: https://img.shields.io/badge/License-MIT-blue.svg
+   :target: https://lbesson.mit-license.org/
+
+.. image:: https://readthedocs.org/projects/homelab-iac/badge/?version=latest
+    :target: https://homelab-iac.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+.. image:: https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg
+   :target: https://www.sphinx-doc.org/
+
+
+Refer to the `full documentation <https://homelab-iac.readthedocs.io/en/latest/>`_ for in-depth 
 explanations.
 
 .. readme-intro-start
@@ -87,6 +98,6 @@ you appreciate it.
 .. readme-donate-end
 
 * Free software: MIT
-* Documentation: https://Homelab-IaC.readthedocs.io.
+* Documentation: https://homelab-iac.readthedocs.io/en/latest/
 
 ⊂(▀¯▀⊂)
