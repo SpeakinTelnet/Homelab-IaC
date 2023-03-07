@@ -9,7 +9,7 @@
 
 - name: Ensure group media exists
   become: true
-  ansible.builtin.ansible.builtin.group:
+  ansible.builtin.group:
     name: media
     state: present
 
