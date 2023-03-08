@@ -1,0 +1,6 @@
+---
+
+##################### Required #####################
+
+nzbget_control_username: homelab
+nzbget_restricted_control_username: automedia
