@@ -1,0 +1,17 @@
+---
+
+##################### Required #####################
+
+node: espeon
+vmid: 20201
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10,hwaddr=EE:D2:54:95:D1:34"}'
+
+core: 1
+
+disk: "local-lvm:10"
+
+additional_conf_lines:
+ - "mp0: /media/media,mp=/media/media"
