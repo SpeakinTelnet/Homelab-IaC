@@ -1,0 +1,7 @@
+---
+
+##################### Required #####################
+
+frigate_mqtt_host: hassos.homelab
+frigate_mqtt_port: 1883
+frigate_mqtt_user: beedrill

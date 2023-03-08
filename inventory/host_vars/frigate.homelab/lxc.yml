@@ -1,0 +1,19 @@
+---
+
+##################### Required #####################
+
+node: espeon
+vmid: 10106
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10,hwaddr=C2:A9:67:DF:36:90"}'
+
+core: 10
+
+disk: "local-lvm:10"
+
+memory: 10240
+
+additional_conf_lines:
+ - "mp0: /media/camera,mp=/media/camera"

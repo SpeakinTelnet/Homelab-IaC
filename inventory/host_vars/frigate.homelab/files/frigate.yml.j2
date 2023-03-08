@@ -1,0 +1,136 @@
+---
+
+mqtt:
+  host: {{ frigate_mqtt_host }}
+  port: {{ frigate_mqtt_port }}
+  user: {{ frigate_mqtt_user }}
+  password: {{ frigate_mqtt_password }}
+
+database:
+  path: /db/frigate.db
+
+detectors:
+  cpu1:
+    type: cpu
+  cpu2:
+    type: cpu
+  cpu3:
+    type: cpu
+
+ffmpeg:
+  input_args: -avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -flags low_delay -strict experimental -analyzeduration 1000M -probesize 1000M -rw_timeout 5000000
+  output_args:
+    record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c copy
+
+detect:
+  width: 896
+  height: 672
+  fps: 5
+ 
+record:
+  enabled: True
+  retain:
+    days: 5
+  events:
+    pre_capture: 20
+    post_capture: 20
+    objects:
+      - person
+      - car
+      - dog
+      - cat
+    retain:
+      default: 30
+
+rtmp:
+  enabled: True
+
+cameras:  
+  ARRIERE:   
+    ffmpeg:
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      inputs:
+        - path: rtmp://{{ frigate_camera1_user }}:{{ frigate_camera1_password }}@192.168.50.120/bcs/channel0_main.bcs?token={{ frigate_nvr_token }}&channel=0&stream=0&user={{ frigate_camera1_user }}&password={{ frigate_camera1_password }}
+          roles:
+            - record
+            - rtmp
+        - path: rtmp://{{ frigate_camera1_user }}:{{ frigate_camera1_password }}@192.168.50.120/bcs/channel0_ext.bcs?token={{ frigate_nvr_token }}&channel=0&stream=0&user={{ frigate_camera1_user }}&password={{ frigate_camera1_password }}
+          roles:
+            - detect
+    detect:
+      width: 896
+      height: 672
+      fps: 7
+
+  PATIO:   
+    ffmpeg:
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      inputs:
+        - path: rtmp://{{ frigate_camera2_user }}:{{ frigate_camera2_password }}@192.168.50.110/bcs/channel0_main.bcs?token={{ frigate_nvr_token }}&channel=0&stream=0&user={{ frigate_camera2_user }}&password={{ frigate_camera2_password }}
+          roles:
+            - record
+            - rtmp
+        - path: rtmp://{{ frigate_camera2_user }}:{{ frigate_camera2_password }}@192.168.50.110/bcs/channel0_ext.bcs?token={{ frigate_nvr_token }}&channel=0&stream=0&user={{ frigate_camera2_user }}&password={{ frigate_camera2_password }}
+          roles:
+            - detect
+    detect:
+      width: 896
+      height: 672
+      fps: 7
+  AVANT:   
+    ffmpeg:
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      inputs:
+        - path: rtmp://{{ frigate_camera3_user }}:{{ frigate_camera3_password }}@192.168.50.130/bcs/channel0_main.bcs?token={{ frigate_nvr_token }}&channel=0&stream=0&user={{ frigate_camera3_user }}&password={{ frigate_camera3_password }}
+          roles:
+            - record
+            - rtmp
+        - path: rtmp://{{ frigate_camera3_user }}:{{ frigate_camera3_password }}@192.168.50.130/bcs/channel0_ext.bcs?token={{ frigate_nvr_token }}&channel=0&stream=0&user={{ frigate_camera3_user }}&password={{ frigate_camera3_password }}
+          roles:
+            - detect
+    detect:
+      width: 896
+      height: 672
+      fps: 7
