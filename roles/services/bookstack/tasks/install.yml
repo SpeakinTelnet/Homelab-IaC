@@ -6,19 +6,19 @@
       - git
       - unzip
       - apache2
-      - php7.4
+      - php8.1
       - curl
       - composer
-      - php7.4-fpm
-      - php7.4-curl
-      - php7.4-mbstring
-      - php7.4-ldap
-      - php7.4-tidy
-      - php7.4-xml
-      - php7.4-zip
-      - php7.4-gd
-      - php7.4-mysql
-      - libapache2-mod-php7.4
+      - php8.1-fpm
+      - php8.1-curl
+      - php8.1-mbstring
+      - php8.1-ldap
+      - php8.1-tidy
+      - php8.1-xml
+      - php8.1-zip
+      - php8.1-gd
+      - php8.1-mysql
+      - libapache2-mod-php8.1
       - default-mysql-server
       - python3-dev
       - default-libmysqlclient-dev
@@ -117,7 +117,7 @@
     chdir: /var/www/bookstack/
   with_items:
     - "a2enmod rewrite"
-    - "a2enmod php7.4"
+    - "a2enmod php8.1"
   changed_when: false
 
 - name: Add Bookstack configuration file
