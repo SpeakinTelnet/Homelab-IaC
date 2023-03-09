@@ -1,5 +1,6 @@
 [lxc]
 frigate.homelab
+mailcow.homelab
 nzbget.homelab
 radarr.homelab
 sonarr.homelab
