@@ -1,4 +1,5 @@
 [lxc]
+bookstack.homelab
 frigate.homelab
 mailcow.homelab
 nzbget.homelab
