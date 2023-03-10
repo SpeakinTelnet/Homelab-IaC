@@ -1,0 +1,7 @@
+---
+
+##################### Required #####################
+
+ftp_users:
+  - homelab
+  - outofink

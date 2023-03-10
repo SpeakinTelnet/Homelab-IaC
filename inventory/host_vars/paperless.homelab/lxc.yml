@@ -1,0 +1,17 @@
+---
+
+##################### Required #####################
+
+node: espeon
+vmid: 10116
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10,hwaddr=F6:2D:63:E8:E9:B5"}'
+
+disk: "local-lvm:12"
+
+memory: 2048
+
+additional_conf_lines:
+ - "mp0: /media/backup/paperless/media,mp=/var/paperless/media"

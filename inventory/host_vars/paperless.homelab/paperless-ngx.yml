@@ -1,0 +1,7 @@
+---
+
+##################### Required #####################
+
+paperless_default_superuser: homelab
+
+paperless_default_superuser_email: paperless@mail.homelab
