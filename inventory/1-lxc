@@ -1,6 +1,7 @@
 [lxc]
 bookstack.homelab
 frigate.homelab
+jellyseerr.homelab
 mailcow.homelab
 nzbget.homelab
 paperless.homelab
