@@ -1,10 +1,15 @@
 ---
 
-- name: Update Nzbget package
+- name: Update Nzbget package and dependencies
   become: true
   ansible.builtin.apt:
-    name: nzbget
+    name: "{{ item }}"
     state: latest
+    update_cache: true
+    cache_valid_time: 1800
+  loop:
+    - unrar
+    - nzbget
   notify: restart-nzbget
 
 - name: Copy the config to remote if changed

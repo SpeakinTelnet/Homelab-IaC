@@ -1,10 +1,15 @@
 ---
 
-- name: Install Nzbget package
+- name: Install Nzbget package and dependencies
   become: true
   ansible.builtin.apt:
-    name: nzbget
+    name: "{{ item }}"
     state: latest
+    update_cache: true
+    cache_valid_time: 1800
+  loop:
+    - unrar
+    - nzbget
 
 - name: Ensure group media exists
   become: true
