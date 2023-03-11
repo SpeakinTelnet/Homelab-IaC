@@ -145,7 +145,7 @@
         content: >-
           {{ lookup('ansible.builtin.file',
             inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml')
-            | vault(vault_secret) }}"
+            | vault(vault_secret) }}
         dest: >-
           {{ inventory_dir }}/host_vars/{{ inventory_hostname }}/.credentials.yml
         mode: 0744
