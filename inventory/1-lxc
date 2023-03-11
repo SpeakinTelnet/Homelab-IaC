@@ -1,6 +1,7 @@
 [lxc]
 bookstack.homelab
 frigate.homelab
+gitea.homelab
 homepage.homelab
 jellyseerr.homelab
 mailcow.homelab

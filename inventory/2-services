@@ -11,7 +11,7 @@ bookstack.homelab
 frigate.homelab
 
 [gitea]
-
+gitea.homelab
 
 [grafana]
 
