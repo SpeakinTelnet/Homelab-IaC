@@ -1,0 +1,177 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/services
+
+- Media:
+    - Jellyfin:
+        icon: jellyfin
+        href: http://jellyfin.homelab:8096
+        ping: http://jellyfin.homelab:8096
+        description: Mediatheque
+        widget:
+            type: jellyfin
+            url: http://jellyfin.homelab:8096
+            key: {{ homepage_jellyfin_homelab_key }}
+    - Jellyseerr:
+        icon: jellyseerr
+        href: http://jellyseerr.homelab:5055
+        ping: http://jellyseerr.homelab:5055
+        description: App pour demande de media
+        widget:
+            type: jellyseerr
+            url: http://jellyseerr.homelab:5055
+            key: {{ homepage_jellyseerr_homelab_key }}
+    - Paperless:
+        icon: paperless-ng
+        href: http://paperless.homelab
+        ping: http://paperless.homelab
+        description: Archive de paperasse
+        widget:
+            type: paperlessngx
+            url: http://paperless.homelab
+            username: {{ homepage_paperless_homelab_username }}
+            password: {{ homepage_paperless_homelab_password }}
+    - Sonarr:
+        icon: sonarr
+        href: http://sonarr.homelab:8989
+        ping: http://sonarr.homelab:8989
+        description: Demande de series
+        widget:
+            type: sonarr
+            url: http://sonarr.homelab:8989
+            key: {{ homepage_sonarr_homelab_key }}
+    - Radarr:
+        icon: radarr
+        href: http://radarr.homelab:7878
+        ping: http://radarr.homelab:7878
+        description: Demande de films
+        widget:
+            type: radarr
+            url: http://radarr.homelab:7878
+            key: {{ homepage_radarr_homelab_key }}
+
+- Home Automation:
+    - HomeAssistant:
+        icon: home-assistant-circle
+        href: http://hassos.homelab:8123
+        ping: http://hassos.homelab:8123
+        description: Automatisation/Dashboard
+    - Mailcow:
+        icon: mailcow
+        href: http://mailcow.homelab/SOGo
+        ping: http://mailcow.homelab/SOGo
+        description: E-mail interne
+    - Frigate:
+        icon: frigate-light
+        href: http://frigate.homelab:5000
+        ping: http://frigate.homelab:5000
+        description: Camera de Surveillance
+    - Grafana:
+        icon: grafana
+        href: http://grafana.homelab:3000
+        ping: http://grafana.homelab:3000
+        description: Graphiques internes
+    - Bookstack:
+        icon: bookstack
+        href: http://bookstack.homelab
+        ping: http://bookstack.homelab
+        description: Wiki interne
+    - Octoprint:
+        icon: octoprint
+        href: http://octoprint.homelab
+        ping: http://octoprint.homelab
+        description: 3D printer management
+    
+- Download Management:
+    - Sabnzbd:
+        icon: nzbget
+        href: http://sabnzbd.homelab:8080
+        ping: http://sabnzbd.homelab:8080
+        description: usenet download manager
+        widget:
+            type: sabnzbd
+            url: http://sabnzbd.homelab:8080
+            key: {{ homepage_sabnzbd_homelab_api }}
+    - Prowlarr:
+        icon: prowlarr
+        href: http://prowlarr.homelab:9696
+        ping: http://prowlarr.homelab:9696
+        description: usenet newsgroup agregator
+        widget:
+            type: prowlarr
+            url: http://prowlarr.homelab:9696
+            key: {{ homepage_prowlarr_homelab_key }}
+    - Syncthing:
+        icon: syncthing
+        href: http://syncthing.homelab:8384
+        ping: http://syncthing.homelab:8384
+        description: Backup downloader
+
+- Server Management:
+    - OPNSense:
+        icon: opnsense
+        href: {{ homepage_opnsense_url }}
+        ping: {{ homepage_opnsense_url }}
+        description: Firewall/Router
+        widget:
+            type: opnsense
+            url: {{ homepage_opnsense_url }}
+            username: "{{ homepage_opnsense_username }}"
+            password: "{{ homepage_opnsense_password }}"
+    - MailCow-Admin:
+        icon: mailcow
+        href: http://mailcow.homelab
+        ping: http://mailcow.homelab
+        description: MailCow settings
+    - Gitea:
+        icon: gitea
+        href: http://10.1.10.120:3000
+        ping: http://10.1.10.120:3000
+        description: Version control software
+    - Grafana:
+        icon: grafana
+        href: http://grafana.homelab:3000
+        ping: http://grafana.homelab:3000
+        description: Monitoring
+    - CloudBeaver:
+        icon: cloudbeaver
+        href: http://cloudbeaver.homelab:8978
+        ping: http://cloudbeaver.homelab:8978
+        description: Database Management
+
+- hypervisor & KVM:
+    - Espeon:
+        icon: proxmox
+        href: https://espeon.homelab:8006
+        ping: https://espeon.homelab:8006
+        description: Proxmox-Espeon
+        widget:
+            type: proxmox
+            url: https://espeon.homelab:8006
+            username: "{{ homepage_espeon_username }}"
+            password: "{{ homepage_espeon_password }}"
+    - Espeon-KVM:
+        icon: supermicro
+        href: https://10.1.60.100
+        ping: https://10.1.60.100
+        description: Espeon server interface
+    - Umbreon:
+        icon: proxmox
+        href: https://umbreon.homelab:8006
+        ping: https://umbreon.homelab:8006
+        description: Proxmox-Umbreon
+        widget:
+            type: proxmox
+            url: https://umbreon.homelab:8006
+            username: "{{ homepage_umbreon_username }}"
+            password: "{{ homepage_umbreon_password }}"
+#    - Umbreon-KVM:
+#        icon: asus-light
+#        href: https://10.1.60.102/
+#        ping: https://10.1.60.102/
+#        description: Umbreon server interface
+    - Glaceon:
+        icon: proxmox
+        href: https://glaceon.homelab:8007
+        ping: https://glaceon.homelab:8007
+        description: Proxmox backup server
