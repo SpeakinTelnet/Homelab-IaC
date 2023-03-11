@@ -8,6 +8,7 @@
       - default-libmysqlclient-dev
       - build-essential
       - python3-pip
+      - pandoc
 
 - name: Install python package dependencies
   become: true
