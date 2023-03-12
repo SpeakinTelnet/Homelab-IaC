@@ -11,7 +11,7 @@
     group: "{{ item.group | default('nogroup') }}"
   with_items: "{{ nfs_shares | default([]) }}"
   notify:
-    - reload nfs-kernel-server
+    - Reload nfs kernel server
 
 - name: Configure NFS server
   become: true

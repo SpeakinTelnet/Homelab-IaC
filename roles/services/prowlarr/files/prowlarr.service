@@ -3,8 +3,8 @@ Description=Prowlarr Daemon
 After=syslog.target network.target
 
 [Service]
-User=prowlarr
-Group=media
+User=automedia
+Group=automedia
 Type=simple
 
 ExecStart=/opt/Prowlarr/Prowlarr -nobrowser -data=/var/lib/prowlarr/

@@ -7,17 +7,19 @@
       - curl
       - sqlite3
 
-- name: Ensure group media exists
+- name: Ensure group automedia exists
   become: true
   ansible.builtin.group:
-    name: media
+    gid: 6789
+    name: automedia
     state: present
 
-- name: Add user prowlarr and group media
+- name: Add user automedia
   become: true
   ansible.builtin.user:
-    name: prowlarr
-    groups: media
+    name: automedia
+    uid: 9876
+    groups: automedia
 
 - name: Add prowlarr to opt
   become: true
@@ -25,8 +27,8 @@
     # yamllint disable-line rule:line-length
     src: "http://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
     dest: /opt
-    owner: prowlarr
-    group: media
+    owner: automedia
+    group: automedia
     remote_src: true
     creates: /opt/Prowlarr
 
@@ -34,8 +36,8 @@
   become: true
   ansible.builtin.file:
     dest: /var/lib/prowlarr
-    owner: prowlarr
-    group: media
+    owner: automedia
+    group: automedia
     state: directory
     mode: 0744
 

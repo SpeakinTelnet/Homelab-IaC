@@ -11,17 +11,19 @@
     - unrar
     - nzbget
 
-- name: Ensure group media exists
+- name: Ensure group automedia exists
   become: true
   ansible.builtin.group:
-    name: media
+    gid: 6789
+    name: automedia
     state: present
 
-- name: Add user nzbget
+- name: Add user automedia
   become: true
   ansible.builtin.user:
-    name: nzbget
-    groups: media
+    name: automedia
+    uid: 9876
+    groups: automedia
 
 - name: Copy the service file on the remote
   become: true
@@ -36,8 +38,8 @@
   become: true
   ansible.builtin.file:
     dest: /etc/nzbget
-    owner: nzbget
-    group: media
+    owner: automedia
+    group: automedia
     state: directory
     mode: 0755
 
@@ -57,8 +59,8 @@
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/nzbget.conf.j2'
           }}
         dest: /etc/nzbget/nzbget.conf
-        owner: nzbget
-        group: media
+        owner: automedia
+        group: automedia
         mode: 0755
 
 - name: Start/Restart nzbget service

@@ -3,8 +3,8 @@ Description=Radarr Daemon
 After=syslog.target network.target
 
 [Service]
-User=radarr
-Group=media
+User=automedia
+Group=automedia
 Type=simple
 
 ExecStart=/opt/Radarr/Radarr -nobrowser -data=/var/lib/radarr/

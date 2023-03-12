@@ -28,7 +28,7 @@
            inventory_dir + '/host_vars/' + inventory_hostname + '/files/nzbget.conf.j2'
           }}
         dest: /etc/nzbget/nzbget.conf
-        owner: nzbget
-        group: media
+        owner: automedia
+        group: automedia
         mode: 0755
       notify: restart-nzbget

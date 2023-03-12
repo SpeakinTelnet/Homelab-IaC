@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=forking
-User=nzbget
-Group=media
+User=automedia
+Group=automedia
 ExecStart=/usr/bin/nzbget --daemon --configfile /etc/nzbget/nzbget.conf
 ExecReload=/usr/bin/nzbget --reload
 ExecStop=/usr/bin/nzbget --quit

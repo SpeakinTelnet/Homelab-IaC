@@ -8,6 +8,20 @@
       - gnupg
       - ca-certificates
 
+- name: Ensure group automedia exists
+  become: true
+  ansible.builtin.group:
+    gid: 6789
+    name: automedia
+    state: present
+
+- name: Add user automedia
+  become: true
+  ansible.builtin.user:
+    name: automedia
+    uid: 9876
+    groups: automedia
+
 - name: Add mono apt keys
   become: true
   ansible.builtin.apt_key:
@@ -47,6 +61,30 @@
     update_cache: true
     name: sonarr
     state: latest
+
+- name: Change user and group in sonarr service
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/system/sonarr.service
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+  loop:
+    - {regexp: "^User=", line: "User=automedia"}
+    - {regexp: "^Group=", line: "Group=automedia"}
+
+- name: Change ownership of sonarr folders
+  become: true
+  ansible.builtin.file:
+    path: /var/lib/sonarr
+    owner: automedia
+    group: automedia
+    recurse: true
+
+- name: Restart sonarr service
+  become: true
+  ansible.builtin.systemd:
+    name: sonarr.service
+    state: restarted
 
 - name: Stamp as properly deployed
   ansible.builtin.include_role:
