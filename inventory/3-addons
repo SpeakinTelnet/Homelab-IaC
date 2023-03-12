@@ -1,13 +1,14 @@
 [nfs_share]
-
+share.homelab
 
 [samba_share]
-
+share.homelab
 
 [ftp_server]
 paperless.homelab
 
 [ohmyzsh]
+share.homelab
 
 
 [prometheus]

@@ -1,0 +1,14 @@
+---
+
+##################### Required #####################
+
+# has to reflect the required users in the smb.conf file
+# passwords has to be added to the .credentials file as well
+samba_users:
+  - homelab
+
+# has to reflect the required share path in the smb.conf file
+samba_paths:
+  - /shareable/backup
+  - /shareable/media
+  - /shareable/camera

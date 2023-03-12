@@ -1,0 +1,22 @@
+---
+
+##################### Required #####################
+
+node: espeon
+vmid: 20205
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10,hwaddr=FE:5F:BE:DB:72:2D"}'
+
+core: 2
+
+disk: "local-lvm:10"
+
+memory: 4096
+
+additional_conf_lines:
+ - "mp0: /media/backup,mp=/shareable/backup"
+ - "mp1: /media/media,mp=/shareable/media"
+ - "mp2: /media/camera,mp=/shareable/camera"
+ - "features: mount=nfs;cifs,nesting=1"

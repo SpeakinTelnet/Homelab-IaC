@@ -1,0 +1,20 @@
+---
+
+##################### Required #####################
+
+nfs_shares:
+  - {
+    path: /shareable/backup,
+    options: "rw,no_root_squash,async,insecure,no_subtree_check",
+    target: ["10.1.10.1/24", "10.1.60.1/24"], 
+  }
+  - {
+    path: /shareable/media,
+    options: "rw,no_root_squash,async,insecure,no_subtree_check",
+    target: ["10.1.10.1/24", "10.1.60.1/24"],
+  }
+  - {
+    path: /shareable/camera,
+    options: "rw,no_root_squash,async,insecure,no_subtree_check",
+    target: ["10.1.10.1/24", "10.1.60.1/24"],
+  }
