@@ -1,44 +1,34 @@
 ---
 
 - name: Check if oh-my-zsh is installed
-  remote_user: "{{ user }}"
+  become: true
   ansible.builtin.stat:
-    path: ~/.oh-my-zsh
+    path: "~{{ user }}/.oh-my-zsh"
   register: ohmyzsh_folder
 
 - name: Execute the zsh-installer.sh
-  remote_user: "{{ user }}"
+  become: true
+  become_user: "{{ user }}"
   ansible.builtin.command: "/bin/sh /tmp/zsh-installer.sh --unattended"
   changed_when: false
   when: not ohmyzsh_folder.stat.exists
 
-- name: Write the ~/.zshrc file
-  remote_user: "{{ user }}"
-  ansible.builtin.lineinfile:
-    path: ~/.zshrc
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-    state: present
-  loop:
-    - {
-      regexp: "^ZSH_THEME=",
-      line: "{{ 'ZSH_THEME=\"' + ohmyzsh_theme + '\"' }}"
-    }
-    - {
-      regexp: "^plugins=",
-      line: "{{ 'plugins=(' + ohmyzsh_plugins | default([]) | join(' ') + ')' }}"
-    }
-    - {
-      regexp: "^DEFAULT_USER=",
-      line: "DEFAULT_USER=homelab"
-    }
-    - {
-      regexp: "prompt_context(){}",
-      line: "prompt_context(){}"
-    }
+- name: Copy the zshrc template
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.template:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/zshrc.j2'
+      }}
+    dest: "/home/{{ user }}/.zshrc"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0644
 
 - name: Create .bash_profile file
-  remote_user: "{{ user }}"
+  become: true
+  become_user: "{{ user }}"
   ansible.builtin.copy:
     content: |-
       export SHELL=/bin/zsh
@@ -48,7 +38,8 @@
     mode: 0744
 
 - name: Add auto-suggestions plugin
-  remote_user: "{{ user }}"
+  become: true
+  become_user: "{{ user }}"
   ansible.builtin.git:
     repo: https://github.com/zsh-users/zsh-autosuggestions.git
     dest: ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions

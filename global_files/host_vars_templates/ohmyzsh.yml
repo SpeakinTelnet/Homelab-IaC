@@ -1,14 +1,5 @@
 ---
-##################### Required #####################
-
-ohmyzsh_theme: agnoster
-
 ##################### Optional #####################
-
-ohmyzsh_plugins:
-  - systemd
-  - git
-  - zsh-autosuggestions
 
 #ohmyzsh_users:
 #  - user1

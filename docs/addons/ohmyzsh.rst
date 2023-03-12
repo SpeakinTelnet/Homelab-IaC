@@ -8,6 +8,9 @@ Oh-my-zsh
 
 For additional information see `oh-my-zsh official docs <https://github.com/ohmyzsh/ohmyzsh/wiki>`_
 
+.. note::
+    Includes a configuration file in the /host_vars folder
+
 Deployment Vars
 ---------------
 
@@ -18,14 +21,6 @@ None Required
 
 Host variables
 **************
-
-``ohmyzsh_theme``:
-    * Required
-    * Some themes requires manual installation
-
-``ohmyzsh_plugins``:
-    * Optional
-    * Some plugins requires manual installation
 
 ``ohmyzsh_users``:
     * Optional
