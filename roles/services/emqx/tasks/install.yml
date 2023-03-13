@@ -1,31 +1,10 @@
 ---
 
-- name: Install emqx dependencies
+- name: Add emqx Repository and Dependencies
   become: true
-  ansible.builtin.apt:
-    name:
-      - curl
-      - gnupg
-    update_cache: true
-    cache_valid_time: 1800
-
-- name: Add emqx GPG key
-  become: true
-  ansible.builtin.get_url:
-    url: "https://packages.emqx.com/emqx/emqx/gpgkey"
-    dest: /etc/apt/trusted.gpg.d/emqx.asc
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Add emqx APT sources
-  become: true
-  ansible.builtin.template:
-    src: emqx.sources.j2
-    dest: /etc/apt/sources.list.d/emqx.sources
-    owner: root
-    group: root
-    mode: 0644
+  ansible.builtin.script: install.sh
+  register: installstdout
+  failed_when: "'The repository is setup' not in installstdout.stdout"
 
 - name: Install Emqx
   become: true
@@ -51,7 +30,7 @@
   ansible.builtin.systemd:
     name: emqx
     enabled: true
-    state: started
+    state: restarted
 
 - name: Stamp as properly deployed
   ansible.builtin.include_role:
