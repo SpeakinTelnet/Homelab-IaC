@@ -5,7 +5,7 @@ bookstack.homelab
 
 
 [emqx]
-
+mqtt.homelab
 
 [frigate]
 frigate.homelab
