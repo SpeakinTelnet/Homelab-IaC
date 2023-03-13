@@ -2,7 +2,7 @@
 bookstack.homelab
 
 [cloudbeaver]
-
+cloudbeaver.homelab
 
 [emqx]
 mqtt.homelab
@@ -20,7 +20,7 @@ gitea.homelab
 homepage.homelab
 
 [jellyfin]
-
+jellyfin.homelab
 
 [jellyseerr]
 jellyseerr.homelab

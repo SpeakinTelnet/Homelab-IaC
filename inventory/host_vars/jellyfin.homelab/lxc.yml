@@ -1,0 +1,32 @@
+---
+
+##################### Required #####################
+
+node: espeon
+vmid: 10105
+
+##################### Optional #####################
+
+lxc_unprivileged: false
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10,hwaddr=BA:EB:51:E8:ED:77"}'
+
+core: 4
+
+disk: "local-lvm:50"
+
+memory: 4096
+
+additional_conf_lines:
+  - "mp0: /media/media,mp=/media/media"
+  - "lxc.cgroup2.devices.allow: c 195:* rw"
+  - "lxc.cgroup2.devices.allow: c 195:* rw"
+  - "lxc.cgroup2.devices.allow: c 195:* rw"
+  - "lxc.cgroup2.devices.allow: c 503:* rw"
+  - "lxc.cgroup2.devices.allow: c 503:* rw"
+  - "lxc.mount.entry: /dev/nvidia0 dev/nvidia0 none bind,optional,create=file"
+  - "lxc.mount.entry: /dev/nvidiactl dev/nvidiactl none bind,optional,create=file"
+  - "lxc.mount.entry: /dev/nvidia-uvm dev/nvidia-uvm none bind,optional,create=file"
+  - "lxc.mount.entry: /dev/nvidia-modeset dev/nvidia-modeset none bind,optional,create=file"
+  - "lxc.mount.entry: /dev/nvidia-uvm-tools dev/nvidia-uvm-tools none bind,optional,create=file"
+  - "lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir"

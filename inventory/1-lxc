@@ -1,8 +1,10 @@
 [lxc]
 bookstack.homelab
+cloudbeaver.homelab
 frigate.homelab
 gitea.homelab
 homepage.homelab
+jellyfin.homelab
 jellyseerr.homelab
 mailcow.homelab
 nzbget.homelab

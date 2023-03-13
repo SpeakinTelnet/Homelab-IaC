@@ -1,0 +1,14 @@
+---
+
+##################### Required #####################
+
+node: espeon
+vmid: 10130
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr1,tag=10,hwaddr=12:F6:29:34:A9:1A"}'
+
+core: 1
+
+disk: "local-lvm:10"
