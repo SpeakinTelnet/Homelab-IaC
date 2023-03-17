@@ -1,0 +1,15 @@
+[Unit]
+Description=AvalancheGo systemd service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=cryptobro
+WorkingDirectory=/var/lib/avalanchego
+ExecStart=/usr/local/bin/avalanchego --config-file=/var/lib/avalanchego/configs/node.json
+LimitNOFILE=32768
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

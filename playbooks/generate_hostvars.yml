@@ -15,7 +15,7 @@
 
 - name: Add host configuration files
   hosts: bookstack, emqx, frigate, gitea, grafana, jellyseerr, nzbget, paperless,
-    samba_share, ftp_server, homepage, ohmyzsh
+    samba_share, ftp_server, homepage, ohmyzsh, avalanchego
   gather_facts: false
   tasks:
     - name: Create host files folders
@@ -34,6 +34,7 @@
         force: false
         mode: 0744
       loop:
+        - "{{ 'avalanchego' if 'avalanchego' in group_names }}"
         - "{{ 'bookstack' if 'bookstack' in group_names }}"
         - "{{ 'emqx' if 'emqx' in group_names }}"
         - "{{ 'frigate' if 'frigate' in group_names }}"

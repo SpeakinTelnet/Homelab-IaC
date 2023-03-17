@@ -1,0 +1,7 @@
+---
+
+- name: Restart avalanchego service
+  become: true
+  ansible.builtin.systemd:
+    name: avalanchego
+    state: restarted

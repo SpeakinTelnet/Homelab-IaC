@@ -1,0 +1,7 @@
+{
+    "http-host": "127.0.0.1",
+    "api-admin-enabled": true,
+    "network-id": "mainnet",
+    "db-dir":"/var/lib/avalanchego/chain-data",
+    "public-ip-resolution-service":"opendns"
+}

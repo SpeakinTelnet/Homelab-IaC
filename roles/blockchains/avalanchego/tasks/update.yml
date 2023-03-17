@@ -1,0 +1,22 @@
+---
+
+- name: Update AvalancheGo
+  become: true
+  ansible.builtin.apt:
+    name: avalanchego
+    state: latest
+    update_cache: true
+  notify: Restart avalanchego service
+
+- name: Copy the Avalanche config file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/node.json'
+      }}
+    dest: /var/lib/avalanchego/configs/node.json
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart avalanchego service
