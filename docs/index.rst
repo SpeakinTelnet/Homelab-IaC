@@ -43,6 +43,12 @@ Welcome to Homelab-IaC's documentation!
 
 .. toctree::
    :maxdepth: 1
+   :caption: Blockchains:
+
+   blockchains/avalanchego
+
+.. toctree::
+   :maxdepth: 1
    :caption: Add-ons:
 
    addons/ftp_server
