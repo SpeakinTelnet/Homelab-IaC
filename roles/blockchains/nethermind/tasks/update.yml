@@ -1,0 +1,23 @@
+---
+
+- name: Update Nethermind
+  become: true
+  ansible.builtin.apt:
+    name: nethermind
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+  notify: Restart nethermind service
+
+- name: Copy nethermind's .env file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/nethermind.env'
+      }}
+    dest: /var/lib/nethermind/.env
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart nethermind service

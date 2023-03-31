@@ -1,0 +1,19 @@
+#jinja2: trim_blocks:False
+[Unit]
+Description=Nethermind client
+After=network.target
+
+[Service]
+User=cryptobro
+Group=cryptobro
+EnvironmentFile=/var/lib/nethermind/.env
+WorkingDirectory=/var/lib/nethermind
+Type=simple
+Restart=always
+ExecStart=/usr/share/nethermind/Nethermind.Runner   \
+          --datadir=/var/lib/nethermind/chain-data  \
+          --config {{ nethermind_base_config | default('mainnet') }}
+
+[Install]
+WantedBy=default.target
+

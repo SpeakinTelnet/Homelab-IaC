@@ -1,0 +1,103 @@
+---
+
+- name: Install Nethermind dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - gnupg
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Create user/group cryptobro
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    user_to_create: cryptobro
+    user_to_create_uid: 1337
+    group_to_create: cryptobro
+    group_to_create_gid: 1337
+
+- name: Create variable folders
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0755
+    state: directory
+  loop:
+    - /var/lib/nethermind
+    - /var/lib/nethermind/chain-data
+
+- name: Add Nethermind PPA repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:nethermindeth/nethermind
+
+- name: Install nethermind package
+  become: true
+  ansible.builtin.apt:
+    name: nethermind
+    state: latest
+    update_cache: true
+
+- name: Template the nethermind service file
+  become: true
+  ansible.builtin.template:
+    src: nethermind.service.j2
+    dest: /etc/systemd/system/nethermind.service
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+
+- name: Add nethermind jwt file
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create the jwt file
+      become: true
+      ansible.builtin.copy:
+        content: "{{ nethermind_jwt_secret }}"
+        dest: /var/lib/nethermind/jwt.hex
+        owner: cryptobro
+        group: cryptobro
+        mode: 0644
+      when: nethermind_jwt_secret is defined
+
+    - name: Add jwt line to nethermind service
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/system/nethermind.service
+        line: "          --JsonRpc.JwtSecretFile=/var/lib/nethermind/jwt.hex \\"
+        insertafter: "^.*--datadir="
+      when: nethermind_jwt_secret is defined
+
+- name: Copy nethermind's .env file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/nethermind.env'
+      }}
+    dest: /var/lib/nethermind/.env
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+
+- name: Start and enable Nethermind
+  become: true
+  ansible.builtin.systemd:
+    name: nethermind
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "nethermind_deployed"

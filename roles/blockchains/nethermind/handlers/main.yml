@@ -1,0 +1,7 @@
+---
+
+- name: Restart nethermind service
+  become: true
+  ansible.builtin.systemd:
+    name: nethermind
+    state: restarted
