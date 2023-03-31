@@ -50,3 +50,5 @@ Geth
 Besu
 Ethereum
 jwt
+prysm
+mainnet

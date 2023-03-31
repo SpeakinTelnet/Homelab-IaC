@@ -47,6 +47,7 @@ Welcome to Homelab-IaC's documentation!
 
    blockchains/avalanchego
    blockchains/lodestar
+   blockchains/nethermind
 
 .. toctree::
    :maxdepth: 1
