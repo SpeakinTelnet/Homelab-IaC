@@ -8,6 +8,9 @@ Lodestar
     Lodestar includes both `lodestar_beacon` and `lodestar_validator` inventory groups. The beacon can be
     ran as standalone, the validator can't
 
+.. warning::
+    Deployment of validator should be made *AFTER* the beacon node is fully synced
+
 Lodestar is an open-source Ethereum Consensus client and Typescript ecosystem, maintained by ChainSafe Systems
 
 For additional information see `Lodestar official docs <https://chainsafe.github.io/lodestar/>`_
