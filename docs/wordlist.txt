@@ -42,3 +42,11 @@ sudoer
 conf
 netif
 username
+json
+validator
+Erigon
+Nethermind
+Geth
+Besu
+Ethereum
+jwt

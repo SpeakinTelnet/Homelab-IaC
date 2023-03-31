@@ -46,6 +46,7 @@ Welcome to Homelab-IaC's documentation!
    :caption: Blockchains:
 
    blockchains/avalanchego
+   blockchains/lodestar
 
 .. toctree::
    :maxdepth: 1
