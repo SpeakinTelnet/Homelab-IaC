@@ -4,20 +4,20 @@ Preparation
 1. Populate your inventory
 --------------------------
 
-| First step is to populate the inventory using the provided ``.inventory/{addons, lxc, services}`` files.
+| First step is to populate the inventory using the provided ``.inventory/{1-lxc, 2-services, 3-addons, 4-blockchains}`` files.
 | Let's say you were to put ``testhost.homelab`` as follow:
 
 .. code-block:: ini
 
-    # .inventory/lxc
+    # .inventory/1-lxc
     [lxc]    
     testhost.homelab
 
-    # .inventory/services
+    # .inventory/2-services
     [gitea]
     testhost.homelab
 
-    # .inventory/addons
+    # .inventory/3-addons
     [ohmyzsh]
     testhost.homelab
 

@@ -1,20 +1,3 @@
-[services:children]
-bookstack
-cloudbeaver
-emqx
-frigate
-gitea
-grafana
-homepage
-jellyfin
-jellyseerr
-mailcow
-nzbget
-paperless
-prowlarr
-radarr
-sonarr
-
 [bookstack]
 
 
