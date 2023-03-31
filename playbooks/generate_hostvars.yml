@@ -17,6 +17,7 @@
   hosts: bookstack,
          emqx,
          frigate,
+         geth,
          gitea,
          grafana,
          jellyseerr,
@@ -52,6 +53,7 @@
         - "{{ 'emqx' if 'emqx' in group_names }}"
         - "{{ 'frigate' if 'frigate' in group_names }}"
         - "{{ 'ftp_server' if 'ftp_server' in group_names }}"
+        - "{{ 'geth' if 'geth' in group_names }}"
         - "{{ 'gitea' if 'gitea' in group_names }}"
         - "{{ 'grafana' if 'grafana' in group_names }}"
         - "{{ 'homepage' if 'homepage' in group_names }}"
@@ -67,6 +69,7 @@
 
 - name: Add host specific host_vars file
   hosts: frigate,
+         geth,
          mailcow,
          nfs_share,
          nzbget,
@@ -89,6 +92,7 @@
       loop:
         - "{{ 'frigate.yml' if 'frigate' in group_names }}"
         - "{{ 'ftp_server.yml' if 'ftp_server' in group_names }}"
+        - "{{ 'geth.yml' if 'geth' in group_names }}"
         - "{{ 'lxc.yml' if 'lxc' in group_names }}"
         - "{{ 'lodestar.yml' if 'lodestar' in group_names }}"
         - "{{ 'mailcow.yml' if 'mailcow' in group_names }}"
@@ -104,6 +108,7 @@
 - name: Add host specific .credentials file
   hosts: bookstack,
          frigate,
+         geth,
          nzbget,
          paperless,
          samba_share,
@@ -130,6 +135,7 @@
         - "{{ 'bookstack.credentials.yml.j2' if 'bookstack' in group_names }}"
         - "{{ 'frigate.credentials.yml.j2' if 'frigate' in group_names }}"
         - "{{ 'ftp_server.credentials.yml.j2' if 'ftp_server' in group_names }}"
+        - "{{ 'geth.credentials.yml.j2' if 'geth' in group_names }}"
         - "{{ 'homepage.credentials.yml.j2' if 'homepage' in group_names }}"
         - "{{ 'lodestar.credentials.yml.j2' if 'lodestar' in group_names }}"
         - "{{ 'nethermind.credentials.yml.j2' if 'nethermind' in group_names }}"

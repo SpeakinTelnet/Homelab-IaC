@@ -1,0 +1,7 @@
+---
+
+- name: Restart geth service
+  become: true
+  ansible.builtin.systemd:
+    name: geth
+    state: restarted

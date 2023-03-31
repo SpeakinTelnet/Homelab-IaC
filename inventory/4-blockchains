@@ -1,5 +1,7 @@
 [avalanchego]
 
+[geth]
+
 [lodestar_beacon]
 
 [lodestar_validator]

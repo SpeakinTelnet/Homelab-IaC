@@ -34,6 +34,7 @@
   strategy: free
   roles:
     - {role: blockchains/avalanchego, when: "'avalanchego' in group_names"}
+    - {role: blockchains/geth, when: "'geth' in group_names"}
     - {role: blockchains/lodestar, when: "'lodestar' in group_names"}
     - {role: blockchains/lodestar_beacon, when: "'lodestar_beacon' in group_names"}
     - {role: blockchains/lodestar_validator, when: "'lodestar_validator' in group_names"}

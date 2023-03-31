@@ -1,0 +1,26 @@
+---
+
+- name: Update Geth
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+  loop:
+    - ethereum
+    - geth
+  notify: Restart geth service
+
+- name: Copy the Geth config file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.toml'
+      }}
+    dest: /var/lib/geth/config.toml
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart geth service

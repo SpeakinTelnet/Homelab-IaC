@@ -6,6 +6,7 @@ ohmyzsh
 
 [blockchains:children]
 avalanchego
+geth
 lodestar
 nethermind
 
