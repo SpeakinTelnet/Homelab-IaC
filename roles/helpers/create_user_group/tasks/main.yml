@@ -1,0 +1,16 @@
+---
+
+- name: Create group {{ group_to_create }}
+  become: true
+  ansible.builtin.group:
+    name: "{{ group_to_create }}"
+    gid: "{{ group_to_create_gid }}"
+    state: present
+
+- name: Create user {{ user_to_create }}
+  become: true
+  ansible.builtin.user:
+    name: "{{ user_to_create }}"
+    uid: "{{ user_to_create_uid }}"
+    state: present
+    groups: "{{ group_to_create }}"
