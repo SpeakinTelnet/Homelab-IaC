@@ -34,3 +34,5 @@ inventory/host_vars/*
 # Ignore node variables for the blank branch
 proxmox_nodes/*
 !proxmox_nodes/.gitkeep
+**/.keys/*
+!**/.keys/.gitkeep

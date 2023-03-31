@@ -1,0 +1,22 @@
+[Unit]
+Description=Lodestar Beacon Node (Ethereum consensus client)
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+
+User=cryptobro
+Group=cryptobro
+WorkingDirectory=/opt/lodestar
+TimeoutSec=1200
+Restart=always
+
+ExecStart=/opt/lodestar/lodestar beacon \
+  --dataDir=/var/opt/lodestar/chain-data \
+  --network=mainnet \
+  --execution.urls=http://127.0.0.1:8551 \
+  --suggestedFeeRecipient=0x29006fd3a752c84c158217B182D8F60FeE565592 \
+  --jwt-secret=/var/opt/lodestar/jwt.hex

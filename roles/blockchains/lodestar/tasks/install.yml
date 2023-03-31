@@ -1,0 +1,103 @@
+---
+
+- name: Add nodejs PPA
+  become: true
+  ansible.builtin.script: nodejsppa.sh
+
+- name: Add lodestar dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - git
+      - nodejs
+
+- name: Install yarn node.js package globally.
+  become: true
+  community.general.npm:
+    name: yarn
+    global: true
+
+- name: Install python package dependencies
+  become: true
+  ansible.builtin.pip:
+    name:
+      - github3.py
+
+- name: Create group cryptobro
+  become: true
+  ansible.builtin.group:
+    name: cryptobro
+    gid: 1337
+    state: present
+
+- name: Create user cryptobro
+  become: true
+  ansible.builtin.user:
+    name: cryptobro
+    uid: 1337
+    state: present
+    groups: cryptobro
+
+- name: Create lodestar folders
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0755
+    state: directory
+  loop:
+    - /var/opt/lodestar
+    - /var/opt/lodestar/chain-data
+
+- name: Create lodestar jwt file
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create the file
+      become: true
+      ansible.builtin.copy:
+        content: "{{ lodestar_jwt_secret }}"
+        dest: /var/opt/lodestar/jwt.hex
+        owner: cryptobro
+        group: cryptobro
+        mode: 0644
+
+- name: Clone and set Lodestar repo permission
+  block:
+    - name: Clone lodestar git repo
+      become: true
+      ansible.builtin.git:
+        repo: "https://github.com/ChainSafe/lodestar.git"
+        version: "{{ lodestar_git_branch | default('stable') }}"
+        dest: /opt/lodestar
+        single_branch: true
+
+    - name: Set Lodestar folder permission
+      become: true
+      ansible.builtin.file:
+        dest: /opt/lodestar
+        owner: cryptobro
+        group: cryptobro
+        recurse: true
+
+- name: Install and build lodestar with Yarn
+  become: true
+  ansible.builtin.command: "{{ item }}"
+  loop:
+    - "yarn install --ignore-optional"
+    - "yarn build"
+  args:
+    chdir: /opt/lodestar
+  changed_when: false
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "lodestar_base_deployed"

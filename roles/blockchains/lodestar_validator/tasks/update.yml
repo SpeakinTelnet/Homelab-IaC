@@ -1,0 +1,45 @@
+---
+
+- name: Copy the lodestar validator file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/validator.service'
+      }}
+    dest: '/etc/systemd/system/lodestar-validator.service'
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart lodestar validator service
+
+- name: Create lodestar validator password file
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create the file
+      become: true
+      ansible.builtin.copy:
+        content: "{{ lodestar_validator_password }}"
+        dest: /var/opt/lodestar/validator/password.txt
+        owner: cryptobro
+        group: cryptobro
+        mode: 0644
+      notify: Restart lodestar validator service
+
+- name: Copy the lodestar validator keys over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/.keys'
+      }}
+    dest: '/var/opt/lodestar/validator/keys'
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart lodestar validator service

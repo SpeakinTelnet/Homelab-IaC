@@ -1,0 +1,10 @@
+---
+
+- name: Restart lodestar services
+  become: true
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: restarted
+  loop:
+    - "{{ 'lodestar-beacon' if 'lodestar_beacon' in group_names }}"
+    - "{{ 'lodestar-validator' if 'lodestar_validator' in group_names }}"

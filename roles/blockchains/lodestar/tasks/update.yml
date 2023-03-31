@@ -1,0 +1,58 @@
+---
+
+- name: Update lodestar to the latest version
+  block:
+    - name: Set Lodestar folder permission for pulling
+      become: true
+      ansible.builtin.file:
+        dest: /opt/lodestar
+        owner: root
+        group: root
+        recurse: true
+
+    - name: Clone lodestar git repo
+      become: true
+      ansible.builtin.git:
+        repo: "https://github.com/ChainSafe/lodestar.git"
+        version: "{{ lodestar_git_branch | default('stable') }}"
+        dest: /opt/lodestar
+      register: lodestar_needs_rebuilding
+      notify: Restart lodestar services
+
+    - name: Re-install and build lodestar with Yarn
+      become: true
+      ansible.builtin.command: "{{ item }}"
+      loop:
+        - "rm -rf node_modules/"
+        - "yarn install --ignore-optional"
+        - "yarn build"
+      args:
+        chdir: /opt/lodestar
+      changed_when: false
+      when: lodestar_needs_rebuilding.changed
+
+    - name: Set Lodestar folder permission
+      become: true
+      ansible.builtin.file:
+        dest: /opt/lodestar
+        owner: cryptobro
+        group: cryptobro
+        recurse: true
+
+- name: Recreate lodestar jwt file
+  notify: Restart lodestar services
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create the file
+      become: true
+      ansible.builtin.copy:
+        content: "{{ lodestar_jwt_secret }}"
+        dest: /var/opt/lodestar/jwt.hex
+        owner: cryptobro
+        group: cryptobro
+        mode: 0644

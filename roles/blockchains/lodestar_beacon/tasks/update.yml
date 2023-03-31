@@ -1,0 +1,14 @@
+---
+
+- name: Copy the Lodestar beacon service file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/beacon.service'
+      }}
+    dest: '/etc/systemd/system/lodestar-beacon.service'
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart lodestar services

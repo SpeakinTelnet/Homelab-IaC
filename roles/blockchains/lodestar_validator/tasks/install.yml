@@ -1,0 +1,64 @@
+---
+
+- name: Create the lodestar validator folder
+  become: true
+  ansible.builtin.file:
+    path: /var/opt/lodestar/validator
+    owner: cryptobro
+    group: cryptobro
+    mode: 0755
+    state: directory
+
+- name: Copy the lodestar validator service file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/validator.service'
+      }}
+    dest: '/etc/systemd/system/lodestar-validator.service'
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+
+- name: Copy the lodestar validator keys over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/.keys/'
+      }}
+    dest: '/var/opt/lodestar/validator/keys'
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+
+- name: Create lodestar validator password file
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create the file
+      become: true
+      ansible.builtin.copy:
+        content: "{{ lodestar_validator_password }}"
+        dest: /var/opt/lodestar/validator/password.txt
+        owner: cryptobro
+        group: cryptobro
+        mode: 0644
+
+- name: Start and enable Lodestar Beacon
+  become: true
+  ansible.builtin.systemd:
+    name: lodestar-validator
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "lodestar_validator_deployed"

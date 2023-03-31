@@ -1,0 +1,25 @@
+[Unit]
+Description=Lodestar Validator (Ethereum consensus client)
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+
+User=cryptobro
+Group=cryptobro
+WorkingDirectory=/opt/lodestar
+TimeoutSec=1200
+Restart=always
+
+RestartPreventExitStatus=129
+
+ExecStart=/opt/lodestar/lodestar validator \
+  --network=mainnet \
+  --dataDir=/var/opt/lodestar/chain-data \
+  --doppelgangerProtectionEnabled \
+  --suggestedFeeRecipient=0x29006fd3a752c84c158217B182D8F60FeE565592 \
+  --importKeystores=/var/opt/lodestar/validator/keys \
+  --importKeystoresPassword=/var/opt/lodestar/validator/password.txt
