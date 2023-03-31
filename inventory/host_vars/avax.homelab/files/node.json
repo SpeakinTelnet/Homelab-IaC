@@ -1,0 +1,7 @@
+{
+    "http-host": "0.0.0.0",
+    "api-admin-enabled": true,
+    "network-id": "mainnet",
+    "db-dir":"/var/lib/avalanchego/chain-data/avax",
+    "public-ip-resolution-service":"opendns"
+}

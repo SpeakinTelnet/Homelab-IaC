@@ -1,0 +1,21 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 960
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=32:31:A8:50:04:9C"}'
+
+core: 4
+
+disk: "local-lvm:20"
+
+memory: 20480
+
+swap: 4096
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/AVAX-Data,mp=/var/lib/avalanchego/chain-data"
