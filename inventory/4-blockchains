@@ -4,8 +4,10 @@ avax.homelab
 [geth]
 
 [lodestar_beacon]
+gnosis-cl.homelab
 
 [lodestar_validator]
+gnosis-cl.homelab
 
 [nethermind]
 

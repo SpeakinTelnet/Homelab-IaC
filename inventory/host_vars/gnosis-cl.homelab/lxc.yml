@@ -1,0 +1,19 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 940
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0"}'
+
+core: 4
+
+disk: "local-lvm:30"
+
+memory: 4096
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/XDAI-Data/lodestar,mp=/var/opt/lodestar/chain-data"
