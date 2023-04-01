@@ -1,0 +1,21 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 930
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=7A:D6:68:72:4D:C7"}'
+
+core: 6
+
+disk: "local-lvm:30"
+
+memory: 16384
+
+swap: 4096
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/XDAI-Data/gnosis,mp=/var/lib/nethermind/chain-data"

@@ -1,0 +1,6 @@
+---
+
+##################### Optional #####################
+
+# default to mainnet
+nethermind_base_config: gnosis
