@@ -11,7 +11,7 @@
     owner: cryptobro
     group: cryptobro
     mode: 0644
-  notify: Restart lodestar validator service
+  notify: Restart lodestar services
 
 - name: Create lodestar validator password file
   block:
@@ -29,7 +29,7 @@
         owner: cryptobro
         group: cryptobro
         mode: 0644
-      notify: Restart lodestar validator service
+      notify: Restart lodestar services
 
 - name: Copy the lodestar validator keys over
   become: true
@@ -42,4 +42,4 @@
     owner: cryptobro
     group: cryptobro
     mode: 0644
-  notify: Restart lodestar validator service
+  notify: Restart lodestar services
