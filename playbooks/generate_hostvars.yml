@@ -24,6 +24,7 @@
          nzbget,
          paperless,
          samba_share,
+         unattended_upgrades,
          ftp_server,
          homepage,
          ohmyzsh,
@@ -64,6 +65,7 @@
         - "{{ 'ohmyzsh' if 'ohmyzsh' in group_names }}"
         - "{{ 'paperless-ngx' if 'paperless' in group_names }}"
         - "{{ 'samba_share' if 'samba_share' in group_names }}"
+        - "{{ 'unattended_upgrades' if 'unattended_upgrades' in group_names }}"
       when: item | length > 0
 
 

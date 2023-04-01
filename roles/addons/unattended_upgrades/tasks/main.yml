@@ -1,0 +1,12 @@
+---
+
+- name: Filter unattended-upgrades role
+  block:
+
+    - name: Deploy unattended-upgrades
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.unattended_upgrades_deployed is undefined
+
+    - name: Update unattended-upgrades
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.unattended_upgrades_deployed is defined

@@ -1,0 +1,32 @@
+---
+
+- name: Update unattended-upgrades dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+  notify: Restart unattended upgrades
+
+- name: Upload unattended-upgrades config file
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - {
+      # yamllint disable-line rule:line-length
+      src: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/50unattended-upgrades.conf',
+      dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    }
+    - {
+      # yamllint disable-line rule:line-length
+      src: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/20auto-upgrades.conf',
+      dest: /etc/apt/apt.conf.d/20auto-upgrades
+    }
+  notify: Restart unattended upgrades

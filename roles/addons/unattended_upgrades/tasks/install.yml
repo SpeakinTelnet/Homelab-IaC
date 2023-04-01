@@ -1,0 +1,43 @@
+---
+
+- name: Install unattended-upgrades dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - unattended-upgrades
+    state: present
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Upload unattended-upgrades config file
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - {
+      # yamllint disable-line rule:line-length
+      src: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/50unattended-upgrades.conf',
+      dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    }
+    - {
+      # yamllint disable-line rule:line-length
+      src: '{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/files/20auto-upgrades.conf',
+      dest: /etc/apt/apt.conf.d/20auto-upgrades
+    }
+
+- name: Ensure unattended-upgrades services is enabled
+  become: true
+  ansible.builtin.service:
+    name: unattended-upgrades
+    state: restarted
+    enabled: true
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "unattended_upgrades_deployed"
