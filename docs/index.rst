@@ -58,6 +58,7 @@ Welcome to Homelab-IaC's documentation!
    addons/nfs_share
    addons/ohmyzsh
    addons/samba_share
+   addons/unattended_upgrades
 
 Indices and tables
 ==================
