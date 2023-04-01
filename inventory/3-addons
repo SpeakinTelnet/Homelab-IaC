@@ -21,4 +21,20 @@ share.homelab
 
 
 [unattended_upgrades]
-
+avax.homelab
+bookstack.homelab
+cloudbeaver.homelab
+frigate.homelab
+gitea.homelab
+gnosis-cl.homelab
+gnosis-el.homelab
+homepage.homelab
+jellyfin.homelab
+jellyseerr.homelab
+mailcow.homelab
+mqtt.homelab
+nzbget.homelab
+paperless.homelab
+prowlarr.homelab
+radarr.homelab
+sonarr.homelab

@@ -10,6 +10,7 @@ homepage.homelab
 jellyfin.homelab
 jellyseerr.homelab
 mailcow.homelab
+mqtt.homelab
 nzbget.homelab
 paperless.homelab
 prowlarr.homelab
