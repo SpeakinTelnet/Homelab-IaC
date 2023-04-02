@@ -1,0 +1,27 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 920
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=5A:D7:31:D3:86:F3"}'
+
+# lxc_image: "local:vztmpl/debian-11-standard_11.6-1_amd64.tar.zst"
+
+core: 4
+
+disk: "local-lvm:10"
+
+memory: 4096
+
+# swap: 1024
+
+# node_storage_for_lxc: "local-lvm"
+
+# features: nesting=1
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/ETH-Data/lodestar,mp=/var/opt/lodestar/chain-data"

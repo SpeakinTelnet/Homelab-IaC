@@ -4,6 +4,7 @@ avax.homelab
 [geth]
 
 [lodestar_beacon]
+ethereum-cl.homelab
 gnosis-cl.homelab
 
 [lodestar_validator]
