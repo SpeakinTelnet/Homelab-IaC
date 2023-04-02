@@ -4,3 +4,9 @@
 
 # default to mainnet
 # geth_network: mainnet
+
+# geth_custom_git_url: https://github.com/ethereum/go-ethereum.git
+# geth_custom_git_branch: master
+# geth_custom_git_additional_service_lines:
+#   - "--additional-line=this"
+#   - "--additional-line=that"

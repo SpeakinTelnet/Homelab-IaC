@@ -1,0 +1,17 @@
+[Unit]
+Description=Ethereum go client
+After=network.target
+
+[Service]
+User=cryptobro
+Group=cryptobro
+Type=simple
+Restart=always
+RestartSec=30s
+ExecStart=/opt/geth/build/bin/geth \
+          --datadir /var/opt/geth/chain-data \
+          --config /var/opt/geth/config.toml \
+          --{{ geth_network | default('mainnet') }}
+
+[Install]
+WantedBy=default.target

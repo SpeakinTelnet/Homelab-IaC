@@ -5,8 +5,20 @@
 
     - name: Deploy geth
       ansible.builtin.include_tasks: install.yml
-      when: ansible_local.geth_deployed is undefined
+      when: ansible_local.geth_deployed is undefined and
+            geth_custom_git_url is undefined
+
+    - name: Deploy geth from git
+      ansible.builtin.include_tasks: git_install.yml
+      when: ansible_local.geth_deployed is undefined and
+            geth_custom_git_url is defined
 
     - name: Update geth
       ansible.builtin.include_tasks: update.yml
-      when: ansible_local.geth_deployed is defined
+      when: ansible_local.geth_deployed is defined and
+            geth_custom_git_url is undefined
+
+    - name: Update geth from git
+      ansible.builtin.include_tasks: git_update.yml
+      when: ansible_local.geth_deployed is defined and
+            geth_custom_git_url is defined

@@ -1,0 +1,54 @@
+---
+
+- name: Update golang for geth
+  ansible.builtin.include_role:
+    name: helpers/install_golang
+
+- name: Update Geth to the latest version
+  block:
+    - name: Set Geth folder permission for pulling
+      become: true
+      ansible.builtin.file:
+        dest: /opt/geth
+        owner: root
+        group: root
+        recurse: true
+
+    - name: Clone Geth git repo
+      become: true
+      ansible.builtin.git:
+        repo: "{{ geth_custom_git_url }}"
+        version: "{{ geth_custom_git_branch | default('master') }}"
+        dest: /opt/geth
+      register: geth_needs_rebuilding
+      notify: Restart geth service
+
+    - name: Rebuild Geth
+      become: true
+      community.general.make:
+        chdir: /opt/geth
+        target: geth
+      environment:
+        PATH: /sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin
+      when: geth_needs_rebuilding.changed
+
+    - name: Set Geth folder permission
+      become: true
+      ansible.builtin.file:
+        dest: /opt/geth
+        owner: cryptobro
+        group: cryptobro
+        recurse: true
+
+- name: Copy the Geth config file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.toml'
+      }}
+    dest: /var/opt/geth/config.toml
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart geth service

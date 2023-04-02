@@ -27,3 +27,15 @@ Host variables
 ``geth_network``:
     * Optional, default to ``mainnet``
     * Refer to the official documentation for additional networks
+
+``geth_custom_git_url``:
+    * Optional
+    * Makes for Geth to be installed from git repository instead of PPA
+
+``geth_custom_git_branch``:
+    * Optional
+    * Applies only to git installed Geth
+
+``geth_custom_git_additional_service_lines``:
+    * Optional
+    * Applies only to git installed Geth
