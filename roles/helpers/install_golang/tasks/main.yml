@@ -1,0 +1,48 @@
+---
+
+- name: Try to get installed golang version
+  ansible.builtin.command: /usr/local/go/bin/go version
+  register: result
+  changed_when: false
+  ignore_errors: true
+
+- name: Get latest golang version
+  ansible.builtin.uri:
+    url: https://go.dev/VERSION?m=text
+    return_content: true
+  register: latest_golang_version
+
+- name: Set installed golang version
+  ansible.builtin.set_fact:
+    installed_golang_version: "{{ result.stdout.split(' ')[2] }}"
+  when: not result.failed
+
+- name: Remove previous version of golang
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/go
+    state: absent
+    recurse: true
+  when: not result.failed and
+        latest_golang_version.content != installed_golang_version
+
+- name: Download golang binary version {{ latest_golang_version.content }}
+  become: true
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: "https://dl.google.com/go/{{ latest_golang_version.content }}.linux-amd64.tar.gz"
+    dest: /usr/local
+    owner: root
+    group: root
+    remote_src: true
+  when: (
+          not result.failed and
+          latest_golang_version.content != installed_golang_version
+        ) or
+        result.failed
+
+- name: Add golang to global path
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: "PATH=$PATH:/usr/local/go/bin"
