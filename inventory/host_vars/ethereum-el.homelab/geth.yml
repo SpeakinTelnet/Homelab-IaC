@@ -1,0 +1,9 @@
+---
+
+##################### Optional #####################
+
+# default to mainnet
+# geth_network: mainnet
+
+geth_custom_git_url: https://github.com/0x2mev/mevexec.git
+geth_custom_git_branch: master

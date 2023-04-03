@@ -1,0 +1,21 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 910
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=26:84:BD:8A:AB:00"}'
+
+core: 8
+
+disk: "local-lvm:30"
+
+memory: 30720
+
+swap: 4096
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/ETH-Data/ethereum,mp=/var/opt/geth/chain-data"

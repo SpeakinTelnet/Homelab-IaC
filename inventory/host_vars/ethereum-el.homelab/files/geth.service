@@ -1,0 +1,19 @@
+[Unit]
+Description=Ethereum go client
+After=network.target
+
+[Service]
+User=cryptobro
+Group=cryptobro
+Type=simple
+Restart=always
+RestartSec=30s
+ExecStart=/usr/bin/geth \
+          --authrpc.jwtsecret /var/opt/geth/jwt.hex \
+          --datadir /var/lib/geth/chain-data \
+          --config /var/lib/geth/config.toml \
+          --cache 18432 \
+          --mainnet
+
+[Install]
+WantedBy=default.target
