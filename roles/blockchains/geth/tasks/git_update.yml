@@ -52,3 +52,36 @@
     group: cryptobro
     mode: 0644
   notify: Restart geth service
+
+- name: Copy the geth service file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/geth.service'
+      }}
+    dest: /etc/systemd/system/geth.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart geth service
+
+- name: Change /var/lib to /var/opt for git installed Geth
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/geth.service
+    replace: "{{ item.replace }}"
+    regexp: "{{ item.regexp }}"
+  loop:
+    - {
+      regexp: "--datadir /var/lib/",
+      replace: "--config /var/opt/"
+    }
+    - {
+      regexp: "--config /var/lib/",
+      replace: "--config /var/opt/"
+    }
+    - {
+      regexp: "/usr/bin/geth",
+      replace: "/opt/geth/build/bin/geth"
+    }

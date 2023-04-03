@@ -24,3 +24,16 @@
     group: cryptobro
     mode: 0644
   notify: Restart geth service
+
+- name: Copy the geth service file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/geth.service'
+      }}
+    dest: /etc/systemd/system/geth.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart geth service

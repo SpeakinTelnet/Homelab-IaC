@@ -11,8 +11,7 @@ RestartSec=30s
 ExecStart=/usr/bin/geth \
           --datadir /var/lib/geth/chain-data \
           --config /var/lib/geth/config.toml \
-          --{{ geth_network | default('mainnet') }}
-
+          --mainnet
 
 [Install]
 WantedBy=default.target

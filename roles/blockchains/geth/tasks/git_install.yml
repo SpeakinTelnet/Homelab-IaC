@@ -78,10 +78,13 @@
     group: cryptobro
     mode: 0644
 
-- name: Template the geth service file
+- name: Copy the geth service file over
   become: true
-  ansible.builtin.template:
-    src: geth_git.service.j2
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/geth.service'
+      }}
     dest: /etc/systemd/system/geth.service
     owner: root
     group: root
@@ -113,13 +116,25 @@
         insertafter: "^ExecStart"
       when: geth_jwt_secret is defined
 
-- name: Add custom lines to the geth service file
+- name: Change /var/lib to /var/opt for git installed Geth
   become: true
-  ansible.builtin.lineinfile:
+  ansible.builtin.replace:
     path: /etc/systemd/system/geth.service
-    line: "          {{ item }} \\"
-    insertafter: "^ExecStart"
-  loop: "{{ geth_custom_git_additional_service_lines | default([]) }}"
+    replace: "{{ item.replace }}"
+    regexp: "{{ item.regexp }}"
+  loop:
+    - {
+      regexp: "--datadir /var/lib/",
+      replace: "--config /var/opt/"
+    }
+    - {
+      regexp: "--config /var/lib/",
+      replace: "--config /var/opt/"
+    }
+    - {
+      regexp: "/usr/bin/geth",
+      replace: "/opt/geth/build/bin/geth"
+    }
 
 - name: Start and enable Geth
   become: true

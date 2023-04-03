@@ -54,10 +54,13 @@
     group: cryptobro
     mode: 0644
 
-- name: Template the geth service file
+- name: Copy the geth service file over
   become: true
-  ansible.builtin.template:
-    src: geth.service.j2
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/geth.service'
+      }}
     dest: /etc/systemd/system/geth.service
     owner: root
     group: root

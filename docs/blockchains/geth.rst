@@ -5,7 +5,8 @@ Geth
     :height: 150
 
 .. note::
-    Includes a configuration file in the /host_vars folder
+    Includes a configuration file and a service file in the /host_vars folder.
+    Some options are only available as a command line in the service file.
 
 Go-Ethereum (aka Geth) is an Ethereum client built in Go.
 
@@ -33,9 +34,5 @@ Host variables
     * Makes for Geth to be installed from git repository instead of PPA
 
 ``geth_custom_git_branch``:
-    * Optional
-    * Applies only to git installed Geth
-
-``geth_custom_git_additional_service_lines``:
-    * Optional
+    * Optional, default to ``master``
     * Applies only to git installed Geth
