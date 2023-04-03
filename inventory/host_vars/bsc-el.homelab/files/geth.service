@@ -1,0 +1,22 @@
+[Unit]
+Description=Ethereum go client
+After=network.target
+
+[Service]
+User=cryptobro
+Group=cryptobro
+Type=simple
+Restart=always
+RestartSec=30s
+ExecStart=/usr/bin/geth \
+          --datadir /var/lib/geth/chain-data \
+          --config /var/lib/geth/config.toml \
+          --tries-verify-mode=none \
+          --diffblock=5000 \
+          --diffsync \
+          --pipecommit \
+          --pruneancient=true \
+          --cache 25600
+
+[Install]
+WantedBy=default.target

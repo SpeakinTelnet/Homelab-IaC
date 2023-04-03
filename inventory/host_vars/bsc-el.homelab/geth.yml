@@ -1,0 +1,11 @@
+---
+
+##################### Optional #####################
+
+# default to mainnet
+# geth_network: mainnet
+
+geth_custom_git_url: http://gitea.homelab:3000/Gege/bsc-geth.git
+geth_custom_git_branch: master
+
+forced_golang_version: go1.19

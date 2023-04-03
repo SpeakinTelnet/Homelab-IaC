@@ -1,0 +1,70 @@
+[Eth]
+NetworkId = 56
+SyncMode = "full"
+NoPruning = false
+NoPrefetch = false
+TxLookupLimit = 0
+LightPeers = 0
+UltraLightFraction = 75
+TrieTimeout = 100000000000
+EnablePreimageRecording = false
+EWASMInterpreter = ""
+EVMInterpreter = ""
+RPCTxFeeCap = 0e+00
+
+[Eth.Miner]
+GasFloor = 30000000
+GasCeil = 40000000
+GasPrice = 1000000000
+Recommit = 10000000000
+Noverify = false
+
+[Eth.TxPool]
+Locals = []
+NoLocals = true
+Journal = "transactions.rlp"
+Rejournal = 3600000000000
+PriceLimit = 1000000000
+PriceBump = 10
+AccountSlots = 512
+GlobalSlots = 10000
+AccountQueue = 256
+GlobalQueue = 5000
+Lifetime = 10800000000000
+
+[Eth.GPO]
+Blocks = 20
+Percentile = 60
+OracleThreshold = 20
+
+[Node]
+IPCPath = "geth.ipc"
+HTTPHost = "0.0.0.0"
+InsecureUnlockAllowed = false
+HTTPPort = 8645
+HTTPVirtualHosts = ["0.0.0.0"]
+HTTPModules = ["eth", "net", "web3", "txpool", "admin"]
+WSPort = 8646
+WSHost = "0.0.0.0"
+WSModules = ["net", "web3", "eth"]
+
+[Node.P2P]
+MaxPeers = 500
+NoDiscovery = false
+BootstrapNodes = ["enode://1cc4534b14cfe351ab740a1418ab944a234ca2f702915eadb7e558a02010cb7c5a8c295a3b56bcefa7701c07752acd5539cb13df2aab8ae2d98934d712611443@52.71.43.172:30311","enode://28b1d16562dac280dacaaf45d54516b85bc6c994252a9825c5cc4e080d3e53446d05f63ba495ea7d44d6c316b54cd92b245c5c328c37da24605c4a93a0d099c4@34.246.65.14:30311","enode://5a7b996048d1b0a07683a949662c87c09b55247ce774aeee10bb886892e586e3c604564393292e38ef43c023ee9981e1f8b335766ec4f0f256e57f8640b079d5@35.73.137.11:30311"]
+StaticNodes = ["enode://ec23c796b2c27a9310645cd64140f15b8c9c7e3a30f7c3fc930ba56d4740018e6f37f463100714723330c3b63f894cdd63d69271c2135b66a4b0feae7832f895@52.69.9.248:30311","enode://e8a97e90dae05940a04a37ddad445b1d1f270e1a0ec1caf31f77ecd9a664db3c0f4750914afbb6f017d214ecef4a5f991b2f16987a76ec38ceb06f7f8f2f9f76@52.17.96.222:30311","enode://67f45bf2e2afe35b390fabffe5865038fe70911a0236e62870c73f06804362dd886354d1ff1f862d950c5e0b50e8a2d68b45be90c1c76ce98f7b87123fe05bcc@13.231.3.53:30311","enode://e071da3e6d4ef916c25901e976da90cfc5ec7de3269de09719637787778824da3186638a0f94c03ad90cdafeab32263f6f6cd9b0fbed67a744c25d38f67a5b5e@54.65.247.12:30311","enode://7ac95307b00962c6257574892fd4b53b38d6b6814aa1dec044539854ca507f2d2c8fbabfde98c5cbb3d2e86d6e7aaf417cc28ecaf403d24f69a9bccc3f818002@54.248.214.5:30311","enode://c753758ca72c55dd389c270d4f94dbb5ef6141649f0e3dabe515498378dde9c0363deb8614ad2568a8f020eb02de5eea41f9116eed735972be9ffa452a1ff242@54.81.254.21:30311","enode://09a0e9335b71f9269dcf099bc8ec071dbf04ac7ef67d95561b958621808bbdc91d5364e2d9769793afc63267d164d1ede6d6c84dc301c83363e038162a13dbaf@54.228.153.191:30311","enode://e421c47edc33d0d929e755196e92c8e7c26f24a38cc76dd17b0e78c304426e7e6d34e3f4e39f5dae1397c3cfac8238eb45533a62e118b183afd66b652fd1d03a@54.249.78.93:30311","enode://99445b85a78c36428e24058e859389920f3f79a3b88f599bfb2ddd407760ef8d117150bf39582d8f5db32766e13b2c8c499c3b77bd239c0a14c7d2655520438c@18.207.39.115:30311","enode://d971e77daf523ced2181d50d1efaa34dd2b18e6e0bbcd39104d4cfe103131df7907a7048e824a9aa49f8aecf49453935976d6cb872579a1227c86ebb9c018a59@52.68.82.0:30311","enode://77262afb46200f3e9b765096214b820fc580a0c1b50ada220019b46ac7e31e23f7d6662de41426cd51ccfb8a041d433e06307e091d4a2af3fb684c2dd1aa0edf@52.209.70.124:30311","enode://742a02a0d8612e6c4a3669f525a9a045e5c7b0d38ab728ca7086901c5f00b90cab8d796eff64dcfa516cff4e45591f8cb3a1e34277810f84e22ac72311c42cd8@52.21.104.255:30311","enode://0e8b399223f64479d5022b76e8f025214183d0a01b7f044a38a1844f57e9fe89d5da1fa04071758d0c39fe6afba4d5798703b4200a5078664c488129ff8239b7@18.207.56.184:30311","enode://2523b1dfdd9a70aa806fd558eebf7e6dbe90882178a4eb0325336277e415e44cef1aae8ecf494313f43b9eabae4416ac7b7281af027763af26cb821d63ae844e@54.247.157.151:30311"]
+ListenAddr = ":30302"
+EnableMsgEvents = false
+
+[Node.HTTPTimeouts]
+ReadTimeout = 30000000000
+WriteTimeout = 30000000000
+IdleTimeout = 120000000000
+
+#[Metrics]
+#HTTP = "127.0.0.1"
+#Port = 6060
+#InfluxDBEndpoint = "http://localhost:8086"
+#InfluxDBToken = ""
+#InfluxDBBucket = "geth"
+#InfluxDBOrganization = "geth"

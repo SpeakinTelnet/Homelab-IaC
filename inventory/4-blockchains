@@ -2,6 +2,7 @@
 avax.homelab
 
 [geth]
+bsc-el.homelab
 
 [lodestar_beacon]
 ethereum-cl.homelab

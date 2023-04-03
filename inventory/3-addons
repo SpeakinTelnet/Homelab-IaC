@@ -22,6 +22,7 @@ share.homelab
 
 [unattended_upgrades]
 avax.homelab
+bsc-el.homelab
 bookstack.homelab
 cloudbeaver.homelab
 ethereum-cl.homelab

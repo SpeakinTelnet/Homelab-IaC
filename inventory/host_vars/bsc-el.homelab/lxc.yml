@@ -1,0 +1,21 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 950
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=D6:F1:F3:10:A1:DC"}'
+
+core: 12
+
+disk: "local-lvm:30"
+
+memory: 32768
+
+swap: 4096
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/BSC-Data/bsc,mp=/var/opt/geth/chain-data"
