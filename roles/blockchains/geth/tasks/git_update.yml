@@ -75,7 +75,7 @@
   loop:
     - {
       regexp: "--datadir /var/lib/",
-      replace: "--config /var/opt/"
+      replace: "--datadir /var/opt/"
     }
     - {
       regexp: "--config /var/lib/",
