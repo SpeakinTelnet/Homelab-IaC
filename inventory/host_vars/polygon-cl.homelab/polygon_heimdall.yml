@@ -1,0 +1,6 @@
+---
+
+##################### Required #####################
+
+# Has to be either mainnet or mumbai
+heimdall_network: mainnet

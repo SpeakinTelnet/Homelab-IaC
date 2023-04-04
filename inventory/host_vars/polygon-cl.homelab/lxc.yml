@@ -1,0 +1,21 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 900
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=8A:E8:95:DD:E6:45"}'
+
+core: 4
+
+disk: "local-lvm:30"
+
+memory: 4096
+
+swap: 2048
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/POLYGON-Data/heimdall,mp=/var/lib/heimdall/data"

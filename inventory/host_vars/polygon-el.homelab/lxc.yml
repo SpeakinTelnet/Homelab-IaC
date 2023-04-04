@@ -1,0 +1,21 @@
+---
+
+##################### Required #####################
+
+node: umbreon
+vmid: 890
+
+##################### Optional #####################
+
+netif_config: '{"net0":"name=eth0,ip=dhcp,bridge=vmbr0,hwaddr=E2:58:51:6B:9A:93"}'
+
+core: 6
+
+disk: "local-lvm:30"
+
+memory: 16384
+
+swap: 4096
+
+additional_conf_lines:
+ - "mp0: /mnt/pve/POLYGON-Data/bor,mp=/var/opt/bor/chain-data"

@@ -1,0 +1,5 @@
+---
+
+##################### Optional #####################
+
+bor_custom_git_url: http://gitea.homelab:3000/Gege/polygon-bor.git
