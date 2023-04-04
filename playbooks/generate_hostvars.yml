@@ -23,6 +23,7 @@
          jellyseerr,
          nzbget,
          paperless,
+         polygon_bor,
          samba_share,
          unattended_upgrades,
          ftp_server,
@@ -64,6 +65,7 @@
         - "{{ 'nzbget' if 'nzbget' in group_names }}"
         - "{{ 'ohmyzsh' if 'ohmyzsh' in group_names }}"
         - "{{ 'paperless-ngx' if 'paperless' in group_names }}"
+        - "{{ 'polygon_bor' if 'polygon_bor' in group_names }}"
         - "{{ 'samba_share' if 'samba_share' in group_names }}"
         - "{{ 'unattended_upgrades' if 'unattended_upgrades' in group_names }}"
       when: item | length > 0

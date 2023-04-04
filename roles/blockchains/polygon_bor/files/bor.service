@@ -1,0 +1,16 @@
+[Unit]
+Description=Ethereum go client
+After=network.target
+
+[Service]
+User=cryptobro
+Group=cryptobro
+Type=simple
+Restart=always
+RestartSec=30s
+ExecStart=/usr/bin/bor server -config "/var/lib/bor/config.toml"
+KillSignal=SIGINT
+TimeoutStopSec=120
+ 
+[Install]
+WantedBy=default.target

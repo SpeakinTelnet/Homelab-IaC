@@ -40,3 +40,4 @@
     - {role: blockchains/lodestar_beacon, when: "'lodestar_beacon' in group_names"}
     - {role: blockchains/lodestar_validator, when: "'lodestar_validator' in group_names"}
     - {role: blockchains/nethermind, when: "'nethermind' in group_names"}
+    - {role: blockchains/polygon_bor, when: "'polygon_bor' in group_names"}

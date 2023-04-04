@@ -1,0 +1,29 @@
+---
+
+- name: Get Bor latest tag
+  community.general.github_release:
+    user: maticnetwork
+    repo: bor
+    action: latest_release
+  register: bor_latest
+  changed_when: false
+
+- name: Install latest Bor binaries from dep
+  become: true
+  ansible.builtin.apt:
+    # yamllint disable-line rule:line-length
+    deb: https://github.com/maticnetwork/bor/releases/download/{{ bor_latest['tag'] }}/bor-{{ bor_latest['tag'] }}-amd64.deb
+  notify: Restart bor service
+
+- name: Copy the Bor config file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.toml'
+      }}
+    dest: "/var/lib/bor/config.toml"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart bor service

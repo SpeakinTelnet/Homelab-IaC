@@ -1,0 +1,8 @@
+---
+
+- name: Restart bor service
+  become: true
+  ansible.builtin.systemd:
+    name: bor
+    state: restarted
+    daemon_reload: true

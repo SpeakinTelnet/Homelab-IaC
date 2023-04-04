@@ -10,6 +10,7 @@ avalanchego
 geth
 lodestar
 nethermind
+polygon_bor
 
 [lodestar:children]
 lodestar_beacon
