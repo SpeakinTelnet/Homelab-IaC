@@ -1,0 +1,111 @@
+---
+
+- name: Install Heimdalld dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - git
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Install python package dependencies
+  become: true
+  ansible.builtin.pip:
+    name:
+      - github3.py
+
+- name: Create user/group cryptobro
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    user_to_create: cryptobro
+    user_to_create_uid: 1337
+    group_to_create: cryptobro
+    group_to_create_gid: 1337
+
+- name: Get Heimdall latest tag
+  community.general.github_release:
+    user: maticnetwork
+    repo: heimdall
+    action: latest_release
+  register: heimdall_latest
+  changed_when: false
+
+- name: Install latest Heimdalld binaries from dep
+  become: true
+  ansible.builtin.apt:
+    # yamllint disable-line rule:line-length
+    deb: "https://github.com/maticnetwork/heimdall/releases/download/v0.3.2/heimdalld-v0.3.2-amd64.deb"
+
+- name: Initiate heimdall configuration
+  become: true
+  ansible.builtin.command: >-
+    /usr/bin/heimdalld init \
+    --chain={{ heimdall_network }} \
+    --home-client=/home/cryptobro/.heimdallcli \
+    --home /var/lib/heimdall
+  register: init_result
+  changed_when: true
+
+- name: Set folders permissions
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0755
+    recurse: true
+    state: directory
+  loop:
+    - /var/lib/heimdall
+    - /var/lib/heimdall/config
+    - /var/lib/heimdall/data
+
+- name: Copy the heimdall's config.toml file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.toml'
+      }}
+    dest: "/var/lib/heimdall/config/config.toml"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+
+- name: Template the heimdall's heimdall-config.toml file over
+  become: true
+  ansible.builtin.template:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/'
+        + inventory_hostname + '/files/heimdall-config.toml.j2'
+      }}
+    dest: "/var/lib/heimdall/config/heimdall-config.toml"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+
+- name: Template the heimdall's service file over
+  become: true
+  ansible.builtin.template:
+    src: heimdalld.service.j2
+    dest: "/etc/systemd/system/heimdalld.service"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable Heimdall
+  become: true
+  ansible.builtin.systemd:
+    name: heimdalld
+    enabled: true
+    state: restarted
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "heimdall_deployed"

@@ -11,6 +11,7 @@ geth
 lodestar
 nethermind
 polygon_bor
+polygon_heimdall
 
 [lodestar:children]
 lodestar_beacon

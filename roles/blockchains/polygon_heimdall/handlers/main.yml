@@ -1,0 +1,7 @@
+---
+
+- name: Restart heimdalld service
+  become: true
+  ansible.builtin.systemd:
+    name: heimdalld
+    state: restarted

@@ -1,0 +1,70 @@
+---
+
+- name: Get Heimdall latest tag
+  community.general.github_release:
+    user: maticnetwork
+    repo: heimdall
+    action: latest_release
+  register: heimdall_latest
+  changed_when: false
+
+- name: Get installed heimdalld version
+  ansible.builtin.command: /usr/bin/heimdalld version
+  register: result
+  changed_when: false
+  ignore_errors: true
+
+- name: Set installed heimdalld version
+  ansible.builtin.set_fact:
+    installed_heimdall_version: "v{{ result.stdout.split('\n')[0] }}"
+  when: not result.failed
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ item }}"
+  loop:
+    - "{{ installed_heimdall_version }}"
+    - "{{ heimdall_latest }}"
+
+- name: Update heimdalld if version changed
+  when: not result.failed and
+        heimdall_latest['tag'] != installed_heimdall_version
+  become: true
+  block:
+    - name: Remove previous package
+      ansible.builtin.command: "/usr/bin/dpkg -r heimdalld"
+      changed_when: false
+
+    - name: Install latest Heimdalld binaries from dep
+      become: true
+      ansible.builtin.apt:
+        # yamllint disable-line rule:line-length
+        deb: "https://github.com/maticnetwork/heimdall/releases/download/{{ heimdall_latest['tag'] }}/heimdalld-{{ heimdall_latest['tag'] }}-amd64.deb"
+      notify: Restart heimdalld service
+
+- name: Copy the heimdall's config.toml file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.toml'
+      }}
+    dest: "/var/lib/heimdall/config/config.toml"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart heimdalld service
+
+- name: Template the heimdall's heimdall-config.toml file over
+  become: true
+  ansible.builtin.template:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/'
+        + inventory_hostname + '/files/heimdall-config.toml.j2'
+      }}
+    dest: "/var/lib/heimdall/config/heimdall-config.toml"
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart heimdalld service
