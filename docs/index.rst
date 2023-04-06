@@ -50,6 +50,7 @@ Welcome to Homelab-IaC's documentation!
    blockchains/lodestar
    blockchains/nethermind
    blockchains/polygon-bor
+   blockchains/polygon-heimdall
 
 .. toctree::
    :maxdepth: 1
