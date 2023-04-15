@@ -22,7 +22,6 @@
   ansible.builtin.file:
     path: /usr/local/go
     state: absent
-    recurse: true
   when: not result.failed and
         latest_golang_version.content != installed_golang_version
 
