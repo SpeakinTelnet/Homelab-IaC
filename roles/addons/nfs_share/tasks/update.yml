@@ -22,7 +22,7 @@
     mode: '0644'
   loop: "{{ nfs_shares | subelements('target') }}"
   notify:
-    - reload nfs-kernel-server
+    - Reload nfs kernel server
 
 - name: Export the share
   become: true
