@@ -35,6 +35,7 @@ Welcome to Homelab-IaC's documentation!
    services/jellyfin
    services/jellyseerr
    services/mailcow
+   services/mattermost
    services/nzbget
    services/paperless
    services/prowlarr
