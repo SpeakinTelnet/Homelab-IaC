@@ -4,13 +4,13 @@
   become: true
   ansible.builtin.group:
     name: "{{ group_to_create }}"
-    gid: "{{ group_to_create_gid }}"
+    gid: "{{ group_to_create_gid | default(omit) }}"
     state: present
 
 - name: Create user {{ user_to_create }}
   become: true
   ansible.builtin.user:
     name: "{{ user_to_create }}"
-    uid: "{{ user_to_create_uid }}"
+    uid: "{{ user_to_create_uid | default(omit) }}"
     state: present
     groups: "{{ group_to_create }}"
