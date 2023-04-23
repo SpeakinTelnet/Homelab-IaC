@@ -1,0 +1,11 @@
+---
+
+- name: Filter Mattermost role
+  block:
+    - name: Deploy Mattermost
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.mattermost_deployed is undefined
+
+    - name: Update Mattermost
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.mattermost_deployed is defined

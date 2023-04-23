@@ -1,0 +1,129 @@
+---
+- name: Add dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - git
+      - default-mysql-server
+      - default-libmysqlclient-dev
+      - python3-pip
+
+- name: Install python package dependencies
+  become: true
+  ansible.builtin.pip:
+    name:
+      - mysqlclient
+      - github3.py
+
+- name: Create mysql mattermost database
+  become: true
+  community.mysql.mysql_db:
+    login_user: root
+    name: mattermost
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+    state: present
+
+- name: Create user/group mattermost
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    user_to_create: mattermost
+    group_to_create: mattermost
+
+- name: Get mattermost latest tag
+  community.general.github_release:
+    user: mattermost
+    repo: mattermost-server
+    action: latest_release
+  register: mattermost_latest
+  changed_when: false
+
+- name: Set version vars
+  ansible.builtin.set_fact:
+    mattermost_version: "{{ mattermost_latest['tag'] | regex_replace('^v', '') }}"
+
+- name: Grab mattermost latest binaries
+  become: true
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: https://releases.mattermost.com/{{ mattermost_version }}/mattermost-{{ mattermost_version }}-linux-amd64.tar.gz
+    dest: /opt
+    owner: mattermost
+    group: mattermost
+    mode: a+x
+    remote_src: true
+
+- name: Create the mattermost folders
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    owner: mattermost
+    group: mattermost
+    state: directory
+    mode: 0755
+  loop:
+    - /var/opt/mattermost/data
+    - /var/opt/mattermost/import
+    - /var/opt/mattermost/export
+    - /var/opt/mattermost/plugins
+    - /var/opt/mattermost/client/plugins
+    - /etc/opt/mattermost
+
+- name: Create mysql matter user and create the config file
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Create mysql user
+      become: true
+      community.mysql.mysql_user:
+        login_user: root
+        name: mmuser
+        password: "{{ mattermost_sql_password }}"
+        priv: "mattermost.*:ALL"
+        state: present
+
+    - name: Copy the configuration file over
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+            inventory_dir + '/host_vars/' +
+            inventory_hostname + '/files/mattermost_config.json.j2'
+          }}
+        dest: /etc/opt/mattermost/config.json
+        owner: mattermost
+        group: mattermost
+        mode: 0644
+
+- name: Add Mattermost service file
+  become: true
+  ansible.builtin.copy:
+    src: mattermost.service
+    dest: /etc/systemd/system/mattermost.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Allow mattermost on lower port 80
+  become: true
+  ansible.builtin.command:
+    cmd: setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
+  changed_when: false
+
+- name: Enable and start Mattermost service
+  become: true
+  ansible.builtin.systemd:
+    name: mattermost
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "mattermost_deployed"

@@ -21,6 +21,7 @@
          gitea,
          grafana,
          jellyseerr,
+         mattermost,
          nzbget,
          paperless,
          polygon_bor,
@@ -62,6 +63,7 @@
         - "{{ 'homepage' if 'homepage' in group_names }}"
         - "{{ 'jellyseerr' if 'jellyseerr' in group_names }}"
         - "{{ 'lodestar' if 'lodestar' in group_names }}"
+        - "{{ 'mattermost' if 'mattermost' in group_names }}"
         - "{{ 'nethermind' if 'nethermind' in group_names }}"
         - "{{ 'nzbget' if 'nzbget' in group_names }}"
         - "{{ 'ohmyzsh' if 'ohmyzsh' in group_names }}"
@@ -118,6 +120,7 @@
          frigate,
          geth,
          nzbget,
+         mattermost,
          paperless,
          samba_share,
          ftp_server,
@@ -146,6 +149,7 @@
         - "{{ 'geth.credentials.yml.j2' if 'geth' in group_names }}"
         - "{{ 'homepage.credentials.yml.j2' if 'homepage' in group_names }}"
         - "{{ 'lodestar.credentials.yml.j2' if 'lodestar' in group_names }}"
+        - "{{ 'mattermost.credentials.yml.j2' if 'mattermost' in group_names }}"
         - "{{ 'nethermind.credentials.yml.j2' if 'nethermind' in group_names }}"
         - "{{ 'nzbget.credentials.yml.j2' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.credentials.yml.j2' if 'paperless' in group_names }}"

@@ -1,0 +1,8 @@
+---
+
+- name: Restart mattermost service
+  become: true
+  ansible.builtin.systemd:
+    name: mattermost
+    state: restarted
+  listen: restart_mattermost

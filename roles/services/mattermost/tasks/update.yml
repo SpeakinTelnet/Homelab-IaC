@@ -1,0 +1,60 @@
+---
+
+- name: Get installed Mattermost version
+  ansible.builtin.command: /opt/mattermost/bin/mattermost version
+  register: result
+  changed_when: false
+
+- name: Get Mattermost latest tag
+  community.general.github_release:
+    user: mattermost
+    repo: mattermost-server
+    action: latest_release
+  register: mattermost_latest
+  changed_when: false
+
+- name: Set installed Mattermost version
+  ansible.builtin.set_fact:
+    installed_mattermost_version: "{{ result.stdout.split(' ')[1] }}"
+    latest_mattermost_version: "{{ mattermost_latest['tag'] | regex_replace('^v', '') }}"
+
+- name: Grab Mattermost latest binaries
+  become: true
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: https://releases.mattermost.com/{{ latest_mattermost_version }}/mattermost-{{ latest_mattermost_version }}-linux-amd64.tar.gz
+    dest: /opt
+    owner: mattermost
+    group: mattermost
+    mode: a+x
+    remote_src: true
+  notify: restart_mattermost
+  when: latest_mattermost_version != installed_mattermost_version
+
+- name: Copy the config file over
+  notify: restart_mattermost
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy the configuration file over
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+            inventory_dir + '/host_vars/' +
+            inventory_hostname + '/files/mattermost_config.json.j2'
+          }}
+        dest: /etc/opt/mattermost/config.json
+        owner: mattermost
+        group: mattermost
+        mode: 0644
+
+- name: Allow mattermost on lower port 80
+  become: true
+  ansible.builtin.command:
+    cmd: setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
+  changed_when: false

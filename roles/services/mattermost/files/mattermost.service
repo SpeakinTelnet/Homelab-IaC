@@ -1,0 +1,20 @@
+[Unit]
+Description=Mattermost
+After=network.target
+After=mysql.service
+BindsTo=mysql.service
+
+[Service]
+Type=notify
+ExecStart=/opt/mattermost/bin/mattermost -c /etc/opt/mattermost/config.json
+TimeoutStartSec=3600
+KillMode=mixed
+Restart=always
+RestartSec=10
+WorkingDirectory=/opt/mattermost
+User=mattermost
+Group=mattermost
+LimitNOFILE=49152
+
+[Install]
+WantedBy=mysql.service
