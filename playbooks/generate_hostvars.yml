@@ -86,6 +86,7 @@
          ftp_server,
          lxc,
          ohmyzsh,
+         polygon_bor,
          polygon_heimdall,
          lodestar,
          nethermind
@@ -110,6 +111,7 @@
         - "{{ 'nzbget.yml' if 'nzbget' in group_names }}"
         - "{{ 'ohmyzsh.yml' if 'ohmyzsh' in group_names }}"
         - "{{ 'paperless-ngx.yml' if 'paperless' in group_names }}"
+        - "{{ 'polygon_bor.yml' if 'polygon_bor' in group_names }}"
         - "{{ 'polygon_heimdall.yml' if 'polygon_heimdall' in group_names }}"
         - "{{ 'samba_share.yml' if 'samba_share' in group_names }}"
       when: item | length > 0

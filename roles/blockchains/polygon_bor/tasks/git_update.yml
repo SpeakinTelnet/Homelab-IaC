@@ -1,0 +1,74 @@
+---
+
+- name: Update golang for bor
+  ansible.builtin.include_role:
+    name: helpers/install_golang
+
+- name: Update Bor to the latest version
+  block:
+    - name: Set Bor folder permission for pulling
+      become: true
+      ansible.builtin.file:
+        dest: /opt/bor
+        owner: root
+        group: root
+        recurse: true
+
+    - name: Clone Bor git repo
+      become: true
+      ansible.builtin.git:
+        repo: "{{ bor_custom_git_url }}"
+        version: "{{ bor_custom_git_branch | default('master') }}"
+        dest: /opt/bor
+      register: bor_needs_rebuilding
+      notify: Restart bor service
+
+    - name: Rebuild Bor
+      become: true
+      community.general.make:
+        chdir: /opt/bor
+        target: bor
+      environment:
+        PATH: /sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/usr/local/go/bin
+      when: bor_needs_rebuilding.changed
+
+    - name: Set Bor folder permission
+      become: true
+      ansible.builtin.file:
+        dest: /opt/bor
+        owner: cryptobro
+        group: cryptobro
+        recurse: true
+
+- name: Copy the Bor config file over
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.toml'
+      }}
+    dest: /var/opt/bor/config.toml
+    owner: cryptobro
+    group: cryptobro
+    mode: 0644
+  notify: Restart bor service
+
+- name: Change /var/lib to /var/opt for git installed Bor
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/bor.service
+    replace: "{{ item.replace }}"
+    regexp: "{{ item.regexp }}"
+  loop:
+    - {
+      regexp: "--datadir /var/lib/",
+      replace: "--datadir /var/opt/"
+    }
+    - {
+      regexp: "--config /var/lib/",
+      replace: "--config /var/opt/"
+    }
+    - {
+      regexp: "/usr/bin/bor",
+      replace: "/opt/bor/build/bin/bor"
+    }

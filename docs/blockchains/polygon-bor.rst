@@ -17,4 +17,9 @@ For additional information see `Bor official repository <https://github.com/mati
 Deployment Vars
 ---------------
 
-None required
+Host variables
+**************
+
+``bor_custom_git_url``:
+    * Optional
+    * Makes for Bor to be installed from git repository instead of deb

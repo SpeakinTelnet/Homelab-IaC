@@ -5,8 +5,20 @@
 
     - name: Deploy Bor
       ansible.builtin.include_tasks: install.yml
-      when: ansible_local.bor_deployed is undefined
+      when: ansible_local.bor_deployed is undefined and
+            bor_custom_git_url is undefined
+
+    - name: Deploy Bor from git
+      ansible.builtin.include_tasks: git_install.yml
+      when: ansible_local.bor_deployed is undefined and
+            bor_custom_git_url is defined
 
     - name: Update Bor
       ansible.builtin.include_tasks: update.yml
-      when: ansible_local.bor_deployed is defined
+      when: ansible_local.bor_deployed is defined and
+            bor_custom_git_url is undefined
+
+    - name: Update Bor from git
+      ansible.builtin.include_tasks: git_update.yml
+      when: ansible_local.bor_deployed is defined and
+            bor_custom_git_url is defined
