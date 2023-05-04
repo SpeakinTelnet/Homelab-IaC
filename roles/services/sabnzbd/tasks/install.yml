@@ -9,14 +9,14 @@
     update_cache: true
     cache_valid_time: 1800
 
-- name: Create user/group cryptobro
+- name: Create user/group automedia
   ansible.builtin.include_role:
     name: helpers/create_user_group
   vars:
     user_to_create: automedia
-    user_to_create_uid: 6789
+    user_to_create_uid: 9876
     group_to_create: automedia
-    group_to_create_gid: 9876
+    group_to_create_gid: 6789
 
 - name: Add Sabnzbd repository
   become: true
