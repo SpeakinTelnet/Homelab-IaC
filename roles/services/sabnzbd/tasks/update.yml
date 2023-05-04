@@ -1,0 +1,31 @@
+---
+
+- name: Update Sabnzbd
+  become: true
+  ansible.builtin.apt:
+    name: sabnzbdplus
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+  notify: Restart sabnzbd service
+
+- name: Copy config template
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Template sabnzbd config file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.ini.j2'
+          }}
+        dest: /home/automedia/.sabnzbd/sabnzbd.ini
+        owner: automedia
+        group: automedia
+        mode: 0755
+      notify: Restart sabnzbd service

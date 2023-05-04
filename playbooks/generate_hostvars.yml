@@ -26,6 +26,7 @@
          paperless,
          polygon_bor,
          polygon_heimdall,
+         sabnzbd,
          samba_share,
          unattended_upgrades,
          ftp_server,
@@ -70,6 +71,7 @@
         - "{{ 'paperless-ngx' if 'paperless' in group_names }}"
         - "{{ 'polygon_bor' if 'polygon_bor' in group_names }}"
         - "{{ 'polygon_heimdall' if 'polygon_heimdall' in group_names }}"
+        - "{{ 'sabnzbd' if 'sabnzbd' in group_names }}"
         - "{{ 'samba_share' if 'samba_share' in group_names }}"
         - "{{ 'unattended_upgrades' if 'unattended_upgrades' in group_names }}"
       when: item | length > 0
@@ -124,6 +126,7 @@
          nzbget,
          mattermost,
          paperless,
+         sabnzbd,
          samba_share,
          ftp_server,
          homepage,
@@ -155,6 +158,7 @@
         - "{{ 'nethermind.credentials.yml.j2' if 'nethermind' in group_names }}"
         - "{{ 'nzbget.credentials.yml.j2' if 'nzbget' in group_names }}"
         - "{{ 'paperless-ngx.credentials.yml.j2' if 'paperless' in group_names }}"
+        - "{{ 'sabnzbd.credentials.yml.j2' if 'sabnzbd' in group_names }}"
         - "{{ 'samba_share.credentials.yml.j2' if 'samba_share' in group_names }}"
       when: item | length > 0
 

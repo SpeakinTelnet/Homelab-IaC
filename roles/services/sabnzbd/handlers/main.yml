@@ -1,0 +1,7 @@
+---
+
+- name: Restart sabnzbd service
+  become: true
+  ansible.builtin.systemd:
+    name: sabnzbdplus
+    state: restarted

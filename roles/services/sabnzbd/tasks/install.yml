@@ -1,0 +1,88 @@
+---
+
+- name: Install Sabnzbd dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - gnupg
+    state: latest
+    update_cache: true
+    cache_valid_time: 1800
+
+- name: Create user/group cryptobro
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    user_to_create: automedia
+    user_to_create_uid: 6789
+    group_to_create: automedia
+    group_to_create_gid: 9876
+
+- name: Add Sabnzbd repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:jcfp/nobetas
+
+- name: Install Sabnzbd package
+  become: true
+  ansible.builtin.apt:
+    name: sabnzbdplus
+    state: latest
+    update_cache: true
+
+- name: Create the Sabnzbd config folder
+  become: true
+  ansible.builtin.file:
+    dest: /home/automedia/.sabnzbd
+    owner: automedia
+    group: automedia
+    state: directory
+    mode: 0755
+
+
+- name: Copy config template
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Template sabnzbd config file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname + '/files/config.ini.j2'
+          }}
+        dest: /home/automedia/.sabnzbd/sabnzbd.ini
+        owner: automedia
+        group: automedia
+        mode: 0755
+
+- name: Modify the sabnzbd startup file
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/default/sabnzbdplus
+    regexp: "^USER="
+    line: "USER=automedia"
+    state: present
+
+- name: Enable Sabnzbd
+  become: true
+  ansible.builtin.systemd:
+    name: sabnzbdplus
+    enabled: true
+    daemon_reload: true
+
+- name: Restart Sabnzbd
+  become: true
+  ansible.builtin.systemd:
+    name: sabnzbdplus
+    state: restarted
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    stamp: "sabnzbd_deployed"
