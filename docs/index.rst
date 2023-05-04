@@ -40,6 +40,7 @@ Welcome to Homelab-IaC's documentation!
    services/paperless
    services/prowlarr
    services/radarr
+   services/sabnzbd
    services/sonarr
 
 .. toctree::

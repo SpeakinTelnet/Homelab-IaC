@@ -59,3 +59,4 @@ Matic
 Bor
 Blockchains
 Mattermost
+usenet
