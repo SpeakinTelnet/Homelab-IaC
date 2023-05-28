@@ -7,19 +7,14 @@
       - gnupg
       - ffmpeg
 
-- name: Ensure group automedia exists
-  become: true
-  ansible.builtin.group:
-    gid: 6789
-    name: automedia
-    state: present
-
-- name: Add user automedia
-  become: true
-  ansible.builtin.user:
-    name: automedia
-    uid: 9876
-    groups: automedia
+- name: Create user/group automedia
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    user_to_create: automedia
+    user_to_create_uid: 9876
+    group_to_create: automedia
+    group_to_create_gid: 6789
 
 - name: Add Jellyfin GPG key
   become: true
@@ -46,6 +41,31 @@
     update_cache: true
     name: jellyfin
     state: latest
+
+- name: Change user and group in jellyfin service
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/system/jellyfin.service
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+  loop:
+    - {regexp: "^User=", line: "User=automedia"}
+    - {regexp: "^Group=", line: "Group=automedia"}
+
+- name: Set Jellyfin folder permission
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    owner: automedia
+    group: automedia
+    recurse: true
+  loop:
+    - /usr/lib/jellyfin-ffmpeg/
+    - /usr/lib/jellyfin
+    - /var/cache/jellyfin
+    - /var/log/jellyfin
+    - /etc/jellyfin
+    - /var/lib/jellyfin
 
 - name: Start and Enable jellyfin service
   become: true
