@@ -49,6 +49,7 @@
         repo: "{{ bor_custom_git_url }}"
         version: "{{ bor_custom_git_branch | default('master') }}"
         dest: /opt/bor
+        accept_hostkey: true
 
     - name: Build Bor
       become: true
