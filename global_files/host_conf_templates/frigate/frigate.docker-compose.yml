@@ -5,7 +5,7 @@ services:
     container_name: frigate
     privileged: true  # this may not be necessary for all setups
     restart: unless-stopped
-    image: blakeblackshear/frigate:stable
+    image: ghcr.io/blakeblackshear/frigate:stable
     shm_size: "256mb"  # update for your cameras based on calculation above
     volumes:
       - /etc/localtime:/etc/localtime:ro
