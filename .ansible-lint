@@ -8,6 +8,7 @@ skip_list:
 exclude_paths:
   - ".readthedocs.yaml"
   - ".yamllint"
+  - ".vault_key"
   - "global_files/host_conf_templates/grafana/provisioning/"
   - "global_files/host_vars_templates/mailcow.yml"
   - "inventory/host_vars/**/.credentials.yml"
