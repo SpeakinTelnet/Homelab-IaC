@@ -72,4 +72,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "mailcow_deployed"
+    tag_host_stamp: "mailcow_deployed"

@@ -66,4 +66,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "samba_deployed"
+    tag_host_stamp: "samba_deployed"

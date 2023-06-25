@@ -23,7 +23,7 @@
       register: geth_needs_rebuilding
       notify: Restart geth service
 
-    - name: Rebuild Geth
+    - name: Rebuild Geth  # noqa no-handler
       become: true
       community.general.make:
         chdir: /opt/geth

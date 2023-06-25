@@ -15,7 +15,10 @@
 
 - name: Set Desired golang version
   ansible.builtin.set_fact:
-    latest_golang_version: "{{ lookup('vars','forced_golang_version') if (forced_golang_version is defined) else lookup('vars','latest_golang_version.content')}}"
+    latest_golang_version: >-
+      {{ lookup('vars', 'forced_golang_version')
+      if (forced_golang_version is defined)
+      else lookup('vars', 'latest_golang_version.content') }}
   when: forced_golang_version is defined
 
 - name: Set installed golang version

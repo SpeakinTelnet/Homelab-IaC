@@ -75,4 +75,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "nzbget_deployed"
+    tag_host_stamp: "nzbget_deployed"

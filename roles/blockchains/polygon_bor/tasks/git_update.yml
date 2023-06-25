@@ -23,7 +23,7 @@
       register: bor_needs_rebuilding
       notify: Restart bor service
 
-    - name: Rebuild Bor
+    - name: Rebuild Bor  # noqa no-handler
       become: true
       community.general.make:
         chdir: /opt/bor

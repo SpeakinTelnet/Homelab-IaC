@@ -28,8 +28,8 @@
   ansible.builtin.include_role:
     name: helpers/create_user_group
   vars:
-    user_to_create: mattermost
-    group_to_create: mattermost
+    create_user_group_user_name: mattermost
+    create_user_group_group_name: mattermost
 
 - name: Get mattermost latest tag
   community.general.github_release:
@@ -126,4 +126,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "mattermost_deployed"
+    tag_host_stamp: "mattermost_deployed"

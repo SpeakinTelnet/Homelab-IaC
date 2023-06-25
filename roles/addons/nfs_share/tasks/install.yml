@@ -50,4 +50,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "nfs_deployed"
+    tag_host_stamp: "nfs_deployed"

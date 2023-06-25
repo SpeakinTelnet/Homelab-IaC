@@ -62,4 +62,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "paperless_deployed"
+    tag_host_stamp: "paperless_deployed"

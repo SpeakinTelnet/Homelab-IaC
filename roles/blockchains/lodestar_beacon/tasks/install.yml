@@ -23,4 +23,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "lodestar_beacon_deployed"
+    tag_host_stamp: "lodestar_beacon_deployed"

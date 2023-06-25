@@ -90,4 +90,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "sonarr_deployed"
+    tag_host_stamp: "sonarr_deployed"

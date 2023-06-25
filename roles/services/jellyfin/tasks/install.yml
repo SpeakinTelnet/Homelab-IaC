@@ -11,10 +11,10 @@
   ansible.builtin.include_role:
     name: helpers/create_user_group
   vars:
-    user_to_create: automedia
-    user_to_create_uid: 9876
-    group_to_create: automedia
-    group_to_create_gid: 6789
+    create_user_group_user_name: automedia
+    create_user_group_uid: 9876
+    create_user_group_group_name: automedia
+    create_user_group_gid: 6789
 
 - name: Add Jellyfin GPG key
   become: true
@@ -78,4 +78,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "jellyfin_deployed"
+    tag_host_stamp: "jellyfin_deployed"

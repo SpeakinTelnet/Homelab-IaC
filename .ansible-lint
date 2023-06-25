@@ -1,4 +1,13 @@
+---
+
 skip_list:
   - '403'
   - 'role-name[path]'
   - 'run_once[play]'
+
+exclude_paths:
+  - ".readthedocs.yaml"
+  - ".yamllint"
+  - "global_files/host_conf_templates/grafana/provisioning/"
+  - "global_files/host_vars_templates/mailcow.yml"
+  - "inventory/host_vars/**/.credentials.yml"

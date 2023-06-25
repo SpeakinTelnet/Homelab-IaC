@@ -31,4 +31,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "cloudbeaver_deployed"
+    tag_host_stamp: "cloudbeaver_deployed"

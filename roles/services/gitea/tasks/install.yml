@@ -140,4 +140,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "gitea_deployed"
+    tag_host_stamp: "gitea_deployed"

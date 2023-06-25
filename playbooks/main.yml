@@ -2,7 +2,7 @@
 
 - name: Deploy all services
   hosts: services
-  strategy: free
+  strategy: free  # noqa: run-once[play]
   roles:
     - {role: services/bookstack, when: "'bookstack' in group_names"}
     - {role: services/cloudbeaver, when: "'cloudbeaver' in group_names"}
@@ -24,7 +24,7 @@
 
 - name: Deploy all add-ons
   hosts: addons
-  strategy: free
+  strategy: free  # noqa: run-once[play]
   roles:
     - {role: addons/nfs_share, when: "'nfs_share' in group_names "}
     - {role: addons/samba_share, when: "'samba_share' in group_names "}
@@ -34,7 +34,7 @@
 
 - name: Deploys all blockchain Infrastructure
   hosts: blockchains
-  strategy: free
+  strategy: free  # noqa: run-once[play]
   roles:
     - {role: blockchains/avalanchego, when: "'avalanchego' in group_names"}
     - {role: blockchains/geth, when: "'geth' in group_names"}

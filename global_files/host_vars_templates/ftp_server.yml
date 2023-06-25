@@ -10,5 +10,5 @@ ftp_users:
 ############### Optional
 
 # Uncomment these lines if your ftp folder in the config file is not the default one
-#ftp_paths:
-# - /var/ftp
+# ftp_paths:
+#  - /var/ftp

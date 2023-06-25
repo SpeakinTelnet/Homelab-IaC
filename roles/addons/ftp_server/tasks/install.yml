@@ -64,4 +64,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "ftp_deployed"
+    tag_host_stamp: "ftp_deployed"

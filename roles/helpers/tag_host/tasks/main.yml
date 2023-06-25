@@ -10,7 +10,7 @@
 - name: Add stamp tag
   become: true
   ansible.builtin.copy:
-    dest: "{{ '/etc/ansible/facts.d/' + stamp + '.fact' }}"
+    dest: "{{ '/etc/ansible/facts.d/' + tag_host_stamp + '.fact' }}"
     content: "true"
     force: false
     mode: 0644

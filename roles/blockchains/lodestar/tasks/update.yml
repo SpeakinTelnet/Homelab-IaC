@@ -19,7 +19,7 @@
       register: lodestar_needs_rebuilding
       notify: Restart lodestar services
 
-    - name: Re-install and build lodestar with Yarn
+    - name: Re-install and build lodestar with Yarn  # noqa no-handler
       become: true
       ansible.builtin.command: "{{ item }}"
       loop:

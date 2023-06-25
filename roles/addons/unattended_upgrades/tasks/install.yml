@@ -40,4 +40,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "unattended_upgrades_deployed"
+    tag_host_stamp: "unattended_upgrades_deployed"

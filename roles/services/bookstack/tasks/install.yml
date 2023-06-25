@@ -152,4 +152,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "bookstack_deployed"
+    tag_host_stamp: "bookstack_deployed"

@@ -20,10 +20,10 @@
   ansible.builtin.include_role:
     name: helpers/create_user_group
   vars:
-    user_to_create: cryptobro
-    user_to_create_uid: 1337
-    group_to_create: cryptobro
-    group_to_create_gid: 1337
+    create_user_group_user_name: cryptobro
+    create_user_group_uid: 1337
+    create_user_group_group_name: cryptobro
+    create_user_group_gid: 1337
 
 - name: Create variable folders
   become: true
@@ -83,4 +83,4 @@
   ansible.builtin.include_role:
     name: helpers/tag_host
   vars:
-    stamp: "bor_deployed"
+    tag_host_stamp: "bor_deployed"
