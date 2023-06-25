@@ -11,3 +11,4 @@ exclude_paths:
   - "global_files/host_conf_templates/grafana/provisioning/"
   - "global_files/host_vars_templates/mailcow.yml"
   - "inventory/host_vars/**/.credentials.yml"
+  - ".github/workflows/ansible-lint.yml"
