@@ -15,11 +15,12 @@
 
 - name: Set Desired golang version
   ansible.builtin.set_fact:
-    latest_golang_version: >-
-      {{ lookup('vars', 'forced_golang_version')
-      if (forced_golang_version is defined)
-      else lookup('vars', 'latest_golang_version.content') }}
-  when: forced_golang_version is defined
+    wanted_golang_version: >-
+      {{
+        forced_golang_version
+        if (forced_golang_version is defined)
+        else latest_golang_version.content
+      }}
 
 - name: Set installed golang version
   ansible.builtin.set_fact:
@@ -32,20 +33,20 @@
     path: /usr/local/go
     state: absent
   when: not result.failed and
-        latest_golang_version != installed_golang_version
+        wanted_golang_version != installed_golang_version
 
-- name: Download golang binary version {{ latest_golang_version }}
+- name: Download golang binary version {{ wanted_golang_version }}
   become: true
   ansible.builtin.unarchive:
     # yamllint disable-line rule:line-length
-    src: "https://dl.google.com/go/{{ latest_golang_version }}.linux-amd64.tar.gz"
+    src: "https://go.dev/dl/{{ wanted_golang_version }}.linux-amd64.tar.gz"
     dest: /usr/local
     owner: root
     group: root
     remote_src: true
   when: (
           not result.failed and
-          latest_golang_version != installed_golang_version
+          wanted_golang_version != installed_golang_version
         ) or
         result.failed
 
