@@ -123,6 +123,7 @@
   hosts: bookstack,
          frigate,
          geth,
+         grafana,
          nzbget,
          mattermost,
          paperless,
@@ -152,6 +153,7 @@
         - "{{ 'frigate.credentials.yml.j2' if 'frigate' in group_names }}"
         - "{{ 'ftp_server.credentials.yml.j2' if 'ftp_server' in group_names }}"
         - "{{ 'geth.credentials.yml.j2' if 'geth' in group_names }}"
+        - "{{ 'grafana.credentials.yml.j2' if 'grafana' in group_names }}"
         - "{{ 'homepage.credentials.yml.j2' if 'homepage' in group_names }}"
         - "{{ 'lodestar.credentials.yml.j2' if 'lodestar' in group_names }}"
         - "{{ 'mattermost.credentials.yml.j2' if 'mattermost' in group_names }}"

@@ -40,30 +40,57 @@
     line: "provisioning = /etc/grafana/provisioning"
     state: present
 
-- name: Add Grafana's Provisioning
+- name: Create the Grafana's provisioning folders
   become: true
-  ansible.builtin.copy:
-    src: >-
-      {{
-        inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
-      }}
-    dest: /etc/grafana/provisioning
-    mode: 0644
-    owner: root
-    group: grafana
-
-- name: Add Grafana's Dashboards
-  become: true
-  ansible.builtin.copy:
-    src: >-
-      {{
-        inventory_dir + '/host_vars/' + inventory_hostname + '/files/dashboards/'
-      }}
-    dest: /var/lib/grafana/dashboards
-    mode: 0755
+  ansible.builtin.file:
+    path: "{{ '/etc/grafana/provisioning/' + item }}"
     owner: grafana
     group: grafana
+    state: directory
+    mode: 0755
+  with_items:
+    - ""
+    - "access-control"
+    - "alerting"
+    - "dashboards"
+    - "datasources"
+    - "notifiers"
+    - "plugins"
 
+- name: Add Grafana's Provisioning
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Add Grafana's Provisioning
+      become: true
+      vars:
+        provisioning_folder: >-
+          {{
+            inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
+          }}
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: >-
+          {{
+            '/etc/grafana/provisioning/'
+            + item | dirname | regex_replace('.*/','')
+            + '/'
+            + item | basename | regex_replace('\.j2$', '')
+          }}
+        mode: 0644
+        owner: root
+        group: grafana
+      with_fileglob:
+        - "{{ provisioning_folder + 'access-control/*.j2' }}"
+        - "{{ provisioning_folder + 'alerting/*.j2' }}"
+        - "{{ provisioning_folder + 'dashboards/*.j2' }}"
+        - "{{ provisioning_folder + 'datasources/*.j2' }}"
+        - "{{ provisioning_folder + 'notifiers/*.j2' }}"
+        - "{{ provisioning_folder + 'plugins/*.j2' }}"
 
 - name: Start and Enable Grafana service
   become: true

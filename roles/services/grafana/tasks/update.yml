@@ -9,28 +9,38 @@
     cache_valid_time: 1800
   notify: restart-grafana
 
-- name: Update Grafana's Provisioning
-  become: true
-  ansible.builtin.copy:
-    src: >-
-      {{
-        inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
-      }}
-    dest: /etc/grafana/provisioning
-    mode: 0644
-    owner: root
-    group: grafana
-  notify: restart-grafana
+- name: Add Grafana's Provisioning
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
 
-- name: Update Grafana's Dashboards
-  become: true
-  ansible.builtin.copy:
-    src: >-
-      {{
-        inventory_dir + '/host_vars/' + inventory_hostname + '/files/dashboards/'
-      }}
-    dest: /var/lib/grafana/dashboards
-    mode: 0755
-    owner: grafana
-    group: grafana
-  notify: restart-grafana
+    - name: Add Grafana's Provisioning
+      become: true
+      vars:
+        provisioning_folder: >-
+          {{
+            inventory_dir + '/host_vars/' + inventory_hostname + '/files/provisioning/'
+          }}
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: >-
+          {{
+            '/etc/grafana/provisioning/'
+            + item | dirname | regex_replace('.*/','')
+            + '/'
+            + item | basename | regex_replace('\.j2$', '')
+          }}
+        mode: 0644
+        owner: root
+        group: grafana
+      with_fileglob:
+        - "{{ provisioning_folder + 'access-control/*.j2' }}"
+        - "{{ provisioning_folder + 'alerting/*.j2' }}"
+        - "{{ provisioning_folder + 'dashboards/*.j2' }}"
+        - "{{ provisioning_folder + 'datasources/*.j2' }}"
+        - "{{ provisioning_folder + 'notifiers/*.j2' }}"
+        - "{{ provisioning_folder + 'plugins/*.j2' }}"
+      notify: restart-grafana
