@@ -1,0 +1,53 @@
+---
+
+- name: Get installed Loki version
+  ansible.builtin.command: /opt/loki --version
+  register: result
+  changed_when: false
+
+- name: Get Loki latest tag
+  community.general.github_release:
+    user: grafana
+    repo: loki
+    action: latest_release
+  register: loki_latest
+  changed_when: false
+
+- name: Set installed Loki version
+  ansible.builtin.set_fact:
+    installed_loki_version: "{{ result.stdout.split(' ')[2] }}"
+    latest_loki_version: "{{ loki_latest['tag'] | regex_replace('^v', '') }}"
+
+- name: Grab Loki latest binaries
+  become: true
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: https://github.com/grafana/loki/releases/download/{{ loki_latest['tag'] }}/loki-linux-amd64.zip
+    dest: /opt
+    owner: loki
+    group: loki
+    mode: a+x
+    remote_src: true
+  notify: restart_loki
+  when: latest_loki_version != installed_loki_version
+
+- name: Copy the config file over
+  notify: restart_loki
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+- name: Add Loki config file
+  become: true
+  ansible.builtin.template:
+    src: >-
+      {{
+       inventory_dir + '/host_vars/' + inventory_hostname + '/files/loki-config.yml.j2'
+      }}
+    dest: /etc/loki/config.yml
+    owner: loki
+    group: loki
+    mode: 0755

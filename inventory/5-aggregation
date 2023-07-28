@@ -3,6 +3,7 @@ nfs_share
 samba_share
 ftp_server
 ohmyzsh
+loki
 unattended_upgrades
 
 [blockchains:children]

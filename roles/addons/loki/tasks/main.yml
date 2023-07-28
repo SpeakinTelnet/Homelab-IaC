@@ -1,0 +1,11 @@
+---
+
+- name: Filter Loki role
+  block:
+    - name: Deploy Loki
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.loki_deployed is undefined
+
+    - name: Update Loki
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.loki_deployed is defined

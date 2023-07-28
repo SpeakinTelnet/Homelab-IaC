@@ -21,6 +21,7 @@
          gitea,
          grafana,
          jellyseerr,
+         loki,
          mattermost,
          nzbget,
          paperless,
@@ -64,6 +65,7 @@
         - "{{ 'homepage' if 'homepage' in group_names }}"
         - "{{ 'jellyseerr' if 'jellyseerr' in group_names }}"
         - "{{ 'lodestar' if 'lodestar' in group_names }}"
+        - "{{ 'loki' if 'loki' in group_names }}"
         - "{{ 'mattermost' if 'mattermost' in group_names }}"
         - "{{ 'nethermind' if 'nethermind' in group_names }}"
         - "{{ 'nzbget' if 'nzbget' in group_names }}"
