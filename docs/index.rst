@@ -59,6 +59,7 @@ Welcome to Homelab-IaC's documentation!
    :caption: Add-ons:
 
    addons/ftp_server
+   addons/loki
    addons/nfs_share
    addons/ohmyzsh
    addons/samba_share
