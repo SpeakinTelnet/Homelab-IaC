@@ -14,7 +14,7 @@ frigate.homelab
 gitea.homelab
 
 [grafana]
-
+grafana.homelab
 
 [homepage]
 homepage.homelab

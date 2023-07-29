@@ -9,6 +9,7 @@ frigate.homelab
 gitea.homelab
 gnosis-cl.homelab
 gnosis-el.homelab
+grafana.homelab
 homepage.homelab
 jellyfin.homelab
 jellyseerr.homelab

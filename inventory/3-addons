@@ -18,7 +18,7 @@ share.homelab
 
 
 [loki]
-
+grafana.homelab
 
 [unattended_upgrades]
 avax.homelab
