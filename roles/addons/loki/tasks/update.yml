@@ -40,14 +40,15 @@
          inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
         }}
 
-- name: Add Loki config file
-  become: true
-  ansible.builtin.template:
-    src: >-
-      {{
-       inventory_dir + '/host_vars/' + inventory_hostname + '/files/loki-config.yml.j2'
-      }}
-    dest: /etc/loki/config.yml
-    owner: loki
-    group: loki
-    mode: 0755
+    - name: Add Loki config file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname
+           + '/files/loki-config.yml.j2'
+          }}
+        dest: /etc/loki/config.yml
+        owner: loki
+        group: loki
+        mode: 0755
