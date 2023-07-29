@@ -13,6 +13,7 @@ lodestar
 nethermind
 polygon_bor
 polygon_heimdall
+xmrig
 
 [lodestar:children]
 lodestar_beacon

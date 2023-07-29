@@ -1,0 +1,10 @@
+[Unit]
+Description=xmrig service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/xmrig --config /etc/xmrig/config.json
+
+[Install]
+WantedBy=multi-user.target

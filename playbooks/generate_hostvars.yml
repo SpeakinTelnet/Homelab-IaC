@@ -35,7 +35,8 @@
          ohmyzsh,
          avalanchego,
          lodestar,
-         nethermind
+         nethermind,
+         xmrig
   gather_facts: false
   tasks:
     - name: Create host files folders
@@ -76,6 +77,7 @@
         - "{{ 'sabnzbd' if 'sabnzbd' in group_names }}"
         - "{{ 'samba_share' if 'samba_share' in group_names }}"
         - "{{ 'unattended_upgrades' if 'unattended_upgrades' in group_names }}"
+        - "{{ 'xmrig' if 'xmrig' in group_names }}"
       when: item | length > 0
 
 
@@ -93,7 +95,8 @@
          polygon_bor,
          polygon_heimdall,
          lodestar,
-         nethermind
+         nethermind,
+         xmrig
   gather_facts: false
   tasks:
     - name: Add server variable templates
@@ -118,6 +121,7 @@
         - "{{ 'polygon_bor.yml' if 'polygon_bor' in group_names }}"
         - "{{ 'polygon_heimdall.yml' if 'polygon_heimdall' in group_names }}"
         - "{{ 'samba_share.yml' if 'samba_share' in group_names }}"
+        - "{{ 'xmrig.yml' if 'xmrig' in group_names }}"
       when: item | length > 0
 
 
@@ -134,7 +138,8 @@
          ftp_server,
          homepage,
          lodestar,
-         nethermind
+         nethermind,
+         xmrig
   gather_facts: false
   vars:
     vault_secret: "{{ lookup('password', '../.vault_key') }}"
@@ -164,6 +169,7 @@
         - "{{ 'paperless-ngx.credentials.yml.j2' if 'paperless' in group_names }}"
         - "{{ 'sabnzbd.credentials.yml.j2' if 'sabnzbd' in group_names }}"
         - "{{ 'samba_share.credentials.yml.j2' if 'samba_share' in group_names }}"
+        - "{{ 'xmrig.credentials.yml.j2' if 'xmrig' in group_names }}"
       when: item | length > 0
 
 

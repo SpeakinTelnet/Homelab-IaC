@@ -1,0 +1,84 @@
+---
+
+- name: Get installed xmrig version
+  ansible.builtin.command: /opt/xmrig --version
+  register: result
+  changed_when: false
+
+- name: Get xmrig latest tag
+  community.general.github_release:
+    user: >-
+          {%- if xmrig_from_moneroocean -%}
+            MoneroOcean
+          {%- else -%}
+            xmrig
+          {%- endif -%}
+    repo: xmrig
+    action: latest_release
+  register: xmrig_latest
+  changed_when: false
+
+- name: Set installed xmrig version
+  ansible.builtin.set_fact:
+    installed_xmrig_version: "{{ result.stdout.split(' ')[1] }}"
+    latest_xmrig_version: "{{ xmrig_latest['tag'] | regex_replace('^v', '') }}"
+
+- name: Grab xmrig latest binaries
+  become: true
+  vars:
+    xmrig_gh_suffix: >-
+      {% if xmrig_from_moneroocean -%}
+        -lin64-compat.tar.gz
+      {% else -%}
+        -linux-static-x64.tar.gz
+      {%- endif %}
+    user: >-
+      {%- if xmrig_from_moneroocean -%}
+        MoneroOcean
+      {%- else -%}
+        xmrig
+      {%- endif -%}
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: >-
+      {{
+        'https://github.com/'
+        + user
+        + '/xmrig/releases/download/'
+        + xmrig_latest['tag']
+        + '/xmrig-'
+        + xmrig_latest['tag']
+        + xmrig_gh_suffix
+      }}
+    dest: /opt
+    owner: cryptobro
+    group: cryptobro
+    mode: a+x
+    remote_src: true
+    include:
+      - 'xmrig'
+  notify: restart_xmrig
+  when: latest_xmrig_version != installed_xmrig_version
+
+- name: Copy the config file over
+  notify: restart_xmrig
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Add xmrig config file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/'
+           + inventory_hostname + '/files/xmrig-config.json.j2'
+          }}
+        dest: /etc/xmrig/config.json
+        owner: cryptobro
+        group: cryptobro
+        mode: 0755
+      notify: restart_xmrig

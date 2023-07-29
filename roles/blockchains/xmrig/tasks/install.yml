@@ -1,0 +1,128 @@
+---
+- name: Add dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - git
+      - python3-pip
+
+- name: Install python package dependencies
+  become: true
+  ansible.builtin.pip:
+    name:
+      - github3.py
+
+- name: Create user/group cryptobro
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    create_user_group_user_name: cryptobro
+    create_user_group_group_name: cryptobro
+
+- name: Get xmrig latest tag
+  community.general.github_release:
+    user: >-
+          {%- if xmrig_from_moneroocean -%}
+            MoneroOcean
+          {%- else -%}
+            xmrig
+          {%- endif -%}
+    repo: xmrig
+    action: latest_release
+  register: xmrig_latest
+  changed_when: false
+
+- name: Grab xmrig latest binaries
+  become: true
+  vars:
+    xmrig_gh_suffix: >-
+      {% if xmrig_from_moneroocean -%}
+        -lin64-compat.tar.gz
+      {% else -%}
+        -linux-static-x64.tar.gz
+      {%- endif %}
+    user: >-
+      {%- if xmrig_from_moneroocean -%}
+        MoneroOcean
+      {%- else -%}
+        xmrig
+      {%- endif -%}
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: >-
+      {{
+        'https://github.com/'
+        + user
+        + '/xmrig/releases/download/'
+        + xmrig_latest['tag']
+        + '/xmrig-'
+        + xmrig_latest['tag']
+        + xmrig_gh_suffix
+      }}
+    dest: /opt
+    owner: cryptobro
+    group: cryptobro
+    mode: a+x
+    remote_src: true
+    include:
+      - 'xmrig'
+
+- name: Create the xmrig config folder
+  become: true
+  ansible.builtin.file:
+    dest: /etc/xmrig
+    owner: cryptobro
+    group: cryptobro
+    state: directory
+    mode: 0755
+
+- name: Add xmrig service
+  become: true
+  ansible.builtin.copy:
+    src: xmrig.service
+    dest: /etc/systemd/system/xmrig.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add xmrig config file
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Add xmrig config file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/'
+           + inventory_hostname + '/files/xmrig-config.json.j2'
+          }}
+        dest: /etc/xmrig/config.json
+        owner: cryptobro
+        group: cryptobro
+        mode: 0755
+
+- name: Set Huge Pages on linux
+  become: true
+  ansible.builtin.lineinfile:
+    dest: /etc/sysctl.conf
+    regexp: "^vm.nr_hugepages"
+    line: "vm.nr_hugepages=1280"
+    state: present
+
+- name: Enable and start xmrig service
+  become: true
+  ansible.builtin.systemd:
+    name: xmrig
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    tag_host_stamp: "xmrig_deployed"

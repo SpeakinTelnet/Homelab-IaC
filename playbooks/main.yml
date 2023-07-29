@@ -45,3 +45,4 @@
     - {role: blockchains/nethermind, when: "'nethermind' in group_names"}
     - {role: blockchains/polygon_bor, when: "'polygon_bor' in group_names"}
     - {role: blockchains/polygon_heimdall, when: "'polygon_heimdall' in group_names"}
+    - {role: blockchains/xmrig, when: "'xmrig' in group_names"}

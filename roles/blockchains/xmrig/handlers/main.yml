@@ -1,0 +1,8 @@
+---
+
+- name: Restart xmrig service
+  become: true
+  ansible.builtin.systemd:
+    name: xmrig
+    state: restarted
+  listen: restart_xmrig
