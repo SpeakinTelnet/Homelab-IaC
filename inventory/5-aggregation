@@ -2,8 +2,9 @@
 nfs_share
 samba_share
 ftp_server
-ohmyzsh
 loki
+ohmyzsh
+promtail
 unattended_upgrades
 
 [blockchains:children]
