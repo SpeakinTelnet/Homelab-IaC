@@ -62,6 +62,7 @@ Welcome to Homelab-IaC's documentation!
    addons/loki
    addons/nfs_share
    addons/ohmyzsh
+   addons/promtail
    addons/samba_share
    addons/unattended_upgrades
 
