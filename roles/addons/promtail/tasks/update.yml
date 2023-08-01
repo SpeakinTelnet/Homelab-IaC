@@ -1,0 +1,60 @@
+---
+
+- name: Get installed Promtail version
+  ansible.builtin.command: /opt/promtail --version
+  register: result
+  changed_when: false
+
+- name: Get Promtail latest tag
+  community.general.github_release:
+    user: grafana
+    repo: loki
+    action: latest_release
+  register: promtail_latest
+  changed_when: false
+
+- name: Set installed Promtail version
+  ansible.builtin.set_fact:
+    installed_promtail_version: "{{ result.stdout.split(' ')[2] }}"
+    latest_promtail_version: "{{ promtail_latest['tag'] | regex_replace('^v', '') }}"
+
+- name: Grab promtail latest binaries
+  become: true
+  notify: restart_promtail
+  when: latest_promtail_version != installed_promtail_version
+  block:
+    - name: Grab promtail's binaries
+      ansible.builtin.unarchive:
+        # yamllint disable-line rule:line-length
+        src: https://github.com/grafana/loki/releases/download/{{ promtail_latest['tag'] }}/promtail-linux-amd64.zip
+        dest: /opt
+        owner: promtail
+        group: promtail
+        mode: a+x
+        remote_src: true
+    - name: Copy the promtail binaries under a proper name
+      ansible.builtin.copy:
+        remote_src: true
+        src: /opt/promtail-linux-amd64
+        dest: /opt/promtail
+        owner: promtail
+        group: promtail
+        mode: a+x
+    - name: Remove the long named promtail binaries
+      ansible.builtin.file:
+        path: /opt/promtail-linux-amd64
+        state: absent
+
+- name: Add Promtail config file
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/'
+        + inventory_hostname + '/files/promtail-config.yml'
+      }}
+    dest: /etc/promtail/config.yml
+    owner: promtail
+    group: promtail
+    mode: 0755
+  notify: restart_promtail

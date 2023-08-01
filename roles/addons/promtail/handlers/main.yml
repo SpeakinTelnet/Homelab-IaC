@@ -1,0 +1,8 @@
+---
+
+- name: Restart promtail service
+  become: true
+  ansible.builtin.systemd:
+    name: promtail
+    state: restarted
+  listen: restart_promtail

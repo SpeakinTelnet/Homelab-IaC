@@ -29,8 +29,9 @@
     - {role: addons/nfs_share, when: "'nfs_share' in group_names "}
     - {role: addons/samba_share, when: "'samba_share' in group_names "}
     - {role: addons/ftp_server, when: "'ftp_server' in group_names "}
-    - {role: addons/ohmyzsh, when: "'ohmyzsh' in group_names"}
     - {role: addons/loki, when: "'loki' in group_names"}
+    - {role: addons/ohmyzsh, when: "'ohmyzsh' in group_names"}
+    - {role: addons/promtail, when: "'promtail' in group_names"}
     - {role: addons/unattended_upgrades, when: "'unattended_upgrades' in group_names"}
 
 - name: Deploys all blockchain Infrastructure
