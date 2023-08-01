@@ -30,14 +30,28 @@
 
 - name: Grab loki latest binaries
   become: true
-  ansible.builtin.unarchive:
-    # yamllint disable-line rule:line-length
-    src: https://github.com/grafana/loki/releases/download/{{ loki_latest['tag'] }}/loki-linux-amd64.zip
-    dest: /opt
-    owner: loki
-    group: loki
-    mode: a+x
-    remote_src: true
+  block:
+    - name: Grab loki's binaries
+      ansible.builtin.unarchive:
+        # yamllint disable-line rule:line-length
+        src: https://github.com/grafana/loki/releases/download/{{ loki_latest['tag'] }}/loki-linux-amd64.zip
+        dest: /opt
+        owner: loki
+        group: loki
+        mode: a+x
+        remote_src: true
+    - name: Copy the loki binaries under a proper name
+      ansible.builtin.copy:
+        remote_src: true
+        src: /opt/loki-linux-amd64
+        dest: /opt/loki
+        owner: loki
+        group: loki
+        mode: a+x
+    - name: Remove the long named loki binaries
+      ansible.builtin.file:
+        path: /opt/loki-linux-amd64
+        state: absent
 
 - name: Create the loki config folder
   become: true
