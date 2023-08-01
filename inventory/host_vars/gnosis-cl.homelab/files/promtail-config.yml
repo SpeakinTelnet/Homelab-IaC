@@ -1,0 +1,24 @@
+---
+
+server:
+    http_listen_port: 9080
+    grpc_listen_port: 0
+
+positions:
+    filename: /tmp/positions.yaml
+
+clients:
+    - url: http://grafana.homelab:3100/loki/api/v1/push
+
+scrape_configs:
+    - job_name: journal
+      journal:
+          max_age: 12h
+          labels:
+              job: systemd-journal
+      relabel_configs:
+          - action: 'replace'
+            source_labels: ['__journal__systemd_unit']
+            regex: '(.*?)\.service'
+            replacement: '\$1'
+            target_label: 'unit'

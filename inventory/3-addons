@@ -15,6 +15,15 @@ share.homelab
 
 
 [promtail]
+avax.homelab
+bsc-el.homelab
+ethereum-cl.homelab
+ethereum-el.homelab
+gnosis-cl.homelab
+gnosis-el.homelab
+jellyfin.homelab
+polygon-cl.homelab
+polygon-el.homelab
 
 
 [loki]
