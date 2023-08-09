@@ -16,6 +16,12 @@ common:
     kvstore:
       store: inmemory
 
+frontend:
+  max_outstanding_per_tenant: 2048
+
+limits_config:
+  split_queries_by_interval: 24h
+
 query_range:
   results_cache:
     cache:
@@ -32,7 +38,6 @@ schema_config:
       index:
         prefix: index_
         period: 24h
-
 ruler:
   alertmanager_url: http://localhost:9093
 

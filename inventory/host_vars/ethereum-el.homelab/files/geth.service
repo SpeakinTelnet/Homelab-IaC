@@ -13,7 +13,9 @@ ExecStart=/usr/bin/geth \
           --datadir /var/lib/geth/chain-data \
           --config /var/lib/geth/config.toml \
           --cache 18432 \
+          --metrics \
+          --metrics.addr 0.0.0.0 \
+          --metrics.port 6060 \
           --mainnet
-
 [Install]
 WantedBy=default.target

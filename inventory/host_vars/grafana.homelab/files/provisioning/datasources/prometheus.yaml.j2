@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+  - name: ethereum-cl
+    type: prometheus
+    access: proxy
+    url: http://ethereum-cl.homelab:9090
+    jsonData:
+      maxLines: 1000
+  - name: ethereum-el
+    type: prometheus
+    access: proxy
+    url: http://ethereum-el.homelab:9090
+    jsonData:
+      maxLines: 1000
+

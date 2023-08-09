@@ -82,3 +82,7 @@ EnableMsgEvents = false
 ReadTimeout = 30000000000
 WriteTimeout = 30000000000
 IdleTimeout = 120000000000
+
+[Metrics]
+HTTP = "0.0.0.0"
+Port = 6060

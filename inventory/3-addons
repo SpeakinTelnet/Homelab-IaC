@@ -10,9 +10,9 @@ paperless.homelab
 [ohmyzsh]
 share.homelab
 
-
 [prometheus]
-
+ethereum-cl.homelab
+ethereum-el.homelab
 
 [promtail]
 avax.homelab
