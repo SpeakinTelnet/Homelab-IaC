@@ -4,6 +4,7 @@ samba_share
 ftp_server
 loki
 ohmyzsh
+prometheus
 promtail
 unattended_upgrades
 

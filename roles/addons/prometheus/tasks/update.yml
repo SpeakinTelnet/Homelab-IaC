@@ -1,0 +1,48 @@
+---
+
+- name: Get installed Prometheus version
+  ansible.builtin.command: /opt/prometheus/prometheus --version
+  register: result
+  changed_when: false
+
+- name: Get Prometheus latest tag
+  community.general.github_release:
+    user: prometheus
+    repo: prometheus
+    token: "{{ github_token | default(omit) }}"
+    action: latest_release
+  register: prometheus_latest
+  changed_when: false
+
+- name: Set installed Prometheus version
+  ansible.builtin.set_fact:
+    installed_prometheus_version: "{{ result.stdout.split(' ')[2] }}"
+    latest_prometheus_version: "{{ prometheus_latest['tag'] | regex_replace('^v', '') }}"
+
+- name: Grab Prometheus latest binaries
+  become: true
+  notify: restart_prometheus
+  when: latest_prometheus_version != installed_prometheus_version
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: https://github.com/prometheus/prometheus/releases/download/{{ prometheus_latest['tag'] }}/prometheus-{{ prometheus_latest['tag'] | regex_replace('^v', '') }}.linux-amd64.tar.gz
+    dest: /opt/prometheus
+    owner: prometheus
+    group: prometheus
+    mode: a+x
+    remote_src: true
+    extra_opts: [--strip-components=1]
+
+- name: Copy the config file over
+  notify: restart_prometheus
+  become: true
+  ansible.builtin.template:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/' + inventory_hostname
+        + '/files/prometheus-config.yml'
+      }}
+    dest: /etc/prometheus/config.yml
+    owner: prometheus
+    group: prometheus
+    mode: 0755

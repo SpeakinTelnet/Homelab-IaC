@@ -1,0 +1,15 @@
+---
+
+- name: Restart prometheus service
+  become: true
+  ansible.builtin.systemd:
+    name: prometheus
+    state: restarted
+  listen: restart_prometheus
+
+- name: Restart node_exporter service
+  become: true
+  ansible.builtin.systemd:
+    name: node_exporter
+    state: restarted
+  listen: restart_node_exporter

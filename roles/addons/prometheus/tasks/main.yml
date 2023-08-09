@@ -1,0 +1,19 @@
+---
+
+- name: Filter Prometheus role
+  block:
+    - name: Deploy Prometheus
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.prometheus_deployed is undefined
+
+    - name: Deploy Node_Exporter
+      ansible.builtin.include_tasks: install_node_exporter.yml
+      when: ansible_local.node_exporter_deployed is undefined
+
+    - name: Update Prometheus
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.prometheus_deployed is defined
+
+    - name: Update Node_Exporter
+      ansible.builtin.include_tasks: update_node_exporter.yml
+      when: ansible_local.node_exporter_deployed is defined

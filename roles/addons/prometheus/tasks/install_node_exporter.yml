@@ -1,0 +1,57 @@
+---
+
+- name: Get Node_Exporter latest tag
+  community.general.github_release:
+    user: prometheus
+    repo: node_exporter
+    token: "{{ github_token | default(omit) }}"
+    action: latest_release
+  register: node_exporter_latest
+  changed_when: false
+
+- name: Create the prometheus opt folder
+  become: true
+  ansible.builtin.file:
+    dest: /opt/node_exporter
+    owner: prometheus
+    group: prometheus
+    state: directory
+    mode: 0755
+
+- name: Grab Node_Exporter latest binaries
+  become: true
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: https://github.com/prometheus/node_exporter/releases/download/{{ node_exporter_latest['tag'] }}/node_exporter-{{ node_exporter_latest['tag'] | regex_replace('^v', '') }}.linux-amd64.tar.gz
+    dest: /opt/node_exporter
+    owner: prometheus
+    group: prometheus
+    mode: a+x
+    remote_src: true
+    extra_opts: [--strip-components=1]
+
+- name: Add Node_Exporter service
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      {{
+        inventory_dir + '/host_vars/'
+        + inventory_hostname + '/files/node_exporter.service'
+      }}
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and start Node_Exporter service
+  become: true
+  ansible.builtin.systemd:
+    name: node_exporter
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    tag_host_stamp: "node_exporter_deployed"
