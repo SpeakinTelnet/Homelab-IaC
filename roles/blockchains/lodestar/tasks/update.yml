@@ -24,7 +24,7 @@
       ansible.builtin.command: "{{ item }}"
       loop:
         - "rm -rf node_modules/"
-        - "yarn install --ignore-optional"
+        - "yarn install"
         - "yarn build"
       args:
         chdir: /opt/lodestar
