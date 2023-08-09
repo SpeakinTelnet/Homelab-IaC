@@ -53,6 +53,26 @@
     mode: 0644
   notify: Restart geth service
 
+- name: Change /var/opt to /var/lib prior to copy
+  become: true
+  ansible.builtin.replace:
+    path: /etc/systemd/system/geth.service
+    replace: "{{ item.replace }}"
+    regexp: "{{ item.regexp }}"
+  loop:
+    - {
+      regexp: "--datadir /var/opt/",
+      replace: "--datadir /var/lib/"
+    }
+    - {
+      regexp: "--config /var/opt/",
+      replace: "--config /var/lib/"
+    }
+    - {
+      regexp: "/opt/geth/build/bin/geth",
+      replace: "/usr/bin/geth"
+    }
+
 - name: Copy the geth service file over
   become: true
   ansible.builtin.copy:
