@@ -16,7 +16,8 @@ Restart=always
 
 RestartPreventExitStatus=129
 
-ExecStart=/opt/lodestar/lodestar validator \
+ExecStart=usr/bin/node --trace-deprecation --max-old-space-size=4096 \
+  /opt/lodestar/packages/cli/bin/lodestar.js validator \
   --network=gnosis \
   --dataDir=/var/opt/lodestar/chain-data \
   --doppelgangerProtectionEnabled \
