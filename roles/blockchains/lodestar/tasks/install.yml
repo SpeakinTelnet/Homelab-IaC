@@ -12,11 +12,20 @@
       - git
       - nodejs
 
-- name: Install yarn node.js package globally.
+- name: Install yarn & n node.js package globally.
   become: true
   community.general.npm:
-    name: yarn
+    name: "{{ item }}"
     global: true
+  loop:
+    - yarn
+    - n
+
+- name: Install latest nodejs
+  become: true
+  ansible.builtin.command: n latest
+  register: n_install_latest
+  changed_when: "'installing' in n_install_latest.stdout"
 
 - name: Install python package dependencies
   become: true

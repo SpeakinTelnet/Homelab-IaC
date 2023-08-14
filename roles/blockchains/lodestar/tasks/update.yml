@@ -1,5 +1,11 @@
 ---
 
+- name: Install latest nodejs
+  become: true
+  ansible.builtin.command: n latest
+  register: n_install_latest
+  changed_when: "'installing' in n_install_latest.stdout"
+
 - name: Update lodestar to the latest version
   block:
     - name: Set Lodestar folder permission for pulling
@@ -9,6 +15,7 @@
         owner: root
         group: root
         recurse: true
+      changed_when: false
 
     - name: Clone lodestar git repo
       become: true
@@ -38,6 +45,7 @@
         owner: cryptobro
         group: cryptobro
         recurse: true
+      changed_when: false
 
 - name: Recreate lodestar jwt file
   notify: Restart lodestar services
