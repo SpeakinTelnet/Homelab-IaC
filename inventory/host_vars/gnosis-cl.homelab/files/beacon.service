@@ -13,7 +13,7 @@ Group=cryptobro
 WorkingDirectory=/opt/lodestar
 TimeoutSec=1200
 Restart=always
-ExecStart=usr/bin/node --trace-deprecation --max-old-space-size=4096 \
+ExecStart=/usr/local/bin/node --trace-deprecation --max-old-space-size=4096 \
   /opt/lodestar/packages/cli/bin/lodestar.js beacon \
   --network=gnosis \
   --network.maxPeers 60 \

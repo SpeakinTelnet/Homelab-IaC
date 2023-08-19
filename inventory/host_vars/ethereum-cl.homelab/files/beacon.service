@@ -14,7 +14,7 @@ WorkingDirectory=/opt/lodestar
 TimeoutSec=1200
 Restart=always
 
-ExecStart=usr/bin/node --trace-deprecation --max-old-space-size=6144 \
+ExecStart=/usr/local/bin/node --trace-deprecation --max-old-space-size=6144 \
   /opt/lodestar/packages/cli/bin/lodestar.js beacon \
   --dataDir=/var/opt/lodestar/chain-data \
   --network.maxPeers 60 \
