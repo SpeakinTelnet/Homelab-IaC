@@ -42,6 +42,7 @@
     user: maticnetwork
     repo: bor
     action: latest_release
+    token: "{{ github_token | default(omit) }}"
   register: bor_latest
   changed_when: false
 

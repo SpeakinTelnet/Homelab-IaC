@@ -14,6 +14,7 @@
             xmrig
           {%- endif -%}
     repo: xmrig
+    token: "{{ github_token | default(omit) }}"
     action: latest_release
   register: xmrig_latest
   changed_when: false

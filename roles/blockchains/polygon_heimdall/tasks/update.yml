@@ -4,6 +4,7 @@
   community.general.github_release:
     user: maticnetwork
     repo: heimdall
+    token: "{{ github_token | default(omit) }}"
     action: latest_release
   register: heimdall_latest
   changed_when: false

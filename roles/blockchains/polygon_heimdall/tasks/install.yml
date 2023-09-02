@@ -30,6 +30,7 @@
     user: maticnetwork
     repo: heimdall
     action: latest_release
+    token: "{{ github_token | default(omit) }}"
   register: heimdall_latest
   changed_when: false
 

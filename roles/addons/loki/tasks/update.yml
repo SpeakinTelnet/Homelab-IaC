@@ -10,6 +10,7 @@
     user: grafana
     repo: loki
     action: latest_release
+    token: "{{ github_token | default(omit) }}"
   register: loki_latest
   changed_when: false
 

@@ -24,6 +24,7 @@
   community.general.github_release:
     user: grafana
     repo: loki
+    token: "{{ github_token | default(omit) }}"
     action: latest_release
   register: loki_latest
   changed_when: false

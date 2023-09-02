@@ -62,6 +62,7 @@
   community.general.github_release:
     user: go-gitea
     repo: gitea
+    token: "{{ github_token | default(omit) }}"
     action: latest_release
   register: gitea_latest
   changed_when: false

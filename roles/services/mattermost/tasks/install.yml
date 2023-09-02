@@ -35,6 +35,7 @@
   community.general.github_release:
     user: mattermost
     repo: mattermost-server
+    token: "{{ github_token | default(omit) }}"
     action: latest_release
   register: mattermost_latest
   changed_when: false
