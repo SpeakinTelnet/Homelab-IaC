@@ -19,7 +19,7 @@
       {{
         forced_golang_version
         if (forced_golang_version is defined)
-        else latest_golang_version.content
+        else latest_golang_version.content.split()[0]
       }}
 
 - name: Set installed golang version
