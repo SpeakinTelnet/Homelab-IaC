@@ -1,0 +1,61 @@
+---
+
+- name: Add dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - curl
+      - sqlite3
+      - mediainfo
+      - libchromaprint-tools
+
+- name: Create user/group automedia
+  ansible.builtin.include_role:
+    name: helpers/create_user_group
+  vars:
+    create_user_group_user_name: automedia
+    create_user_group_uid: 9876
+    create_user_group_group_name: automedia
+    create_user_group_gid: 6789
+
+- name: Add Lidarr to opt
+  become: true
+  ansible.builtin.unarchive:
+    # yamllint disable-line rule:line-length
+    src: "http://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
+    dest: /opt
+    owner: automedia
+    group: automedia
+    remote_src: true
+    creates: /opt/Lidarr
+
+- name: Create the lidarr lib folder
+  become: true
+  ansible.builtin.file:
+    dest: /var/opt/lidarr
+    owner: automedia
+    group: automedia
+    state: directory
+    mode: 0755
+
+- name: Add Lidarr service file
+  become: true
+  ansible.builtin.copy:
+    src: lidarr.service
+    dest: /etc/systemd/system/lidarr.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and start Lidarr service
+  become: true
+  ansible.builtin.systemd:
+    name: lidarr
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    tag_host_stamp: "lidarr_deployed"

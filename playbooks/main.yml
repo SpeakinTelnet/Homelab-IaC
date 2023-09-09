@@ -13,6 +13,7 @@
     - {role: services/homepage, when: "'homepage' in group_names"}
     - {role: services/jellyfin, when: "'jellyfin' in group_names"}
     - {role: services/jellyseerr, when: "'jellyseerr' in group_names"}
+    - {role: services/lidarr, when: "'lidarr' in group_names"}
     - {role: services/mailcow, when: "'mailcow' in group_names"}
     - {role: services/mattermost, when: "'mattermost' in group_names"}
     - {role: services/nzbget, when: "'nzbget' in group_names"}
