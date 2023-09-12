@@ -18,6 +18,7 @@
     - {role: services/mattermost, when: "'mattermost' in group_names"}
     - {role: services/nzbget, when: "'nzbget' in group_names"}
     - {role: services/paperless, when: "'paperless' in group_names"}
+    - {role: services/pbs, when: "'pbs' in group_names"}
     - {role: services/prowlarr, when: "'prowlarr' in group_names"}
     - {role: services/radarr, when: "'radarr' in group_names"}
     - {role: services/sabnzbd, when: "'sabnzbd' in group_names"}

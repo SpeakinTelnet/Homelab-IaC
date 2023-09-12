@@ -1,0 +1,4 @@
+---
+
+lxc_unprivileged: false
+lxc_image: "local:vztmpl/debian-12-standard_12.0-1_amd64.tar.zst"

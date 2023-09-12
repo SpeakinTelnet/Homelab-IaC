@@ -1,0 +1,10 @@
+---
+
+- name: Update PBS
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name: proxmox-backup-server
+    state: latest
+    cache_valid_time: 1800
+  notify: restart-pbs

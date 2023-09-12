@@ -1,0 +1,11 @@
+---
+
+- name: Filter PBS role
+  block:
+    - name: Deploy PBS
+      ansible.builtin.include_tasks: install.yml
+      when: ansible_local.pbs_deployed is undefined
+
+    - name: Update PBS
+      ansible.builtin.include_tasks: update.yml
+      when: ansible_local.pbs_deployed is defined

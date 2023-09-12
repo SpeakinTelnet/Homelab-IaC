@@ -1,0 +1,9 @@
+---
+
+- name: Restart PBS service
+  become: true
+  ansible.builtin.systemd:
+    name: proxmox-backup
+    enabled: true
+    state: restarted
+  listen: restart-pbs

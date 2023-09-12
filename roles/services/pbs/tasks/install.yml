@@ -1,0 +1,46 @@
+---
+- name: Install PBS dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - curl
+      - gnupg
+    state: latest
+
+- name: Add PBS GPG key
+  become: true
+  ansible.builtin.get_url:
+    url: "https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg"
+    dest: /etc/apt/trusted.gpg.d/pbs.key
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add PBS APT sources
+  become: true
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [signed-by=/etc/apt/trusted.gpg.d/pbs.key]
+       http://download.proxmox.com/debian/pbs bookworm pbs-no-subscription
+    filename: pbs
+    state: present
+
+- name: Install PBS
+  become: true
+  ansible.builtin.apt:
+    name: proxmox-backup-server
+    update_cache: true
+    state: latest
+
+- name: Start and Enable PBS service
+  become: true
+  ansible.builtin.systemd:
+    name: proxmox-backup
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    tag_host_stamp: "pbs_deployed"
