@@ -99,7 +99,7 @@
   become: true
   ansible.builtin.command: "{{ item }}"
   loop:
-    - "yarn install --ignore-optional"
+    - "yarn install"
     - "yarn build"
   args:
     chdir: /opt/lodestar
