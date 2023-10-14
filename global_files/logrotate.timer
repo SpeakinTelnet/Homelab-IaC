@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily rotation of log files
+Documentation=man:logrotate(8) man:logrotate.conf(5)
+
+[Timer]
+OnCalendar=0/1:00
+OnActiveSec=1min
+
+[Install]
+WantedBy=timers.target

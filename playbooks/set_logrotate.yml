@@ -1,0 +1,27 @@
+---
+
+- name: Set standardized logrotate
+  hosts: all
+  become: true
+  tasks:
+    - name: Copy the logrotate timer file over
+      ansible.builtin.copy:
+        src: "{{ inventory_dir }}/../global_files/logrotate.timer"
+        dest: /etc/systemd/system/logrotate.timer
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Copy the logrotate for rsyslog file over
+      ansible.builtin.copy:
+        src: "{{ inventory_dir }}/../global_files/logrotate.config"
+        dest: /etc/logrotate.d/rsyslog
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Restart the logrotate timer
+      ansible.builtin.systemd:
+        name: logrotate.timer
+        daemon_reload: true
+        state: restarted
