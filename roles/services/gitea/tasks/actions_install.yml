@@ -1,0 +1,89 @@
+---
+
+- name: Get act_runner latest tag
+  ansible.builtin.uri:
+    url: https://gitea.com/api/v1/repos/gitea/act_runner/releases/latest
+    return_content: true
+  register: release_url
+
+- name: Set Desired act_runner version
+  ansible.builtin.set_fact:
+    wanted_act_runner_version: "{{ release_url.json.tag_name | regex_replace('^v', '') }}"
+
+- name: Grab act_runner latest binaries
+  become: true
+  ansible.builtin.get_url:
+    # yamllint disable-line rule:line-length
+    url: https://dl.gitea.com/act_runner/{{ wanted_act_runner_version }}/act_runner-{{ wanted_act_runner_version }}-linux-amd64
+    # yamllint disable-line rule:line-length
+    checksum: sha256:https://dl.gitea.com/act_runner/{{ wanted_act_runner_version }}/act_runner-{{ wanted_act_runner_version }}-linux-amd64.sha256
+    dest: /usr/local/bin/act-runner
+    owner: git
+    group: git
+    mode: a+x
+
+- name: Create the act_runner /etc folder
+  become: true
+  ansible.builtin.file:
+    dest: /etc/act-runner
+    owner: root
+    group: git
+    state: directory
+    mode: 0775
+
+- name: Load secret variables and set act_runner configs
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname
+           + '/files/act_runner_config.yaml.j2'
+          }}
+        dest: /etc/act-runner/config.yaml
+        owner: root
+        group: git
+        mode: 0775
+
+    - name: Register act_runner with Gitea
+      become: true
+      ansible.builtin.command:
+        cmd: >-
+          {{
+            '/usr/local/bin/act-runner -c /etc/act-runner/config.yaml '
+            + 'register --instance http://'
+            + inventory_hostname
+            + ':3000 --token '
+            + gitea_runner_token
+            + ' --no-interactive'
+          }}
+      changed_when: false
+
+- name: Add act_runner service file
+  become: true
+  ansible.builtin.copy:
+    src: act_runner.service
+    dest: /etc/systemd/system/act_runner.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and start act_runner service
+  become: true
+  ansible.builtin.systemd:
+    name: act_runner
+    enabled: true
+    state: started
+
+- name: Stamp as properly deployed
+  ansible.builtin.include_role:
+    name: helpers/tag_host
+  vars:
+    tag_host_stamp: "gitea_actions_deployed"

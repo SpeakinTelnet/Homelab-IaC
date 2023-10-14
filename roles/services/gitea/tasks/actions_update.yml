@@ -1,0 +1,57 @@
+---
+
+- name: Get act_runner latest tag
+  ansible.builtin.uri:
+    url: https://gitea.com/api/v1/repos/gitea/act_runner/releases/latest
+    return_content: true
+  register: release_url
+
+- name: Try to get installed act_runner version
+  ansible.builtin.command: /usr/local/bin/act-runner --version
+  register: install_result
+  changed_when: false
+
+- name: Set Latest act_runner version
+  ansible.builtin.set_fact:
+    latest_act_runner_version: "{{ release_url.json.tag_name | regex_replace('^v', '') }}"
+
+- name: Set installed act_runner version
+  ansible.builtin.set_fact:
+    # yamllint disable-line rule:line-length
+    installed_act_runner_version: "{{ install_result.stdout.split(' ')[2] | regex_replace('^v', '') }}"
+
+- name: Grab act_runner latest binaries
+  become: true
+  ansible.builtin.get_url:
+    # yamllint disable-line rule:line-length
+    url: https://dl.gitea.com/act_runner/{{ wanted_act_runner_version }}/act_runner-{{ wanted_act_runner_version }}-linux-amd64
+    # yamllint disable-line rule:line-length
+    checksum: sha256:https://dl.gitea.com/act_runner/{{ wanted_act_runner_version }}/act_runner-{{ wanted_act_runner_version }}-linux-amd64.sha256
+    dest: /usr/local/bin/act-runner
+    owner: git
+    group: git
+    mode: a+x
+  when: latest_act_runner_version != installed_act_runner_version
+  register: restart_act_runner
+
+- name: Load secret variables and set act_runner configs
+  block:
+    - name: Load secret variables
+      ansible.builtin.include_vars: >-
+        {{
+         inventory_dir + '/host_vars/' + inventory_hostname + '/.credentials.yml'
+        }}
+
+    - name: Copy file
+      become: true
+      ansible.builtin.template:
+        src: >-
+          {{
+           inventory_dir + '/host_vars/' + inventory_hostname
+           + '/files/act_runner_config.yaml.j2'
+          }}
+        dest: /etc/act-runner/config.yaml
+        owner: root
+        group: git
+        mode: 0775
+      register: restart_act_runner

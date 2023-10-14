@@ -6,3 +6,10 @@
     name: gitea
     state: restarted
   listen: restart_gitea
+
+- name: Restart act_runner
+  become: true
+  ansible.builtin.systemd:
+    name: act_runner
+    state: restarted
+  listen: restart_act_runner

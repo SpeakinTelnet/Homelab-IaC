@@ -1,0 +1,15 @@
+[Unit]
+Description=Gitea Action
+After=network.target
+ 
+[Service]
+#Type=simple
+#User=git
+#Group=git
+WorkingDirectory=/home/git/
+ExecStart=/usr/local/bin/act-runner -c /etc/act-runner/config.yaml daemon
+Environment=PATH=/home/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[Install]
+#WantedBy=multi-user.target
+WantedBy=default.target

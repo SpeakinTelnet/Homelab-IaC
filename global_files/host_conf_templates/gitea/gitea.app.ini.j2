@@ -29,6 +29,9 @@ LFS_START_SERVER = true
 LFS_JWT_SECRET   = {{ gitea_lfs_jwt_secret }}
 OFFLINE_MODE     = false
 
+[actions]
+ENABLED = {% if gitea_actions %}true{% else %}false{% endif %}
+
 [lfs]
 PATH = /var/lib/gitea/data/lfs
 

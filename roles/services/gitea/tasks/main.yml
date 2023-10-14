@@ -9,3 +9,11 @@
     - name: Update Gitea
       ansible.builtin.include_tasks: update.yml
       when: ansible_local.gitea_deployed is defined
+
+    - name: Deploy Gitea Actions
+      ansible.builtin.include_tasks: actions_install.yml
+      when: gitea_actions is true and ansible_local.gitea_actions_deployed is undefined
+
+    - name: Update Gitea Actions
+      ansible.builtin.include_tasks: actions_update.yml
+      when: gitea_actions is true and ansible_local.gitea_actions_deployed is defined
