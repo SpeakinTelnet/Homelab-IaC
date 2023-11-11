@@ -8,3 +8,19 @@
     state: latest
     cache_valid_time: 1800
   notify: restart_jellyfin
+
+- name: Set Jellyfin folder permission
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    owner: automedia
+    group: automedia
+    recurse: true
+  loop:
+    - /usr/lib/jellyfin-ffmpeg/
+    - /usr/lib/jellyfin
+    - /var/cache/jellyfin
+    - /var/log/jellyfin
+    - /etc/jellyfin
+    - /var/lib/jellyfin
+  notify: restart_jellyfin
