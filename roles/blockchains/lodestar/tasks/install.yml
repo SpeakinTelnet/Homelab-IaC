@@ -23,7 +23,7 @@
 
 - name: Install latest nodejs
   become: true
-  ansible.builtin.command: n latest
+  ansible.builtin.command: n lts
   register: n_install_latest
   changed_when: "'installing' in n_install_latest.stdout"
 
